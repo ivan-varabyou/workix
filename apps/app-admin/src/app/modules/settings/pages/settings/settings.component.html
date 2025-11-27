@@ -1,0 +1,8 @@
+<workix-settings-page
+  [config]="settingsConfig()"
+  [isLoading]="isLoading()"
+  [isSaving]="isSaving()"
+  [errorMessage]="errorMessage()"
+  (save)="onSave($event)"
+  (cancel)="onCancel()"
+></workix-settings-page>

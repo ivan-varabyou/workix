@@ -1,0 +1,53 @@
+.integrations-container {
+  padding: 20px;
+}
+
+mat-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.providers-table {
+  width: 100%;
+}
+
+.health-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.health-badge.OPERATIONAL,
+.health-badge.healthy {
+  background-color: #4caf50;
+  color: white;
+}
+
+.health-badge.DEGRADED,
+.health-badge.degraded {
+  background-color: #ff9800;
+  color: white;
+}
+
+.health-badge.OUTAGE,
+.health-badge.unhealthy {
+  background-color: #f44336;
+  color: white;
+}
+
+.health-badge.UNKNOWN {
+  background-color: #9e9e9e;
+  color: white;
+}

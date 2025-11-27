@@ -1,0 +1,9 @@
+<div class="login-container">
+  <workix-auth-form
+    [config]="authFormConfig()"
+    [isLoading]="isLoading()"
+    [errorMessage]="errorMessage()"
+    (onSubmit)="onSubmit($event)"
+    (onSocialLogin)="onSocialLogin($event)"
+  />
+</div>

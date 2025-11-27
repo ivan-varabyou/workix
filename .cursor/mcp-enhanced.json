@@ -1,0 +1,127 @@
+{
+  "mcpServers": {
+    "workix": {
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/apps/mcp-server/dist/main.js"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    "ollama": {
+      "command": "ollama",
+      "args": [
+        "serve"
+      ]
+    },
+    "nx-workspace": {
+      "command": "npx",
+      "args": [
+        "@nx/mcp-server"
+      ],
+      "env": {
+        "NX_WORKSPACE_ROOT": "${workspaceFolder}",
+        "NODE_ENV": "development"
+      }
+    },
+    "typescript-language-server": {
+      "command": "npx",
+      "args": [
+        "typescript-language-server",
+        "--stdio"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    "eslint": {
+      "command": "npx",
+      "args": [
+        "eslint",
+        "--ext",
+        ".ts,.js,.tsx,.jsx",
+        "--format",
+        "json",
+        "--cache",
+        "--fix-dry-run"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    "prisma-server": {
+      "command": "npx",
+      "args": [
+        "prisma",
+        "studio"
+      ],
+      "env": {
+        "NODE_ENV": "development",
+        "DATABASE_URL": "postgresql://workix:workix@localhost:5432/workix_main"
+      }
+    }
+  },
+  "models": {
+    "llama3.1:8b-instruct-q4_K_M": {
+      "provider": "ollama",
+      "baseUrl": "http://localhost:11434/v1",
+      "apiKey": "ollama",
+      "model": "llama3.1:8b-instruct-q4_K_M",
+      "temperature": 0.7,
+      "maxTokens": 4096
+    },
+    "mistral:7b-instruct-q4_K_M": {
+      "provider": "ollama",
+      "baseUrl": "http://localhost:11434/v1",
+      "apiKey": "ollama",
+      "model": "mistral:7b-instruct-q4_K_M",
+      "temperature": 0.7,
+      "maxTokens": 4096
+    },
+    "codellama:7b-code": {
+      "provider": "ollama",
+      "baseUrl": "http://localhost:11434/v1",
+      "apiKey": "ollama",
+      "model": "codellama:7b-code",
+      "temperature": 0.1,
+      "maxTokens": 8192
+    }
+  },
+  "tools": {
+    "nx": {
+      "description": "NX workspace management",
+      "commands": [
+        "nx build",
+        "nx test",
+        "nx lint",
+        "nx serve",
+        "nx generate",
+        "nx affected:build",
+        "nx affected:test",
+        "nx affected:lint",
+        "nx graph",
+        "nx dep-graph"
+      ]
+    },
+    "typescript": {
+      "description": "TypeScript compilation and checking",
+      "commands": [
+        "tsc --noEmit",
+        "tsc --noEmit --watch",
+        "tsc --build",
+        "tsc --listFiles"
+      ]
+    },
+    "prisma": {
+      "description": "Prisma database management",
+      "commands": [
+        "prisma generate",
+        "prisma db push",
+        "prisma migrate dev",
+        "prisma studio",
+        "prisma db seed"
+      ]
+    }
+  }
+}

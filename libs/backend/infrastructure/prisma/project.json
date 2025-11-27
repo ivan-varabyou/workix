@@ -1,0 +1,21 @@
+{
+  "name": "infrastructure-prisma",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/infrastructure/prisma/src",
+  "projectType": "library",
+  "tags": ["type:lib", "scope:infrastructure"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/infrastructure/prisma",
+        "main": "libs/infrastructure/prisma/src/index.ts",
+        "tsConfig": "libs/infrastructure/prisma/tsconfig.lib.json"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

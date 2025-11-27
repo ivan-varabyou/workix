@@ -1,0 +1,106 @@
+.virtual-workers-container {
+  padding: 20px;
+}
+
+mat-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-state mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #ccc;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  margin: 16px 0 8px;
+  color: #666;
+}
+
+.empty-state p {
+  color: #999;
+  margin-bottom: 24px;
+}
+
+.workers-table {
+  width: 100%;
+}
+
+.worker-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-badge.IDLE {
+  background-color: #e0e0e0;
+  color: #666;
+}
+
+.status-badge.ACTIVE {
+  background-color: #4caf50;
+  color: white;
+}
+
+.status-badge.RUNNING {
+  background-color: #2196f3;
+  color: white;
+}
+
+.status-badge.PAUSED {
+  background-color: #ff9800;
+  color: white;
+}
+
+.status-badge.COMPLETED {
+  background-color: #9c27b0;
+  color: white;
+}
+
+.status-badge.ERROR {
+  background-color: #f44336;
+  color: white;
+}
+
+.metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric {
+  font-size: 12px;
+  color: #666;
+}
+
+.no-metrics {
+  color: #999;
+  font-style: italic;
+}

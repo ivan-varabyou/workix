@@ -1,0 +1,6 @@
+---
+alwaysApply: true
+- All commits: English, lowercase
+- Format: T #{number} - {type}({scope}): description or custom message
+- number task number = default 0
+---

@@ -1,0 +1,59 @@
+<div class="pipeline-detail-container">
+  <workix-detail-view
+    [config]="detailConfig()"
+    [data]="pipeline()"
+    [isLoading]="isLoading()"
+    [errorMessage]="errorMessage()"
+    (back)="onBack()"
+    (actionClick)="onActionClick($event)"
+  />
+
+  <!-- Last Execution -->
+  @if (pipeline()?.lastExecution) {
+  <workix-card [styleClass]="'execution-card'">
+    <h3>Last Execution</h3>
+    <div class="execution-header">
+      <workix-chip
+        [label]="pipeline()!.lastExecution!.status"
+        [variant]="
+          pipeline()!.lastExecution!.status === 'success'
+            ? 'success'
+            : pipeline()!.lastExecution!.status === 'failed'
+            ? 'danger'
+            : 'info'
+        "
+      />
+      <span class="duration">
+        Duration: {{ getExecutionDuration(pipeline()!.lastExecution!) }}
+      </span>
+    </div>
+
+    <div class="execution-timeline">
+      @for (step of pipeline()!.lastExecution!.steps; track step.id) {
+      <div class="timeline-item">
+        <div class="timeline-marker" [ngClass]="'status-' + step.status">
+          @switch (step.status) { @case ('success') {
+          <workix-icon name="check_circle" [size]="'md'" />
+          } @case ('failed') {
+          <workix-icon name="error" [size]="'md'" />
+          } @case ('running') {
+          <workix-spinner [loading]="true" [size]="'sm'" />
+          } @default {
+          <workix-icon name="schedule" [size]="'md'" />
+          } }
+        </div>
+        <div class="timeline-content">
+          <div class="step-name">{{ step.name }}</div>
+          <div class="step-status">{{ step.status }}</div>
+          @if (step.error) {
+          <div class="step-error">{{ step.error }}</div>
+          } @if (step.duration) {
+          <div class="step-duration">{{ step.duration }}ms</div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+  </workix-card>
+  }
+</div>

@@ -1,0 +1,5 @@
+# Игнорировать файлы автоматического продолжения
+auto-continue.txt
+auto-continue.lock
+last-check.txt
+trigger-continue.txt

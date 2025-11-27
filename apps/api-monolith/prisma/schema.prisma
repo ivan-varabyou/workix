@@ -1,0 +1,560 @@
+// Monolith Prisma Schema
+// Unified schema for all services
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// AUTH MODELS
+// ============================================
+
+model User {
+  id                String    @id @default(uuid()) @db.Uuid
+  email             String    @unique @db.VarChar(255)
+  name              String    @db.VarChar(255)
+  passwordHash      String    @db.VarChar(255)
+  emailVerified     Boolean   @default(false)
+  failedLoginAttempts Int     @default(0)
+  lockedUntil       DateTime? @db.Timestamp
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime? @db.Timestamp
+
+  // Relations
+  socialAccounts    SocialAccount[]
+  phoneOtps         PhoneOtp[]
+  emailVerifications EmailVerification[]
+  userProfile       UserProfile?
+  userRoles         UserRole[]
+  pipelines        Pipeline[]
+  executions       Execution[]
+
+  @@index([email], name: "idx_user_email")
+  @@index([createdAt], name: "idx_user_created")
+  @@map("users")
+}
+
+model SocialAccount {
+  id              String    @id @default(uuid()) @db.Uuid
+  provider        Provider
+  providerAccountId String  @db.VarChar(500)
+  email           String?   @db.VarChar(255)
+  displayName     String?   @db.VarChar(255)
+  profilePicture  String?   @db.Text
+  accessToken     String?   @db.Text
+  refreshToken    String?   @db.Text
+  tokenExpiresAt  DateTime? @db.Timestamp
+  metadata        Json?     @default("{}")
+  userId          String    @db.Uuid
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], name: "idx_social_account_user")
+  @@index([provider, providerAccountId], name: "idx_social_account_provider")
+  @@map("social_accounts")
+}
+
+enum Provider {
+  google
+  apple
+  github
+}
+
+model PhoneOtp {
+  id          String    @id @default(uuid()) @db.Uuid
+  phoneNumber String    @db.VarChar(20)
+  code        String    @db.VarChar(10)
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(5)
+  expiresAt   DateTime  @db.Timestamp
+  verifiedAt  DateTime? @db.Timestamp
+  lockedUntil DateTime? @db.Timestamp
+  metadata    Json?     @default("{}")
+  userId      String?   @db.Uuid
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([phoneNumber], name: "idx_phone_otp_phone")
+  @@index([code], name: "idx_phone_otp_code")
+  @@index([expiresAt], name: "idx_phone_otp_expires")
+  @@map("phone_otps")
+}
+
+model EmailVerification {
+  id          String    @id @default(uuid()) @db.Uuid
+  email       String    @db.VarChar(255)
+  token       String    @unique @db.VarChar(255)
+  expiresAt   DateTime  @db.Timestamp
+  verifiedAt  DateTime? @db.Timestamp
+  resendCount Int       @default(0)
+  maxResends  Int       @default(5)
+  lastResendAt DateTime? @db.Timestamp
+  userId      String?   @db.Uuid
+  metadata    Json?     @default("{}")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([email], name: "idx_email_verification_email")
+  @@index([token], name: "idx_email_verification_token")
+  @@index([expiresAt], name: "idx_email_verification_expires")
+  @@map("email_verifications")
+}
+
+// ============================================
+// USER PROFILE MODELS
+// ============================================
+
+model UserProfile {
+  id           String    @id @default(uuid()) @db.Uuid
+  userId       String    @unique @db.Uuid
+  bio          String?   @db.Text
+  avatarUrl    String?   @db.Text
+  avatarFileKey String?  @db.VarChar(255)
+  phoneNumber  String?   @db.VarChar(20)
+  dateOfBirth  DateTime? @db.Date
+  location     String?   @db.VarChar(255)
+  website      String?   @db.VarChar(255)
+  preferences  Json?     @default("{}")
+  status       Status    @default(active)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], name: "idx_user_profile_userid")
+  @@map("user_profiles")
+}
+
+enum Status {
+  active
+  suspended
+  deleted
+}
+
+// ============================================
+// PIPELINE MODELS
+// ============================================
+
+model Pipeline {
+  id              String    @id @default(uuid()) @db.Uuid
+  userId          String    @db.Uuid
+  name            String    @db.VarChar(255)
+  description     String?   @db.Text
+  config          Json      @default("{\"version\":\"1.0\",\"name\":\"\",\"nodes\":[],\"edges\":[]}")
+  tags            String[]  @default([])
+  version         Int       @default(1)
+  isPublic        Boolean   @default(false)
+  isActive        Boolean   @default(true)
+  isTemplate      Boolean   @default(false)
+  executionCount  Int       @default(0)
+  lastExecutedAt  DateTime? @db.Timestamp
+  category        String?   @db.VarChar(100)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime? @db.Timestamp
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  executions     Execution[]
+
+  @@index([userId, isActive], name: "idx_pipeline_user_active")
+  @@index([userId, createdAt], name: "idx_pipeline_user_created")
+  @@index([isPublic, isActive], name: "idx_pipeline_public_active")
+  @@map("pipelines")
+}
+
+model Execution {
+  id              String          @id @default(uuid()) @db.Uuid
+  pipelineId      String          @db.Uuid
+  userId          String          @db.Uuid
+  status          ExecutionStatus @default(pending)
+  inputs          Json?           @default("{}")
+  outputs         Json?           @default("{}")
+  stepResults     Json?           @default("{}")
+  error           String?         @db.Text
+  errorMessage    String?         @db.Text
+  durationMs      Int?
+  stepsExecuted   Int             @default(0)
+  stepsFailed     Int             @default(0)
+  startedAt       DateTime?       @db.Timestamp
+  completedAt     DateTime?       @db.Timestamp
+  result          Json?           @default("{}")
+  metadata        Json?           @default("{}")
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  pipeline        Pipeline        @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([pipelineId], name: "idx_execution_pipeline")
+  @@index([userId], name: "idx_execution_user")
+  @@index([status], name: "idx_execution_status")
+  @@index([createdAt], name: "idx_execution_created")
+  @@map("executions")
+}
+
+enum ExecutionStatus {
+  pending
+  running
+  success
+  failed
+  timeout
+}
+
+// ============================================
+// RBAC MODELS
+// ============================================
+
+model Role {
+  id          String      @id @default(uuid()) @db.Uuid
+  name        String      @unique @db.VarChar(100)
+  description String?     @db.VarChar(255)
+  level       Int         @default(0)
+  isSystem    Boolean     @default(false)
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  permissions Permission[] @relation("RolePermissions")
+  userRoles   UserRole[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String    @unique @db.VarChar(100)
+  resource    String    @db.VarChar(50)
+  action      String    @db.VarChar(50)
+  description String?   @db.VarChar(255)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  roles       Role[]    @relation("RolePermissions")
+
+  @@map("permissions")
+}
+
+model UserRole {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @db.Uuid
+  roleId      String    @db.Uuid
+  assignedBy  String?   @db.VarChar(100)
+  assignedAt  DateTime  @default(now())
+  expiresAt   DateTime? @db.Timestamp
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        Role      @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId], name: "idx_user_role_unique")
+  @@index([userId], name: "idx_user_role_user")
+  @@index([roleId], name: "idx_user_role_role")
+  @@map("user_roles")
+}
+
+// ============================================
+// AI CORE MODELS
+// ============================================
+
+model AIProvider {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String    @unique @db.VarChar(100)
+  type        String    @db.VarChar(50)
+  apiKey      String?   @db.Text
+  baseUrl     String?   @db.VarChar(500)
+  config      Json?     @default("{}")
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  models      AIModel[]
+  executions  AIExecution[]
+
+  @@map("ai_providers")
+}
+
+model AIModel {
+  id          String    @id @default(uuid()) @db.Uuid
+  providerId  String    @db.Uuid
+  name        String    @db.VarChar(255)
+  modelId     String    @db.VarChar(255)
+  type        String    @db.VarChar(50)
+  config      Json?     @default("{}")
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  provider    AIProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  executions  AIExecution[]
+
+  @@unique([providerId, modelId], name: "idx_ai_model_provider_model")
+  @@index([providerId], name: "idx_ai_model_provider")
+  @@map("ai_models")
+}
+
+model AIExecution {
+  id          String    @id @default(uuid()) @db.Uuid
+  providerId  String    @db.Uuid
+  modelId     String?   @db.Uuid
+  taskType    String    @db.VarChar(100)
+  input       Json?     @default("{}")
+  output      Json?     @default("{}")
+  status      String    @db.VarChar(50)
+  error       String?   @db.Text
+  latencyMs   Int?
+  tokensUsed  Int?
+  cost        Decimal?  @db.Decimal(10, 4)
+  metadata    Json?     @default("{}")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  provider    AIProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  model       AIModel?   @relation(fields: [modelId], references: [id], onDelete: SetNull)
+
+  @@index([providerId], name: "idx_ai_execution_provider")
+  @@index([modelId], name: "idx_ai_execution_model")
+  @@index([taskType], name: "idx_ai_execution_task")
+  @@index([status], name: "idx_ai_execution_status")
+  @@index([createdAt], name: "idx_ai_execution_created")
+  @@map("ai_executions")
+}
+
+// ============================================
+// INTEGRATION CORE MODELS
+// ============================================
+
+model IntegrationProvider {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String    @unique @db.VarChar(100)
+  type        String    @db.VarChar(50)
+  config      Json?     @default("{}")
+  credentials Json?     @default("{}")
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  events      IntegrationEvent[]
+
+  @@map("integration_providers")
+}
+
+model IntegrationEvent {
+  id          String    @id @default(uuid()) @db.Uuid
+  providerId  String    @db.Uuid
+  eventType   String    @db.VarChar(100)
+  payload     Json?     @default("{}")
+  status      String    @db.VarChar(50)
+  error       String?   @db.Text
+  metadata    Json?     @default("{}")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  provider    IntegrationProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([providerId], name: "idx_integration_event_provider")
+  @@index([eventType], name: "idx_integration_event_type")
+  @@index([status], name: "idx_integration_event_status")
+  @@index([createdAt], name: "idx_integration_event_created")
+  @@map("integration_events")
+}
+
+// ============================================
+// VIRTUAL WORKER MODELS
+// ============================================
+
+model VirtualWorker {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @db.Uuid
+  name        String    @db.VarChar(255)
+  type        String    @db.VarChar(100)
+  config      Json?     @default("{}")
+  status      String    @db.VarChar(50)
+  metadata    Json?     @default("{}")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId], name: "idx_virtual_worker_user")
+  @@index([type], name: "idx_virtual_worker_type")
+  @@index([status], name: "idx_virtual_worker_status")
+  @@map("virtual_workers")
+}
+
+// ============================================
+// A/B TESTING MODELS
+// ============================================
+
+model ABTest {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @db.Uuid
+  name        String    @db.VarChar(255)
+  description String?   @db.Text
+  variants    Json      @default("[]")
+  config      Json?     @default("{}")
+  status      String    @db.VarChar(50)
+  results     Json?     @default("{}")
+  metadata    Json?     @default("{}")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId], name: "idx_ab_test_user")
+  @@index([status], name: "idx_ab_test_status")
+  @@map("ab_tests")
+}
+
+// ============================================
+// AUDIT LOGGING MODELS
+// ============================================
+
+model AuditLog {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String?   @db.Uuid
+  action      String    @db.VarChar(255)
+  entityType  String    @db.VarChar(100)
+  entityId    String?   @db.Uuid
+  changes     Json?     @default("{}")
+  ipAddress   String?   @db.VarChar(50)
+  userAgent   String?   @db.Text
+  metadata    Json?     @default("{}")
+  createdAt   DateTime  @default(now())
+
+  @@index([userId], name: "idx_audit_log_user")
+  @@index([entityType, entityId], name: "idx_audit_log_entity")
+  @@index([action], name: "idx_audit_log_action")
+  @@index([createdAt], name: "idx_audit_log_created")
+  @@map("audit_logs")
+}
+
+// ============================================
+// SECURITY MODELS
+// ============================================
+
+model AccountSecurityStatus {
+  id                     String    @id @default(uuid()) @db.Uuid
+  userId                 String    @unique @db.Uuid
+  email                  String    @db.VarChar(255)
+  isLocked               Boolean   @default(false)
+  lockedUntil            DateTime? @db.Timestamp
+  failedAttempts         Int       @default(0)
+  lastFailedLogin        DateTime? @db.Timestamp
+  suspiciousIpCount      Int       @default(0)
+  lastSuspiciousActivity DateTime? @db.Timestamp
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  @@index([email], name: "idx_account_security_status_email")
+  @@index([isLocked], name: "idx_account_security_status_locked")
+  @@index([lockedUntil], name: "idx_account_security_status_locked_until")
+  @@map("account_security_status")
+}
+
+model SuspiciousIpActivity {
+  id           String   @id @default(uuid()) @db.Uuid
+  ipAddress    String   @db.VarChar(45)
+  userId       String?  @db.Uuid
+  email        String?  @db.VarChar(255)
+  activityType String   @db.VarChar(50)
+  requestPath  String?  @db.VarChar(500)
+  requestBody  Json?
+  userAgent    String?  @db.VarChar(500)
+  createdAt    DateTime @default(now())
+
+  @@index([ipAddress], name: "idx_suspicious_ip_activity_ip")
+  @@index([userId], name: "idx_suspicious_ip_activity_user")
+  @@index([email], name: "idx_suspicious_ip_activity_email")
+  @@index([activityType], name: "idx_suspicious_ip_activity_type")
+  @@index([createdAt], name: "idx_suspicious_ip_activity_created")
+  @@map("suspicious_ip_activities")
+}
+
+model UserIpLocation {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @db.Uuid
+  ipAddress   String   @db.VarChar(45)
+  country     String?  @db.VarChar(2)
+  countryName String?  @db.VarChar(100)
+  region      String?  @db.VarChar(100)
+  city        String?  @db.VarChar(100)
+  latitude    Float?
+  longitude   Float?
+  isp         String?  @db.VarChar(255)
+  loginCount  Int      @default(1)
+  firstSeen   DateTime @default(now())
+  lastSeen    DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId], name: "idx_user_ip_location_user")
+  @@index([ipAddress], name: "idx_user_ip_location_ip")
+  @@index([country], name: "idx_user_ip_location_country")
+  @@index([userId, country], name: "idx_user_ip_location_user_country")
+  @@map("user_ip_locations")
+}
+
+model AccountSecurityEvent {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String?  @db.Uuid
+  email     String?  @db.VarChar(255)
+  ipAddress String   @db.VarChar(45)
+  eventType String   @db.VarChar(50)
+  severity  String   @db.VarChar(20)
+  details   Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId], name: "idx_account_security_event_user")
+  @@index([email], name: "idx_account_security_event_email")
+  @@index([ipAddress], name: "idx_account_security_event_ip")
+  @@index([eventType], name: "idx_account_security_event_type")
+  @@index([createdAt], name: "idx_account_security_event_created")
+  @@map("account_security_events")
+}
+
+model IpBlock {
+  id           String   @id @default(uuid()) @db.Uuid
+  ipAddress    String   @db.VarChar(45)
+  reason       String   @db.VarChar(255)
+  blockedUntil DateTime @db.Timestamp
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([ipAddress], name: "idx_ip_block_address")
+  @@index([blockedUntil], name: "idx_ip_block_until")
+  @@map("ip_blocks")
+}
+
+model SecurityVerificationCode {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @db.Uuid
+  email       String    @db.VarChar(255)
+  code        String    @db.VarChar(10)
+  reason      String    @db.VarChar(50)
+  ipAddress   String?   @db.VarChar(45)
+  country     String?   @db.VarChar(2)
+  countryName String?   @db.VarChar(100)
+  expiresAt   DateTime  @db.Timestamp
+  verifiedAt  DateTime? @db.Timestamp
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(3)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId], name: "idx_security_verification_code_user")
+  @@index([email], name: "idx_security_verification_code_email")
+  @@index([code], name: "idx_security_verification_code_code")
+  @@index([expiresAt], name: "idx_security_verification_code_expires")
+  @@map("security_verification_codes")
+}

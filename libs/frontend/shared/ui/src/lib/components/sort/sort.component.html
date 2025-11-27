@@ -1,0 +1,5 @@
+<div [class]="sortClass()" (click)="toggleSort()">
+  <ng-content></ng-content>
+  <span [class]="iconClass()">{{ sortIcon() }}</span>
+</div>
+}

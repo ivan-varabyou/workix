@@ -1,0 +1,45 @@
+{
+  "name": "@workix/domain/auth-service",
+  "version": "1.0.0",
+  "description": "Workix Authentication Microservice",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "NODE_ENV=development API_AUTH_PORT=7102 JWT_SECRET=dev-jwt-secret-minimum-32-characters-long-for-development-only DATABASE_URL_AUTH=postgresql://postgres:postgres@localhost:5102/workix_auth SERVICE_KEY=dev-service-key-minimum-32-characters-long-for-development-only npx tsx watch --tsconfig ../../tsconfig.base.json src/main.ts",
+    "start:dev": "NODE_ENV=development API_AUTH_PORT=7102 JWT_SECRET=dev-jwt-secret-minimum-32-characters-long-for-development-only DATABASE_URL_AUTH=postgresql://postgres:postgres@localhost:5102/workix_auth SERVICE_KEY=dev-service-key-minimum-32-characters-long-for-development-only npx tsx --tsconfig ../../tsconfig.base.json src/main.ts",
+    "build": "nx build api-auth",
+    "build:local": "tsc",
+    "start": "node ../../dist/apps/api-auth/main.js",
+    "start:local": "node dist/main.js",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/config": "^3.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/jwt": "^11.0.0",
+    "@nestjs/passport": "^10.0.0",
+    "@nestjs/platform-express": "^11.0.0",
+    "@nestjs/swagger": "^7.0.0",
+    "bcrypt": "^5.1.0",
+    "class-transformer": "^0.5.0",
+    "class-validator": "^0.14.0",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "pg": "^8.10.0",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.0",
+    "swagger-ui-express": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "@types/passport-jwt": "^3.0.8",
+    "tsx": "^3.14.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.0.0"
+  }
+}

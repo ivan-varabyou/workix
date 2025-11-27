@@ -1,0 +1,57 @@
+<div class="virtual-worker-create-container">
+  <h2>Create Virtual Worker</h2>
+  <form [formGroup]="workerForm" class="worker-form">
+    <workix-input
+      label="Name"
+      formControlName="name"
+      placeholder="Give your virtual worker a descriptive name"
+      [required]="true"
+    />
+
+    <workix-select
+      label="Type"
+      formControlName="type"
+      [required]="true"
+      [options]="[
+        { label: 'Marketer', value: 'MARKETER', icon: 'campaign' },
+        { label: 'Designer', value: 'DESIGNER', icon: 'palette' },
+        { label: 'Copywriter', value: 'COPYWRITER', icon: 'edit' },
+        { label: 'Analyst', value: 'ANALYST', icon: 'analytics' },
+        { label: 'Custom', value: 'CUSTOM', icon: 'settings' }
+      ]"
+    />
+
+    <workix-input
+      label="Description"
+      formControlName="description"
+      type="textarea"
+      rows="3"
+      placeholder="Describe what this worker will do"
+    />
+
+    <div class="config-section">
+      <h3>Configuration</h3>
+      <p class="config-hint">Configure worker-specific settings (JSON format)</p>
+      <workix-input
+        label="Config (JSON)"
+        formControlName="config"
+        type="textarea"
+        rows="6"
+        placeholder='{"key": "value"}'
+        [required]="true"
+      />
+    </div>
+
+    <div class="form-actions">
+      <workix-button label="Cancel" variant="secondary" (onClick)="onCancel()" />
+      <workix-button
+        label="Create Worker"
+        icon="add"
+        variant="primary"
+        (onClick)="onCreate()"
+        [disabled]="!workerForm.valid || isCreating()"
+        [isLoading]="isCreating()"
+      />
+    </div>
+  </form>
+</div>

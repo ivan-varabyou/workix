@@ -1,0 +1,80 @@
+<div class="analytics-container">
+  <div class="analytics-header">
+    <h2>Integration Analytics Dashboard</h2>
+    <div class="header-actions">
+      <!-- TODO: Use WorkixSelectComponent when available -->
+      <select [value]="selectedPeriod()" (change)="onPeriodChange($any($event.target).value)">
+        <option value="1h">Last Hour</option>
+        <option value="24h">Last 24 Hours</option>
+        <option value="7d">Last 7 Days</option>
+        <option value="30d">Last 30 Days</option>
+      </select>
+      <workix-button
+        label="Refresh"
+        variant="primary"
+        icon="refresh"
+        (onClick)="loadDashboardData()"
+      />
+    </div>
+  </div>
+
+  @if (isLoading()) {
+  <workix-spinner [loading]="true" [size]="'lg'" />
+  } @else {
+  <workix-dashboard [config]="dashboardConfig()" [isLoading]="isLoading()" />
+
+  <!-- By Provider Table -->
+  @if (dashboardData()?.byProvider && dashboardData()!.byProvider.length > 0) {
+  <div class="providers-section">
+    <h3>By Provider</h3>
+    <workix-data-table
+      [data]="dashboardData()!.byProvider"
+      [config]="providerTableConfig()"
+      [isLoading]="false"
+    />
+  </div>
+  }
+
+  <!-- Alerts -->
+  @if (alerts() && alerts()!.total > 0) {
+  <div class="alerts-section">
+    <h3>Alerts</h3>
+    <workix-list>
+      @for (alert of alerts()!.alerts; track alert.id || $index) {
+      <workix-list-item [styleClass]="'alert-item alert-' + alert.severity">
+        <workix-icon
+          [name]="
+            alert.severity === 'error' ? 'error' : alert.severity === 'warning' ? 'warning' : 'info'
+          "
+          [size]="'md'"
+        />
+        <div class="alert-content">
+          <div class="alert-header">
+            <span class="alert-type">{{ alert.type }}</span>
+            <workix-chip
+              [label]="alert.severity"
+              [variant]="
+                alert.severity === 'error'
+                  ? 'danger'
+                  : alert.severity === 'warning'
+                  ? 'warning'
+                  : 'info'
+              "
+            />
+          </div>
+          <div class="alert-message">{{ alert.message }}</div>
+          <div class="alert-meta">
+            <span class="alert-provider">{{ alert.providerName }}</span>
+            <span class="alert-time">{{ alert.timestamp | date : 'short' }}</span>
+          </div>
+        </div>
+      </workix-list-item>
+      }
+    </workix-list>
+  </div>
+  } @else if (alerts() && alerts()!.total === 0) {
+  <div class="no-alerts">
+    <p>No alerts</p>
+  </div>
+  } }
+</div>

@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_WEBHOOKS")
+}
+
+// ============================================
+// WEBHOOK MODELS
+// ============================================
+
+model Webhook {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  url       String    @db.VarChar(500)
+  events    String[]  @default([])
+  secret    String?   @db.VarChar(255)
+  active    Boolean   @default(true)
+  retries   Int       @default(3)
+  timeout   Int       @default(30)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  events_relation WebhookEvent[]
+
+  @@index([userId], name: "idx_webhook_user")
+  @@index([active], name: "idx_webhook_active")
+  @@map("webhooks")
+}
+
+model WebhookEvent {
+  id         String    @id @default(uuid()) @db.Uuid
+  webhookId  String    @db.Uuid
+  event      String    @db.VarChar(100)
+  payload    Json      @default("{}")
+  status     String    @db.VarChar(20) // pending, success, failed
+  statusCode Int?
+  error      String?   @db.Text
+  attempt    Int       @default(0)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  webhook Webhook @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+
+  @@index([webhookId], name: "idx_webhook_event_webhook")
+  @@index([status], name: "idx_webhook_event_status")
+  @@index([createdAt], name: "idx_webhook_event_created")
+  @@map("webhook_events")
+}
+
+// Minimal User model for relations
+model User {
+  id String @id @default(uuid()) @db.Uuid
+
+  @@map("users")
+}

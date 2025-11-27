@@ -1,0 +1,66 @@
+<div class="integrations-container">
+  <div class="integrations-header">
+    <h2>Integration Providers</h2>
+    <div class="header-actions">
+      <workix-button label="Refresh" variant="primary" icon="refresh" (onClick)="loadProviders()" />
+      <workix-button
+        label="Add Provider"
+        variant="primary"
+        icon="add"
+        (onClick)="openAddProviderDialog()"
+      />
+    </div>
+  </div>
+
+  <workix-data-table
+    [data]="providers()"
+    [config]="dataTableConfig()"
+    [isLoading]="isLoading()"
+    [totalItems]="totalProviders()"
+    [currentPage]="currentPage()"
+    [pageSize]="currentPageSize()"
+    (onSearch)="onSearch($event)"
+    (onPageChange)="onPageChange($event.page, $event.pageSize)"
+    (onSortChange)="onSortChange($event.sortKey, $event.sortDirection)"
+    (onActionClick)="onActionClick($event.action, $event.row)"
+  />
+
+  @if (showCredentials() && selectedProvider()) {
+  <workix-card [styleClass]="'credentials-card'">
+    <div class="credentials-header">
+      <h3>Credentials Management</h3>
+      <workix-button
+        label=""
+        variant="secondary"
+        icon="close"
+        [text]="true"
+        (onClick)="showCredentials.set(false)"
+      />
+    </div>
+    <app-provider-credentials
+      [providerIdInput]="selectedProvider()!.id"
+      [providerNameInput]="selectedProvider()!.displayName || selectedProvider()!.name"
+    ></app-provider-credentials>
+  </workix-card>
+  }
+
+  <!-- Add Provider Dialog -->
+  <workix-form-dialog
+    [visible]="showAddProviderDialog()"
+    [config]="addProviderDialogConfig()"
+    [isLoading]="addProviderDialogLoading()"
+    (submit)="onAddProviderDialogSubmit($event)"
+    (cancel)="onAddProviderDialogCancel()"
+    (visibleChange)="showAddProviderDialog.set($event)"
+  />
+
+  <!-- Delete Provider Dialog -->
+  <workix-confirm-dialog
+    [visible]="showDeleteDialog()"
+    [config]="deleteDialogConfig()"
+    [isLoading]="deleteDialogLoading()"
+    (confirm)="onDeleteDialogConfirm()"
+    (cancel)="onDeleteDialogCancel()"
+    (visibleChange)="showDeleteDialog.set($event)"
+  />
+</div>

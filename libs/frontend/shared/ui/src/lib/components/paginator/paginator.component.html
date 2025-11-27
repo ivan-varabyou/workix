@@ -1,0 +1,8 @@
+<div [class]="paginatorClass()">
+  <button (click)="firstPage()" [disabled]="isFirstPage()">First</button>
+  <button (click)="previousPage()" [disabled]="isFirstPage()">Previous</button>
+  <span>{{ pageInfo() }}</span>
+  <button (click)="nextPage()" [disabled]="isLastPage()">Next</button>
+  <button (click)="lastPage()" [disabled]="isLastPage()">Last</button>
+</div>
+}

@@ -1,0 +1,90 @@
+.canvas-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  overflow: hidden;
+  background-color: #fafafa;
+
+  .pipeline-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .steps-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+
+    .step-node {
+      position: absolute;
+      width: 120px;
+      height: 80px;
+      background-color: #ffffff;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: move;
+      pointer-events: all;
+      transition: all 0.2s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      &:hover {
+        border-color: #1976d2;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      &.selected {
+        border-color: #1976d2;
+        background-color: #e3f2fd;
+        box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+      }
+
+      .step-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 8px;
+        color: #1976d2;
+      }
+
+      .step-label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.87);
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    .empty-state {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: rgba(0, 0, 0, 0.6);
+      pointer-events: none;
+
+      p {
+        margin: 16px 0 0 0;
+        font-size: 0.875rem;
+      }
+    }
+  }
+}

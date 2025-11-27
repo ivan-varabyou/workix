@@ -1,0 +1,114 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  padding: 16px;
+
+  .login-card {
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+    mat-card-header {
+      margin-bottom: 24px;
+
+      mat-card-title {
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+
+      mat-card-subtitle {
+        color: var(--text-secondary);
+      }
+    }
+
+    form {
+      .error-message {
+        background-color: #ffebee;
+        color: #c62828;
+        padding: 12px;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        font-size: 0.875rem;
+      }
+
+      mat-form-field {
+        margin-bottom: 16px;
+      }
+
+      .remember-forgot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        font-size: 0.875rem;
+
+        a {
+          color: var(--primary-color);
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      button {
+        margin-bottom: 16px;
+      }
+    }
+
+    .divider {
+      text-align: center;
+      margin: 24px 0;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .google-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+
+      img {
+        height: 20px;
+      }
+    }
+
+    .signup-link {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+
+      a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+// Dark theme
+:root.dark-theme {
+  .login-container {
+    background: linear-gradient(135deg, #bb86fc, #03dac6);
+  }
+
+  .error-message {
+    background-color: #b71c1c !important;
+    color: #ffcdd2 !important;
+  }
+}

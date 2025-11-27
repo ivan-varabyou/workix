@@ -1,0 +1,17 @@
+:host {
+  display: block;
+}
+
+li {
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+li.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+li.selected {
+  background-color: rgba(0, 0, 0, 0.04);
+}

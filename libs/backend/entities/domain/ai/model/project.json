@@ -1,0 +1,27 @@
+{
+  "name": "backend-entities-domain-ai-model",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/backend/entities/domain/ai/model/src",
+  "projectType": "library",
+  "tags": ["domain", "entities", "ai"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/backend/entities/domain/ai/model",
+        "main": "libs/backend/entities/domain/ai/model/src/index.ts",
+        "tsConfig": "libs/backend/entities/domain/ai/model/tsconfig.lib.json",
+        "assets": []
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../../../../coverage/libs/backend/entities/domain/ai/model"
+      }
+    }
+  }
+}

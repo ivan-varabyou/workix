@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_AUDIT")
+}
+
+// ============================================
+// AUDIT LOG MODELS
+// ============================================
+
+model AuditLog {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String?  @db.Uuid
+  adminId      String?  @db.Uuid
+  action       String   @db.VarChar(100) // create, update, delete, login, logout, etc.
+  entityType   String   @db.VarChar(100) // service, application, endpoint, user, etc.
+  resourceType String?  @db.VarChar(100) // deprecated, use entityType
+  resourceId   String?  @db.Uuid
+  entityId     String?  @db.Uuid // deprecated, use resourceId
+  details      Json?    // Additional details about the action
+  changes      Json?    // Changes made (for compatibility)
+  metadata     Json?    // Additional metadata (for compatibility)
+  ipAddress    String?  @db.VarChar(45)
+  userAgent    String?  @db.VarChar(500)
+  createdAt    DateTime @default(now()) @db.Timestamp
+
+  @@index([userId], name: "idx_audit_log_user")
+  @@index([adminId], name: "idx_audit_log_admin")
+  @@index([action], name: "idx_audit_log_action")
+  @@index([entityType], name: "idx_audit_log_entity_type")
+  @@index([resourceType], name: "idx_audit_log_resource_type")
+  @@index([createdAt], name: "idx_audit_log_created")
+  @@map("audit_logs")
+}
+
+// Minimal User model for relations
+model User {
+  id String @id @default(uuid()) @db.Uuid
+
+  @@map("users")
+}
+
+// Minimal Admin model for relations
+model Admin {
+  id String @id @default(uuid()) @db.Uuid
+
+  @@map("admins")
+}
+

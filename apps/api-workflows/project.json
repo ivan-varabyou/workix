@@ -1,0 +1,58 @@
+{
+  "name": "api-workflows",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/api-workflows/src",
+  "projectType": "application",
+  "tags": [
+    "type:app",
+    "scope:backend"
+  ],
+  "implicitDependencies": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/apps/api-workflows",
+        "main": "apps/api-workflows/src/main.ts",
+        "tsConfig": "apps/api-workflows/tsconfig.json",
+        "assets": [
+          "apps/api-workflows/src/assets"
+        ],
+        "configFile": "apps/api-workflows/vite.config.ts"
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "api-workflows:build",
+        "runBuildTargetDependencies": false,
+        "watch": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "api-workflows:build"
+        },
+        "production": {
+          "buildTarget": "api-workflows:build:production"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": [
+        "{workspaceRoot}/coverage/apps/api-workflows"
+      ],
+      "options": {
+        "passWithNoTests": true,
+        "configFile": "apps/api-workflows/vitest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

@@ -1,0 +1,207 @@
+.pipeline-builder-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+
+  .builder-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 12px;
+    }
+  }
+
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+  }
+
+  .error-message {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 12px;
+    border-radius: 4px;
+    margin: 16px;
+    font-size: 0.875rem;
+  }
+
+  .builder-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    gap: 16px;
+    padding: 16px;
+
+    .left-panel {
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+
+      .details-card,
+      .steps-list-card {
+        padding: 16px;
+
+        h3 {
+          margin: 0 0 16px 0;
+          font-size: 1.125rem;
+          font-weight: 500;
+        }
+
+        .pipeline-form {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .no-steps {
+          text-align: center;
+          color: rgba(0, 0, 0, 0.6);
+          padding: 20px;
+          margin: 0;
+        }
+
+        .steps-list {
+          .step-item {
+            padding: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+
+            &:hover {
+              background-color: rgba(0, 0, 0, 0.02);
+            }
+
+            &.selected {
+              background-color: rgba(25, 118, 210, 0.1);
+              border-left: 3px solid #1976d2;
+            }
+
+            .step-item-content {
+              display: flex;
+              gap: 12px;
+              align-items: center;
+              width: 100%;
+
+              .step-icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background-color: rgba(0, 0, 0, 0.05);
+                flex-shrink: 0;
+              }
+
+              .step-info {
+                flex: 1;
+                min-width: 0;
+
+                .step-name {
+                  font-size: 0.875rem;
+                  font-weight: 500;
+                  margin-bottom: 4px;
+                }
+
+                .step-type {
+                  font-size: 0.75rem;
+                  color: rgba(0, 0, 0, 0.6);
+                }
+              }
+
+              .step-actions {
+                flex-shrink: 0;
+              }
+            }
+          }
+        }
+      }
+
+      .add-step-btn {
+        margin-top: auto;
+      }
+    }
+
+    .center-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+
+      .canvas-card {
+        flex: 1;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
+
+        .canvas-placeholder {
+          text-align: center;
+          color: rgba(0, 0, 0, 0.6);
+
+          p {
+            margin: 8px 0;
+          }
+
+          .hint {
+            font-size: 0.875rem;
+            color: rgba(0, 0, 0, 0.4);
+          }
+        }
+      }
+    }
+
+    .right-panel {
+      width: 350px;
+      overflow-y: auto;
+
+      .step-editor-card {
+        padding: 20px;
+
+        h3 {
+          margin: 0 0 16px 0;
+          font-size: 1.125rem;
+          font-weight: 500;
+        }
+
+        .step-name {
+          font-size: 1rem;
+          font-weight: 500;
+          margin-bottom: 8px;
+        }
+
+        .step-type {
+          font-size: 0.875rem;
+          color: rgba(0, 0, 0, 0.6);
+          margin-bottom: 16px;
+        }
+
+        .hint {
+          font-size: 0.875rem;
+          color: rgba(0, 0, 0, 0.4);
+          font-style: italic;
+        }
+      }
+    }
+  }
+}
+
+.full-width {
+  width: 100%;
+}

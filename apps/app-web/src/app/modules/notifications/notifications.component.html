@@ -1,0 +1,12 @@
+<div class="notifications-container">
+  <workix-notification-list
+    [notifications]="filteredNotifications()"
+    [config]="notificationListConfig()"
+    [isLoading]="false"
+    (filterChange)="onFilterChange($event)"
+    (pageChange)="onPageChange($event.pageIndex, $event.pageSize)"
+    (markAllAsRead)="onMarkAllAsRead()"
+    (delete)="onDeleteNotification($event)"
+    (clearAll)="onClearAll()"
+  />
+</div>

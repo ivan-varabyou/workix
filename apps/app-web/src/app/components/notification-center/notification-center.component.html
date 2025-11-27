@@ -1,0 +1,105 @@
+<workix-button
+  variant="icon"
+  icon="notifications"
+  [badge]="unreadCount()"
+  [attr.aria-label]="'Notifications: ' + unreadCount()"
+  class="notification-bell"
+  workix-menu-trigger
+>
+</workix-button>
+
+<workix-menu class="notification-menu">
+  <div class="notification-header">
+    <h3>Notifications</h3>
+    @if (unreadCount() > 0) {
+    <workix-button
+      variant="icon"
+      icon="done_all"
+      (onClick)="markAllAsRead()"
+      [tooltip]="'Mark all as read'"
+    />
+    }
+  </div>
+
+  <workix-divider></workix-divider>
+
+  @if (notifications().length === 0) {
+  <div class="empty-state">
+    <workix-icon name="notifications_none" [size]="'lg'" />
+    <p>No notifications</p>
+  </div>
+  } @else {
+  <workix-list class="notification-list">
+    @for (notification of notifications(); track notification.id) {
+    <workix-list-item
+      class="notification-item"
+      [class.unread]="!notification.read"
+      [class]="notification.type"
+    >
+      <workix-icon
+        [name]="getTypeIcon(notification.type)"
+        [size]="'md'"
+        [style.color]="getTypeColor(notification.type)"
+      />
+
+      <div class="notification-content">
+        <div class="notification-title">
+          {{ notification.title }}
+        </div>
+
+        <div class="notification-message">
+          {{ notification.message }}
+        </div>
+
+        <div class="notification-time">
+          {{ notification.timestamp | date : 'short' }}
+        </div>
+      </div>
+
+      <div class="notification-actions">
+        @if (notification.action) {
+        <workix-button
+          [label]="notification.action.label"
+          variant="text"
+          [routerLink]="notification.action.url"
+          class="action-btn"
+        />
+        }
+        <workix-button
+          variant="icon"
+          icon="close"
+          (onClick)="deleteNotification(notification.id)"
+          [tooltip]="'Delete'"
+        />
+      </div>
+    </workix-list-item>
+    @if ($index() < notifications().length - 1) {
+    <workix-divider></workix-divider>
+    } }
+  </workix-list>
+
+  <workix-divider></workix-divider>
+
+  <workix-menu-item routerLink="/notifications" class="view-all-btn">
+    <workix-icon name="visibility" [size]="'sm'" />
+    <span>View All Notifications</span>
+  </workix-menu-item>
+
+  @if (notifications().length > 0) {
+  <workix-menu-item (click)="deleteAllNotifications()" class="clear-all-btn">
+    <workix-icon name="clear_all" [size]="'sm'" />
+    <span>Clear All</span>
+  </workix-menu-item>
+  } }
+
+  <workix-divider></workix-divider>
+
+  <div class="connection-status">
+    <workix-icon
+      [name]="isConnected() ? 'cloud_done' : 'cloud_off'"
+      [size]="'sm'"
+      [class.connected]="isConnected()"
+    />
+    <span>{{ isConnected() ? 'Connected' : 'Disconnected' }}</span>
+  </div>
+</workix-menu>

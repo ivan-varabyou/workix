@@ -1,0 +1,36 @@
+{
+  "name": "monolith-e2e",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "implicitDependencies": ["api-monolith", "api-auth"],
+  "targets": {
+    "e2e": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
+      "options": {
+        "passWithNoTests": true
+      },
+      "dependsOn": ["monolith:build", "monolith:serve"]
+    },
+    "e2e:auth": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bash scripts/load-test-env.sh && vitest run apps-e2e/src/auth/auth.spec.ts --config apps-e2e/vitest.config.auth.ts",
+        "cwd": "{workspaceRoot}"
+      },
+      "configurations": {
+        "ci": {
+          "command": "bash scripts/load-test-env.sh && vitest run apps-e2e/src/auth/auth.spec.ts --config apps-e2e/vitest.config.auth.ts --reporter=json --outputFile=e2e-auth-results.json"
+        }
+      },
+      "env": {
+        "AUTH_SERVICE_URL": "http://localhost:7200",
+        "AUTH_SERVICE_PORT": "7200",
+        "DATABASE_URL": "postgresql://postgres:postgres@localhost:5432/workix_monolith",
+        "DATABASE_URL_AUTH": "postgresql://postgres:postgres@localhost:5432/workix_monolith",
+        "NODE_ENV": "test"
+      },
+      "dependsOn": ["api-auth:build"]
+    }
+  }
+}

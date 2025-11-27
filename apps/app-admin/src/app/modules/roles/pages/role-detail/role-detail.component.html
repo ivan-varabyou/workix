@@ -1,0 +1,30 @@
+<workix-detail-view
+  [config]="detailConfig()"
+  [data]="role()"
+  [isLoading]="isLoading()"
+  [errorMessage]="errorMessage()"
+  (back)="onBack()"
+  (actionClick)="onActionClick($event)"
+></workix-detail-view>
+
+<!-- Permissions list -->
+@if (!isLoading() && role()) {
+<div class="permissions-section">
+  <h3>Permissions</h3>
+  <workix-card>
+    <workix-list>
+      @for (permission of permissions(); track permission.id) {
+      <workix-list-item>
+        <workix-icon name="check_circle" [size]="'md'" />
+        <div class="permission-info">
+          <div class="permission-name">{{ permission.name }}</div>
+          <div class="permission-description">{{ permission.description }}</div>
+        </div>
+      </workix-list-item>
+      } @empty {
+      <p>No permissions assigned to this role</p>
+      }
+    </workix-list>
+  </workix-card>
+</div>
+}

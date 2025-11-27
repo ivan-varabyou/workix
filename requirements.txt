@@ -1,0 +1,10 @@
+# AI и ML библиотеки
+pyautogen<0.3.0
+openai>=1.0.0
+
+# Для работы с Ollama
+ollama>=0.1.0
+
+# Дополнительные зависимости
+requests>=2.31.0
+python-dotenv>=1.0.0

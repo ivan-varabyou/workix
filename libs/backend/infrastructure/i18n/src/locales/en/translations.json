@@ -1,0 +1,181 @@
+{
+  "common": {
+    "welcome": "Welcome to Workix!",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "update": "Update",
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "success": "Success",
+    "error": "Error",
+    "confirm": "Confirm",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "user": "User"
+  },
+  "errors": {
+    "user_not_found": "User not found",
+    "validation_failed": "Validation failed",
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "not_found": "Not found",
+    "internal_error": "Internal server error",
+    "bad_request": "Bad request",
+    "email_already_exists": "Email already exists",
+    "invalid_credentials": "Invalid credentials",
+    "token_expired": "Token expired",
+    "token_invalid": "Invalid token",
+    "user_no_email": "User {{userId}} has no email address"
+  },
+  "notifications": {
+    "welcome": "Welcome {{userId}}!",
+    "pipeline_completed": "Pipeline {{pipelineId}} completed successfully",
+    "pipeline_failed": "Pipeline {{pipelineId}} failed",
+    "approval_requested": "Approval requested for {{item}}",
+    "email_verification_sent": "Verification email sent",
+    "password_reset_sent": "Password reset email sent",
+    "user_created": "User created successfully",
+    "user_updated": "User updated successfully",
+    "user_deleted": "User deleted successfully"
+  },
+  "alerts": {
+    "pipeline_failed": "Alert: Pipeline {{pipelineId}} failed",
+    "system_error": "System error occurred",
+    "quota_exceeded": "Quota exceeded",
+    "trial_expiring": "Trial expiring soon",
+    "title": "Alert: {{alertType}}",
+    "greeting": "Hello {{userName}},",
+    "footer": "This is an automated message from Workix."
+  },
+  "email": {
+    "digest": {
+      "title": "{{period}} Digest Report",
+      "greeting": "Hello {{userName}},",
+      "summary": "Here's your {{period}} summary:",
+      "metrics": "Metrics",
+      "events": "Events",
+      "alerts": "Alerts",
+      "recent_events": "Recent Events",
+      "no_events": "No events this period.",
+      "no_alerts": "No alerts this period.",
+      "footer": "This is an automated digest from Workix.",
+      "pipelines_executed": "Pipelines Executed",
+      "tokens_used": "Tokens Used",
+      "api_calls": "API Calls"
+    }
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "forgot_password": "Forgot password?",
+    "reset_password": "Reset password",
+    "email_verification": "Email verification",
+    "two_factor": "Two-factor authentication",
+    "password_reset": {
+      "email_sent": "If an account exists with this email, a password reset link will be sent",
+      "too_many_requests": "Too many password reset requests. Please try again later.",
+      "success": "Password has been reset successfully. You can now login with your new password.",
+      "token_expired": "Password reset token has expired. Please request a new one.",
+      "token_invalid": "Invalid password reset token.",
+      "token_used": "Reset token not found or already used"
+    },
+    "email_verification": {
+      "already_verified": "Email is already verified",
+      "success": "Email has been verified successfully.",
+      "token_expired": "Email verification token has expired. Please request a new one.",
+      "token_invalid": "Invalid email verification token.",
+      "token_used": "Verification token not found or already used",
+      "no_pending": "No pending verification found for this email",
+      "max_resends_exceeded": "Maximum resend attempts exceeded. Please contact support.",
+      "resend_cooldown": "Please wait {{seconds}} seconds before resending verification email",
+      "resend_success": "Verification email resent successfully ({{remaining}} resends remaining)"
+    },
+    "account_locked": "Account is locked. Try again later",
+    "password_validation": {
+      "min_length": "Password must be at least 12 characters",
+      "lowercase": "Password must contain lowercase letters",
+      "uppercase": "Password must contain uppercase letters",
+      "numbers": "Password must contain numbers",
+      "special": "Password must contain special characters (@$!%*?&)"
+    },
+    "oauth": {
+      "email_required": "Email is required from OAuth provider",
+      "cannot_unlink_no_password": "Cannot unlink social account: user must have a password set first"
+    },
+    "phone_otp": {
+      "too_many_requests": "Too many OTP requests. Try again later.",
+      "no_active_otp": "No active OTP found for this phone number",
+      "too_many_failed_attempts": "Too many failed attempts. Try again later.",
+      "expired": "OTP has expired. Request a new one.",
+      "email_required": "Email is required for registration with phone OTP",
+      "sent_success": "OTP sent successfully"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "overview": "Overview",
+    "pipelines": "Pipelines",
+    "executions": "Executions",
+    "settings": "Settings"
+  },
+  "slack": {
+    "integration_not_found": "Slack integration not found",
+    "no_channel_specified": "No channel specified",
+    "notification": "Notification"
+  },
+  "rbac": {
+    "role_already_exists": "Role already exists",
+    "user_or_role_not_found": "User or role not found",
+    "permission_already_exists": "Permission already exists",
+    "cannot_change_system_role_level": "Cannot change level of system role",
+    "cannot_delete_system_role": "Cannot delete system role"
+  },
+  "users": {
+    "avatar": {
+      "no_file_provided": "No file provided",
+      "file_size_exceeded": "File size exceeds 5MB limit",
+      "invalid_file_type": "Only JPEG, PNG, and WebP images are allowed",
+      "invalid_file_extension": "Invalid file extension"
+    },
+    "user_id_required": "User ID is required",
+    "user_id_and_avatar_required": "User ID and avatar URL are required",
+    "profile_not_found": "User profile not found"
+  },
+  "pipelines": {
+    "not_found": "Pipeline not found",
+    "step_not_found": "Step not found",
+    "execution_not_found": "Execution not found",
+    "name_and_steps_required": "Pipeline name and steps are required",
+    "cannot_edit_published": "Cannot edit published pipeline",
+    "must_have_at_least_one_step": "Pipeline must have at least one step",
+    "no_access": "You do not have access to this pipeline",
+    "can_only_update_own": "You can only update your own pipelines",
+    "can_only_delete_own": "You can only delete your own pipelines",
+    "can_only_publish_own": "You can only publish your own pipelines",
+    "can_only_manage_own": "You can only manage your own pipelines",
+    "only_templates_can_be_cloned": "Only templates can be cloned"
+  },
+  "api_keys": {
+    "required": "API key required",
+    "invalid_format": "Invalid API key format",
+    "invalid_or_expired": "Invalid or expired API key",
+    "rate_limit_exceeded": "Rate limit exceeded"
+  },
+  "service_discovery": {
+    "name_url_port_required": "Service name, URL, and port are required",
+    "not_found": "Service not found",
+    "no_healthy_instances": "No healthy instances of {{serviceName}} found"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "name": "api-monolith",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/api-monolith/src",
+  "prefix": "app",
+  "tags": ["type:app", "scope:backend"],
+  "targets": {
+    "prisma:generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma generate --schema=apps/api-monolith/prisma/schema.prisma",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": ["prisma:generate"],
+      "options": {
+        "outputPath": "dist/apps/api-monolith",
+        "main": "apps/api-monolith/src/main.ts",
+        "tsConfig": "apps/api-monolith/tsconfig.app.json",
+        "assets": [],
+        "configFile": "apps/api-monolith/vite.config.ts"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/api-monolith/src/environments/environment.ts",
+              "with": "apps/api-monolith/src/environments/environment.prod.ts"
+            }
+          ]
+        },
+        "development": {}
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "api-monolith:build",
+        "runBuildTargetDependencies": false,
+        "watch": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "api-monolith:build:development"
+        },
+        "production": {
+          "buildTarget": "api-monolith:build:production"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{workspaceRoot}/coverage/apps/api-monolith"],
+      "options": {
+        "passWithNoTests": true,
+        "configFile": "apps/api-monolith/vitest.config.ts"
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Cursor Auto Continue",
+  "version": "1.0.0",
+  "description": "Автоматически отправляет 'продолжай' в чат Cursor",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://localhost/*",
+    "https://cursor.sh/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://localhost/*",
+        "https://cursor.sh/*",
+        "file:///*"
+      ],
+      "js": ["auto-continue-content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Отправить 'продолжай' в чат"
+  }
+}
+
+
+

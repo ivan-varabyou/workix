@@ -1,0 +1,13 @@
+@if (isOpen()) {
+<div
+  [class]="snackbarClass()"
+  [style.bottom]="verticalPosition() === 'bottom' ? '20px' : 'auto'"
+  [style.top]="verticalPosition() === 'top' ? '20px' : 'auto'"
+>
+  <span>{{ message() }}</span>
+  @if (action()) {
+  <button (click)="handleAction()">{{ action() }}</button>
+  }
+  <button (click)="handleDismiss()">×</button>
+</div>
+} }

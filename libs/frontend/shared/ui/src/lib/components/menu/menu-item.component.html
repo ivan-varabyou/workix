@@ -1,0 +1,9 @@
+<button
+  [class]="itemClass()"
+  [disabled]="disabled()"
+  (click)="handleClick()"
+  [routerLink]="routerLink()"
+  routerLinkActive="active"
+>
+  <ng-content></ng-content>
+</button>

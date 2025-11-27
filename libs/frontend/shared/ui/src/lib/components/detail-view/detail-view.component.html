@@ -1,0 +1,54 @@
+<div class="detail-view-container">
+  @if (config().showBackButton !== false) {
+  <workix-button
+    label=""
+    variant="secondary"
+    [icon]="'arrow_back'"
+    [text]="true"
+    [styleClass]="'back-button'"
+    (onClick)="handleBack()"
+  />
+  } @if (isLoading()) {
+  <div class="loading">
+    <workix-spinner [loading]="true" [size]="'lg'" />
+  </div>
+  } @if (errorMessage()) {
+  <div class="error-message">
+    {{ errorMessage() }}
+  </div>
+  } @if (!isLoading() && config()) {
+  <div class="detail-view">
+    <div class="detail-header">
+      <h2>{{ config().title }}</h2>
+      @if (config().subtitle) {
+      <p class="subtitle">{{ config().subtitle }}</p>
+      }
+    </div>
+
+    <workix-card [styleClass]="'detail-card'">
+      <div class="detail-grid">
+        @for (field of config().fields; track field.label) {
+        <div class="detail-item" [class.full-width]="field.fullWidth">
+          <label>{{ field.label }}</label>
+          <p>{{ formatFieldValue(field) }}</p>
+        </div>
+        }
+      </div>
+    </workix-card>
+
+    @if (config().actions && config().actions.length > 0) {
+    <div class="detail-actions">
+      @for (action of config().actions; track action.label) {
+      <workix-button
+        [label]="action.label"
+        [variant]="action.variant || 'primary'"
+        [icon]="action.icon"
+        [disabled]="action.disabled"
+        (onClick)="handleAction(action.label, data())"
+      />
+      }
+    </div>
+    }
+  </div>
+  }
+</div>

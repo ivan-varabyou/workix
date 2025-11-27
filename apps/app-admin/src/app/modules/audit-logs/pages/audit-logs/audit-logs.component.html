@@ -1,0 +1,37 @@
+<div class="audit-logs-container">
+  <div class="audit-logs-header">
+    <h2>Audit Logs</h2>
+    <div class="header-actions">
+      <workix-button
+        label="Export CSV"
+        variant="secondary"
+        icon="download"
+        (onClick)="exportLogs('csv')"
+      />
+      <workix-button
+        label="Export JSON"
+        variant="secondary"
+        icon="download"
+        (onClick)="exportLogs('json')"
+      />
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <!-- TODO: Add filter inputs -->
+  </div>
+
+  <workix-data-table
+    [data]="auditLogs()"
+    [config]="dataTableConfig()"
+    [isLoading]="isLoading()"
+    [totalItems]="totalLogs()"
+    [currentPage]="currentPage()"
+    [pageSize]="currentPageSize()"
+    (onSearch)="onSearch($event)"
+    (onPageChange)="onPageChange($event.page, $event.pageSize)"
+    (onSortChange)="onSortChange($event.sortKey, $event.sortDirection)"
+    (onActionClick)="onActionClick($event.action, $event.row)"
+  />
+</div>

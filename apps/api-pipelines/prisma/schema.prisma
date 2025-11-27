@@ -1,0 +1,79 @@
+// Pipelines Service Prisma Schema
+// Extracted from monolith for microservice architecture
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_PIPELINES")
+}
+
+// ============================================
+// PIPELINE MODELS
+// ============================================
+
+model Pipeline {
+  id              String    @id @default(uuid()) @db.Uuid
+  userId          String    @db.Uuid
+  name            String    @db.VarChar(255)
+  description     String?   @db.Text
+  config          Json      @default("{\"version\":\"1.0\",\"name\":\"\",\"nodes\":[],\"edges\":[]}")
+  tags            String[]  @default([])
+  version         Int       @default(1)
+  isPublic        Boolean   @default(false)
+  isActive        Boolean   @default(true)
+  isTemplate      Boolean   @default(false)
+  executionCount  Int       @default(0)
+  lastExecutedAt  DateTime? @db.Timestamp
+  category        String?   @db.VarChar(100)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime? @db.Timestamp
+
+  executions     Execution[]
+
+  @@index([userId, isActive], name: "idx_pipeline_user_active")
+  @@index([userId, createdAt], name: "idx_pipeline_user_created")
+  @@index([isPublic, isActive], name: "idx_pipeline_public_active")
+  @@map("pipelines")
+}
+
+model Execution {
+  id              String          @id @default(uuid()) @db.Uuid
+  pipelineId      String          @db.Uuid
+  userId          String          @db.Uuid
+  status          ExecutionStatus @default(pending)
+  inputs          Json?           @default("{}")
+  outputs         Json?           @default("{}")
+  stepResults     Json?           @default("{}")
+  error           String?         @db.Text
+  errorMessage    String?         @db.Text
+  durationMs      Int?
+  stepsExecuted   Int             @default(0)
+  stepsFailed     Int             @default(0)
+  startedAt       DateTime?       @db.Timestamp
+  completedAt     DateTime?       @db.Timestamp
+  result          Json?           @default("{}")
+  metadata        Json?           @default("{}")
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  pipeline        Pipeline        @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+
+  @@index([pipelineId], name: "idx_execution_pipeline")
+  @@index([userId], name: "idx_execution_user")
+  @@index([status], name: "idx_execution_status")
+  @@index([createdAt], name: "idx_execution_created")
+  @@map("executions")
+}
+
+enum ExecutionStatus {
+  pending
+  running
+  success
+  failed
+  timeout
+}

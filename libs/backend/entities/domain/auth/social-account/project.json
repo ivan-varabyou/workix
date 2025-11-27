@@ -1,0 +1,27 @@
+{
+  "name": "backend-entities-domain-auth-social-account",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/backend/entities/domain/auth/social-account/src",
+  "projectType": "library",
+  "tags": ["domain", "entities", "auth"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/backend/entities/domain/auth/social-account",
+        "main": "libs/backend/entities/domain/auth/social-account/src/index.ts",
+        "tsConfig": "libs/backend/entities/domain/auth/social-account/tsconfig.lib.json",
+        "assets": []
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../../../../coverage/libs/backend/entities/domain/auth/social-account"
+      }
+    }
+  }
+}

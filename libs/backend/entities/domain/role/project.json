@@ -1,0 +1,20 @@
+{
+  "name": "backend-entities-domain-role",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/backend/entities/domain/role/src",
+  "prefix": "workix",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/backend/entities/domain/role",
+        "main": "libs/backend/entities/domain/role/src/index.ts",
+        "tsConfig": "libs/backend/entities/domain/role/tsconfig.lib.json",
+        "assets": ["libs/backend/entities/domain/role/*.md"]
+      }
+    }
+  },
+  "tags": ["type:lib", "scope:backend", "scope:entities", "scope:domain"]
+}

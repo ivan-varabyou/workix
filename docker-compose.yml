@@ -1,0 +1,175 @@
+version: '3.8'
+
+services:
+  postgres-gateway:
+    image: postgres:16-alpine
+    container_name: workix-postgres-gateway
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: workix_gateway
+    ports:
+      # API 7000 → DB 5000 (change first digit: 7 → 5)
+      - "5000:5432"
+    volumes:
+      - postgres_gateway_data:/var/lib/postgresql/data
+      - ./scripts/init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - workix-network
+
+  postgres-monolith:
+    image: postgres:16-alpine
+    container_name: workix-postgres-monolith
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: workix_monolith
+    ports:
+      # API 7101 → DB 5101 (change first digit: 7 → 5)
+      - "5101:5432"
+    volumes:
+      - postgres_monolith_data:/var/lib/postgresql/data
+      - ./scripts/init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - workix-network
+
+  postgres-auth:
+    image: postgres:16-alpine
+    container_name: workix-postgres-auth
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: workix_auth
+    ports:
+      # API 7102 → DB 5102 (change first digit: 7 → 5)
+      - "5102:5432"
+    volumes:
+      - postgres_auth_data:/var/lib/postgresql/data
+      - ./scripts/init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - workix-network
+
+  postgres-notifications:
+    image: postgres:16-alpine
+    container_name: workix-postgres-notifications
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: workix_notifications
+    ports:
+      # API 7103 → DB 5103 (change first digit: 7 → 5)
+      - "5103:5432"
+    volumes:
+      - postgres_notifications_data:/var/lib/postgresql/data
+      - ./scripts/init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - workix-network
+
+  api-auth:
+    build:
+      context: .
+      dockerfile: apps/api-auth/Dockerfile.dev
+    container_name: workix-api-auth
+    environment:
+      # API 7102 → DB 5102 (change first digit: 7 → 5)
+      DATABASE_URL: postgresql://postgres:postgres@postgres-auth:5432/workix_auth
+      DATABASE_URL_AUTH: postgresql://postgres:postgres@postgres-auth:5432/workix_auth
+      API_AUTH_PORT: 7102
+      API_HOST: 0.0.0.0
+      NODE_ENV: development
+      # Redis for message queue
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    ports:
+      - "7102:7102"
+    depends_on:
+      postgres-auth:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - workix-network
+    volumes:
+      - .:/app
+      - /app/node_modules
+    working_dir: /app
+    command: sh -c "cd apps/api-auth && npx prisma generate --schema=./prisma/schema.prisma && npx prisma db push --skip-generate && cd /app && npx nx build api-auth && node dist/apps/api-auth/main.js"
+
+  redis:
+    image: redis:7-alpine
+    container_name: workix-redis
+    ports:
+      # Redis 6379 → 5900
+      - "5900:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - workix-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api-notifications:
+    build:
+      context: .
+      dockerfile: apps/api-notifications/Dockerfile.dev
+    container_name: workix-api-notifications
+    environment:
+      # API 7103 → DB 5103 (change first digit: 7 → 5)
+      DATABASE_URL_NOTIFICATIONS: postgresql://postgres:postgres@postgres-notifications:5432/workix_notifications
+      API_NOTIFICATIONS_PORT: 7103
+      NODE_ENV: development
+      # Redis for message queue
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      # Email configuration
+      EMAIL_PROVIDER: sendgrid
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY:-}
+      EMAIL_FROM: noreply@workix.com
+      FRONTEND_URL: http://localhost:7300
+    depends_on:
+      postgres-notifications:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - workix-network
+    volumes:
+      - .:/app
+      - /app/node_modules
+    working_dir: /app
+    command: sh -c "cd /app && npx nx build api-notifications && node dist/apps/api-notifications/main.js"
+
+volumes:
+  postgres_monolith_data:
+  postgres_gateway_data:
+  postgres_auth_data:
+  postgres_notifications_data:
+  redis_data:
+
+networks:
+  workix-network:
+    driver: bridge

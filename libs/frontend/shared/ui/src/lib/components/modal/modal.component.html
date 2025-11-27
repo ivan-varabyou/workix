@@ -1,0 +1,31 @@
+<p-dialog
+  [visible]="visible()"
+  [modal]="modal()"
+  [closable]="closable()"
+  [draggable]="draggable()"
+  [resizable]="resizable()"
+  [header]="title()"
+  [style]="style()"
+  [styleClass]="styleClass()"
+  [width]="width()"
+  [height]="height()"
+  [position]="position()"
+  (onHide)="onHide()"
+>
+  @if (message()) {
+  <p>{{ message() }}</p>
+  }
+  <ng-content></ng-content>
+  @if (showFooter()) {
+  <ng-template pTemplate="footer">
+    <p-button
+      [label]="cancelLabel()"
+      [severity]="'secondary'"
+      [outlined]="true"
+      (onClick)="onCancel()"
+      styleClass="mr-2"
+    />
+    <p-button [label]="confirmLabel()" (onClick)="onConfirmClick()" />
+  </ng-template>
+  }
+</p-dialog>

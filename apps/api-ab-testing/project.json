@@ -1,0 +1,58 @@
+{
+  "name": "api-ab-testing",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/api-ab-testing/src",
+  "projectType": "application",
+  "tags": [
+    "type:app",
+    "scope:backend"
+  ],
+  "implicitDependencies": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/apps/api-ab-testing",
+        "main": "apps/api-ab-testing/src/main.ts",
+        "tsConfig": "apps/api-ab-testing/tsconfig.json",
+        "assets": [
+          "apps/api-ab-testing/src/assets"
+        ],
+        "configFile": "apps/api-ab-testing/vite.config.ts"
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "api-ab-testing:build",
+        "runBuildTargetDependencies": false,
+        "watch": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "api-ab-testing:build"
+        },
+        "production": {
+          "buildTarget": "api-ab-testing:build:production"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": [
+        "{workspaceRoot}/coverage/apps/api-ab-testing"
+      ],
+      "options": {
+        "passWithNoTests": true,
+        "configFile": "apps/api-ab-testing/vitest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

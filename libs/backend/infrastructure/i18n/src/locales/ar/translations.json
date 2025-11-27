@@ -1,0 +1,184 @@
+{
+  "common": {
+    "welcome": "مرحباً بك في Workix!",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "search": "بحث",
+    "filter": "تصفية",
+    "loading": "جاري التحميل...",
+    "success": "نجح",
+    "error": "خطأ",
+    "confirm": "تأكيد",
+    "close": "إغلاق",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "submit": "إرسال",
+    "reset": "إعادة تعيين",
+    "daily": "يومي",
+    "weekly": "أسبوعي",
+    "monthly": "شهري",
+    "user": "المستخدم"
+  },
+  "errors": {
+    "user_not_found": "المستخدم غير موجود",
+    "validation_failed": "فشل التحقق",
+    "unauthorized": "غير مصرح",
+    "forbidden": "ممنوع",
+    "not_found": "غير موجود",
+    "internal_error": "خطأ داخلي في الخادم",
+    "bad_request": "طلب غير صحيح",
+    "email_already_exists": "البريد الإلكتروني موجود بالفعل",
+    "invalid_credentials": "بيانات اعتماد غير صحيحة",
+    "token_expired": "انتهت صلاحية الرمز",
+    "token_invalid": "رمز غير صحيح",
+    "user_no_email": "المستخدم {{userId}} ليس لديه عنوان بريد إلكتروني"
+  },
+  "notifications": {
+    "welcome": "مرحباً {{userId}}!",
+    "pipeline_completed": "اكتمل المسار {{pipelineId}} بنجاح",
+    "pipeline_failed": "فشل المسار {{pipelineId}}",
+    "approval_requested": "تم طلب الموافقة على {{item}}",
+    "email_verification_sent": "تم إرسال بريد التحقق",
+    "password_reset_sent": "تم إرسال بريد إعادة تعيين كلمة المرور",
+    "user_created": "تم إنشاء المستخدم بنجاح",
+    "user_updated": "تم تحديث المستخدم بنجاح",
+    "user_deleted": "تم حذف المستخدم بنجاح"
+  },
+  "alerts": {
+    "pipeline_failed": "تنبيه: فشل المسار {{pipelineId}}",
+    "system_error": "حدث خطأ في النظام",
+    "quota_exceeded": "تم تجاوز الحصة",
+    "trial_expiring": "فترة التجربة تنتهي قريباً",
+    "title": "تنبيه: {{alertType}}",
+    "greeting": "مرحباً {{userName}}،",
+    "footer": "هذه رسالة تلقائية من Workix."
+  },
+  "email": {
+    "digest": {
+      "title": "تقرير {{period}} الملخص",
+      "greeting": "مرحباً {{userName}}،",
+      "summary": "ملخص {{period}} الخاص بك:",
+      "metrics": "المقاييس",
+      "events": "الأحداث",
+      "alerts": "التنبيهات",
+      "recent_events": "الأحداث الأخيرة",
+      "no_events": "لا توجد أحداث في هذه الفترة.",
+      "no_alerts": "لا توجد تنبيهات في هذه الفترة.",
+      "footer": "هذا ملخص تلقائي من Workix.",
+      "pipelines_executed": "تم تنفيذ المسارات",
+      "tokens_used": "الرموز المستخدمة",
+      "api_calls": "استدعاءات API"
+    }
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "register": "التسجيل",
+    "forgot_password": "نسيت كلمة المرور؟",
+    "reset_password": "إعادة تعيين كلمة المرور",
+    "email_verification": "التحقق من البريد الإلكتروني",
+    "two_factor": "المصادقة الثنائية",
+    "password_reset": {
+      "email_sent": "إذا كان هناك حساب بهذا البريد الإلكتروني، سيتم إرسال رابط إعادة تعيين كلمة المرور",
+      "too_many_requests": "طلبات كثيرة جداً لإعادة تعيين كلمة المرور. يرجى المحاولة لاحقاً.",
+      "success": "تم إعادة تعيين كلمة المرور بنجاح. يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.",
+      "token_expired": "انتهت صلاحية رمز إعادة تعيين كلمة المرور. يرجى طلب رمز جديد.",
+      "token_invalid": "رمز إعادة تعيين كلمة المرور غير صحيح.",
+      "token_used": "رمز إعادة التعيين غير موجود أو تم استخدامه بالفعل"
+    },
+    "email_verification": {
+      "already_verified": "البريد الإلكتروني مؤكد بالفعل",
+      "success": "تم التحقق من البريد الإلكتروني بنجاح.",
+      "token_expired": "انتهت صلاحية رمز التحقق من البريد الإلكتروني. يرجى طلب رمز جديد.",
+      "token_invalid": "رمز التحقق من البريد الإلكتروني غير صحيح.",
+      "token_used": "رمز التحقق من البريد الإلكتروني غير موجود أو تم استخدامه بالفعل",
+      "no_pending": "لا يوجد تحقق معلق لهذا البريد الإلكتروني",
+      "max_resends_exceeded": "تم تجاوز الحد الأقصى لمحاولات إعادة الإرسال. يرجى الاتصال بالدعم.",
+      "resend_cooldown": "الرجاء الانتظار {{seconds}} ثانية قبل إعادة إرسال بريد التحقق",
+      "resend_success": "تم إعادة إرسال بريد التحقق بنجاح ({{remaining}} محاولات متبقية)"
+    },
+    "account_locked": "الحساب مقفل. حاول مرة أخرى لاحقاً",
+    "password_validation": {
+      "min_length": "يجب أن تحتوي كلمة المرور على 12 حرفاً على الأقل",
+      "lowercase": "يجب أن تحتوي كلمة المرور على أحرف صغيرة",
+      "uppercase": "يجب أن تحتوي كلمة المرور على أحرف كبيرة",
+      "numbers": "يجب أن تحتوي كلمة المرور على أرقام",
+      "special": "يجب أن تحتوي كلمة المرور على أحرف خاصة (@$!%*?&)"
+    },
+    "oauth": {
+      "email_required": "البريد الإلكتروني مطلوب من مزود OAuth",
+      "cannot_unlink_no_password": "لا يمكن فك ربط الحساب الاجتماعي: يجب أن يكون لدى المستخدم كلمة مرور محددة أولاً"
+    },
+    "phone_otp": {
+      "too_many_requests": "طلبات OTP كثيرة جداً. يرجى المحاولة لاحقاً.",
+      "no_active_otp": "لم يتم العثور على OTP نشط لهذا الرقم",
+      "too_many_failed_attempts": "محاولات فاشلة كثيرة جداً. يرجى المحاولة لاحقاً.",
+      "expired": "انتهت صلاحية OTP. يرجى طلب رمز جديد.",
+      "email_required": "البريد الإلكتروني مطلوب للتسجيل باستخدام OTP عبر الهاتف",
+      "sent_success": "تم إرسال OTP بنجاح"
+    }
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "overview": "نظرة عامة",
+    "pipelines": "المسارات",
+    "executions": "التنفيذات",
+    "settings": "الإعدادات"
+  },
+  "slack": {
+    "integration_not_found": "لم يتم العثور على تكامل Slack",
+    "no_channel_specified": "لم يتم تحديد القناة",
+    "notification": "إشعار"
+  },
+  "rbac": {
+    "role_already_exists": "الدور موجود بالفعل",
+    "user_or_role_not_found": "المستخدم أو الدور غير موجود",
+    "permission_already_exists": "الصلاحية موجودة بالفعل",
+    "cannot_change_system_role_level": "لا يمكن تغيير مستوى دور النظام",
+    "cannot_delete_system_role": "لا يمكن حذف دور النظام"
+  },
+  "users": {
+    "avatar": {
+      "no_file_provided": "لم يتم توفير ملف",
+      "file_size_exceeded": "حجم الملف يتجاوز الحد الأقصى 5MB",
+      "invalid_file_type": "يُسمح فقط بصور JPEG و PNG و WebP",
+      "invalid_file_extension": "امتداد ملف غير صحيح"
+    },
+    "user_id_required": "معرف المستخدم مطلوب",
+    "user_id_and_avatar_required": "معرف المستخدم وعنوان URL للصورة الرمزية مطلوبان",
+    "profile_not_found": "ملف تعريف المستخدم غير موجود"
+  },
+  "pipelines": {
+    "not_found": "المسار غير موجود",
+    "step_not_found": "الخطوة غير موجودة",
+    "execution_not_found": "التنفيذ غير موجود",
+    "name_and_steps_required": "اسم المسار والخطوات مطلوبة",
+    "cannot_edit_published": "لا يمكن تعديل المسار المنشور",
+    "must_have_at_least_one_step": "يجب أن يحتوي المسار على خطوة واحدة على الأقل",
+    "no_access": "ليس لديك حق الوصول إلى هذا المسار",
+    "can_only_update_own": "يمكنك تحديث مساراتك فقط",
+    "can_only_delete_own": "يمكنك حذف مساراتك فقط",
+    "can_only_publish_own": "يمكنك نشر مساراتك فقط",
+    "can_only_manage_own": "يمكنك إدارة مساراتك فقط",
+    "only_templates_can_be_cloned": "يمكن استنساخ القوالب فقط"
+  },
+  "api_keys": {
+    "required": "مفتاح API مطلوب",
+    "invalid_format": "تنسيق مفتاح API غير صحيح",
+    "invalid_or_expired": "مفتاح API غير صحيح أو منتهي الصلاحية",
+    "rate_limit_exceeded": "تم تجاوز حد المعدل"
+  },
+  "service_discovery": {
+    "name_url_port_required": "اسم الخدمة وعنوان URL والمنفذ مطلوبة",
+    "not_found": "الخدمة غير موجودة",
+    "no_healthy_instances": "لم يتم العثور على حالات صحية لـ {{serviceName}}"
+  },
+  "service_auth": {
+    "invalid_service_key": "مفتاح خدمة غير صحيح"
+  }
+}

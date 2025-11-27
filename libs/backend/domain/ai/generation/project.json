@@ -1,0 +1,19 @@
+{
+  "name": "ai-generation",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/ai/generation/src",
+  "projectType": "library",
+  "tags": ["type:lib", "scope:ai"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{workspaceRoot}/coverage/libs/ai/generation"],
+      "options": {
+        "passWithNoTests": true
+      }
+    }
+  }
+}

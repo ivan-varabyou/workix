@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_AB_TESTING")
+}
+
+// ============================================
+// AB TESTING MODELS
+// ============================================
+
+model ABTest {
+  id            String    @id @default(uuid()) @db.Uuid
+  userId        String    @db.Uuid
+  name          String    @db.VarChar(255)
+  description   String?   @db.Text
+  type          String?   @db.VarChar(100)
+  status        String    @db.VarChar(50) // active, paused, ended
+  variants      Json      @default("[]")
+  config        Json?     @default("{}")
+  trafficSplit  Json?     @default("{}")
+  results       Json?     @default("{}")
+  metadata      Json?     @default("{}")
+  startDate     DateTime? @db.Timestamp
+  endDate       DateTime? @db.Timestamp
+  winnerVariant String?   @db.VarChar(100)
+  confidenceLevel Float?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  events ABTestEvent[]
+
+  @@index([userId], name: "idx_ab_test_user")
+  @@index([status], name: "idx_ab_test_status")
+  @@index([createdAt], name: "idx_ab_test_created")
+  @@map("ab_tests")
+}
+
+model ABTestEvent {
+  id        String    @id @default(uuid()) @db.Uuid
+  testId    String    @db.Uuid
+  variant   String    @db.VarChar(100)
+  eventType String    @db.VarChar(50) // view, conversion
+  metadata  Json      @default("{}")
+  createdAt DateTime  @default(now())
+
+  test ABTest @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  @@index([testId], name: "idx_ab_test_event_test")
+  @@index([variant], name: "idx_ab_test_event_variant")
+  @@index([eventType], name: "idx_ab_test_event_type")
+  @@index([createdAt], name: "idx_ab_test_event_created")
+  @@map("ab_test_events")
+}
+
+// Minimal User model for relations
+model User {
+  id String @id @default(uuid()) @db.Uuid
+
+  @@map("users")
+}

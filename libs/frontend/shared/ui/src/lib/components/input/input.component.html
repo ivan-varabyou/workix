@@ -1,0 +1,11 @@
+<input
+  pInputText
+  type="text"
+  [value]="displayValue()"
+  [placeholder]="placeholder()"
+  [disabled]="disabled()"
+  [readonly]="readonly()"
+  [styleClass]="styleClass()"
+  (input)="onInput($event)"
+  (blur)="onBlur()"
+/>

@@ -1,0 +1,33 @@
+<workix-modal
+  [visible]="visible()"
+  [title]="config().title"
+  [message]="config().message"
+  [width]="config().width || '400px'"
+  [height]="config().height || 'auto'"
+  [closable]="true"
+  [showFooter]="false"
+  (visibleChange)="onModalClose()"
+>
+  <div class="confirm-dialog-content">
+    <p class="confirm-message">{{ config().message }}</p>
+  </div>
+
+  <div class="confirm-dialog-actions">
+    @if (config().showCancel !== false) {
+    <workix-button
+      [label]="config().cancelLabel || 'Cancel'"
+      [variant]="config().cancelVariant || 'secondary'"
+      [outlined]="true"
+      [disabled]="isLoading()"
+      (onClick)="onCancel()"
+    />
+    }
+    <workix-button
+      [label]="config().confirmLabel || 'Confirm'"
+      [variant]="config().confirmVariant || 'danger'"
+      [loading]="isLoading()"
+      [disabled]="isLoading()"
+      (onClick)="onConfirm()"
+    />
+  </div>
+</workix-modal>

@@ -1,0 +1,60 @@
+<div class="pipeline-builder-container">
+  <workix-pipeline-builder
+    [config]="pipelineBuilderConfig()"
+    [isLoading]="isLoading()"
+    (onSave)="savePipeline()"
+    (onCancel)="goBack()"
+    (onAddStep)="addStep()"
+    (onStepClick)="editStep($event)"
+    (onStepSave)="saveStepConfig($event)"
+    (onStepDelete)="deleteStepConfig()"
+  >
+    <!-- Pipeline Details Form -->
+    <form [formGroup]="pipelineForm" class="pipeline-form">
+      <workix-input
+        label="Pipeline Name"
+        formControlName="name"
+        placeholder="Enter pipeline name"
+        [required]="true"
+      />
+      <workix-input
+        label="Description"
+        formControlName="description"
+        type="textarea"
+        rows="3"
+        placeholder="Enter description"
+      />
+    </form>
+
+    <!-- Steps List -->
+    @if (steps().length === 0) {
+    <p class="no-steps">No steps yet. Add one from the toolbar above.</p>
+    } @else {
+    <workix-list>
+      @for (step of steps(); track step.id; let i = $index) {
+      <workix-list-item>
+        <workix-icon [name]="getStepIcon(step.type)" [size]="'md'" />
+        <div class="step-info">
+          <div class="step-name">{{ step.name }}</div>
+          <div class="step-type">{{ step.type }}</div>
+        </div>
+        <workix-button variant="icon" icon="delete" (onClick)="deleteStep(i)" />
+      </workix-list-item>
+      }
+    </workix-list>
+    }
+
+    <!-- Step Editor -->
+    @if (selectedStep()) {
+    <workix-step-editor
+      [step]="selectedStep()!"
+      [config]="stepEditorConfig()"
+      (onSave)="saveStepConfig($event)"
+      (onDelete)="deleteStepConfig()"
+    />
+    }
+
+    <!-- Canvas -->
+    <workix-canvas [steps]="steps()" [config]="canvasConfig()" (onStepClick)="editStep($event)" />
+  </workix-pipeline-builder>
+</div>

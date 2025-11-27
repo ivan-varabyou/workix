@@ -1,0 +1,47 @@
+<div class="pipelines-container">
+  <div class="header">
+    <h2>My Pipelines</h2>
+    <workix-button
+      label="Create Pipeline"
+      icon="add"
+      variant="primary"
+      (onClick)="onCreatePipeline()"
+    />
+  </div>
+
+  @if (isLoading()) {
+  <div class="loading">
+    <workix-spinner [loading]="true" [size]="'lg'" />
+  </div>
+  } @else if (isEmpty()) {
+  <div class="empty-state">
+    <workix-icon name="dashboard" [size]="'lg'" />
+    <p>No pipelines yet. Create one to get started!</p>
+    <workix-button
+      label="Create First Pipeline"
+      icon="add"
+      variant="primary"
+      (onClick)="onCreatePipeline()"
+    />
+  </div>
+  } @else {
+  <workix-data-table
+    [data]="displayedPipelines()"
+    [config]="dataTableConfig()"
+    [isLoading]="isLoading()"
+    [totalItems]="pipelineCount()"
+    [currentPage]="currentPage()"
+    [pageSize]="currentPageSize()"
+    (onSearch)="searchTerm.set($event)"
+    (onPageChange)="onPageChange($event.page, $event.pageSize)"
+    (onSortChange)="onSortChange($event.sortKey, $event.sortDirection)"
+    (onActionClick)="onActionClick($event.action, $event.row)"
+  />
+
+  <div class="stats">
+    <p>Total: {{ pipelineCount() }}</p>
+    <p>Active: {{ activeCount() }}</p>
+    <p>Inactive: {{ inactiveCount() }}</p>
+  </div>
+  }
+</div>

@@ -1,0 +1,10 @@
+<div class="profile-container">
+  <workix-settings-page
+    [config]="settingsConfig()"
+    [isLoading]="isLoading()"
+    [isSaving]="isSaving()"
+    [errorMessage]="errorMessage()"
+    (save)="onSettingsSave($event)"
+    (cancel)="onSettingsCancel()"
+  />
+</div>

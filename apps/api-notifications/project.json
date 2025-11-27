@@ -1,0 +1,47 @@
+{
+  "name": "api-notifications",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/api-notifications/src",
+  "projectType": "application",
+  "tags": ["type:app", "scope:backend"],
+  "implicitDependencies": ["backend-domain-notifications"],
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/api-notifications",
+        "main": "apps/api-notifications/src/main.ts",
+        "tsConfig": "apps/api-notifications/tsconfig.json",
+        "assets": ["apps/api-notifications/src/assets"]
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "api-notifications:build",
+        "runBuildTargetDependencies": false,
+        "watch": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "api-notifications:build"
+        },
+        "production": {
+          "buildTarget": "api-notifications:build:production"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{workspaceRoot}/coverage/apps/api-notifications"],
+      "options": {
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

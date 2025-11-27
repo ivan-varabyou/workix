@@ -1,0 +1,25 @@
+<div class="pipeline-list-container">
+  <div class="list-header">
+    <h2>Pipelines</h2>
+    <workix-button
+      label="Create Pipeline"
+      variant="primary"
+      icon="add"
+      (onClick)="createNewPipeline()"
+    />
+  </div>
+
+  <workix-data-table
+    [data]="pipelines()"
+    [config]="dataTableConfig()"
+    [isLoading]="isLoading()"
+    [totalItems]="totalPipelines()"
+    [currentPage]="currentPage()"
+    [pageSize]="currentPageSize()"
+    [emptyMessage]="'No pipelines yet. Create your first one!'"
+    (onSearch)="onSearch($event)"
+    (onPageChange)="onPageChange($event.page, $event.pageSize)"
+    (onSortChange)="onSortChange($event.sortKey, $event.sortDirection)"
+    (onActionClick)="onActionClick($event.action, $event.row)"
+  />
+</div>

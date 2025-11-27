@@ -1,0 +1,217 @@
+#!/bin/bash
+
+# Advanced Cyrillic to English conversion for MD files
+
+cd /home/ivan/git/workix
+
+# Find and convert all MD files with remaining Cyrillic
+find . -name "*.md" -type f -exec grep -l '[а-яё]' {} \; 2>/dev/null | while read -r file; do
+    echo "Advanced converting: $file"
+
+    # Advanced translations for complex phrases and words
+    sed -i \
+        -e 's/уже настроен/already configured/g' \
+        -e 's/уже есть/already exists/g' \
+        -e 's/найдено в проекте/found in project/g' \
+        -e 's/настроены/configured/g' \
+        -e 's/использование/usage/g' \
+        -e 's/преимущества/advantages/g' \
+        -e 's/автоматически/automatically/g' \
+        -e 's/развертывание/deployment/g' \
+        -e 's/обновление/update/g' \
+        -e 's/обновления/updates/g' \
+        -e 's/мониторинг/monitoring/g' \
+        -e 's/проверка/check/g' \
+        -e 's/проверки/checks/g' \
+        -e 's/здоровье/health/g' \
+        -e 's/состояние/status/g' \
+        -e 's/готовность/readiness/g' \
+        -e 's/доступность/availability/g' \
+        -e 's/производительность/performance/g' \
+        -e 's/масштабирование/scaling/g' \
+        -e 's/балансировка/balancing/g' \
+        -e 's/нагрузка/load/g' \
+        -e 's/трафик/traffic/g' \
+        -e 's/запросы/requests/g' \
+        -e 's/ответы/responses/g' \
+        -e 's/ошибки/errors/g' \
+        -e 's/исключения/exceptions/g' \
+        -e 's/логирование/logging/g' \
+        -e 's/журналирование/logging/g' \
+        -e 's/отслеживание/tracking/g' \
+        -e 's/аналитика/analytics/g' \
+        -e 's/метрики/metrics/g' \
+        -e 's/статистика/statistics/g' \
+        -e 's/отчеты/reports/g' \
+        -e 's/отчет/report/g' \
+        -e 's/данные/data/g' \
+        -e 's/информация/information/g' \
+        -e 's/сведения/information/g' \
+        -e 's/детали/details/g' \
+        -e 's/подробности/details/g' \
+        -e 's/описание/description/g' \
+        -e 's/объяснение/explanation/g' \
+        -e 's/инструкция/instruction/g' \
+        -e 's/инструкции/instructions/g' \
+        -e 's/руководство/guide/g' \
+        -e 's/справочник/reference/g' \
+        -e 's/документ/document/g' \
+        -e 's/файл/file/g' \
+        -e 's/папка/folder/g' \
+        -e 's/директория/directory/g' \
+        -e 's/каталог/catalog/g' \
+        -e 's/путь/path/g' \
+        -e 's/адрес/address/g' \
+        -e 's/ссылка/link/g' \
+        -e 's/соединение/connection/g' \
+        -e 's/подключение/connection/g' \
+        -e 's/интеграция/integration/g' \
+        -e 's/взаимодействие/interaction/g' \
+        -e 's/коммуникация/communication/g' \
+        -e 's/сообщение/message/g' \
+        -e 's/уведомление/notification/g' \
+        -e 's/предупреждение/warning/g' \
+        -e 's/предупреждения/warnings/g' \
+        -e 's/ошибка/error/g' \
+        -e 's/проблема/problem/g' \
+        -e 's/решение/solution/g' \
+        -e 's/исправление/fix/g' \
+        -e 's/улучшение/improvement/g' \
+        -e 's/оптимизация/optimization/g' \
+        -e 's/рефакторинг/refactoring/g' \
+        -e 's/переработка/refactoring/g' \
+        -e 's/изменение/change/g' \
+        -e 's/модификация/modification/g' \
+        -e 's/редактирование/editing/g' \
+        -e 's/создание/creation/g' \
+        -e 's/генерация/generation/g' \
+        -e 's/построение/building/g' \
+        -e 's/сборка/build/g' \
+        -e 's/компиляция/compilation/g' \
+        -e 's/выполнение/execution/g' \
+        -e 's/запуск/launch/g' \
+        -e 's/старт/start/g' \
+        -e 's/остановка/stop/g' \
+        -e 's/завершение/completion/g' \
+        -e 's/финиш/finish/g' \
+        -e 's/конец/end/g' \
+        -e 's/начало/start/g' \
+        -e 's/инициализация/initialization/g' \
+        -e 's/подготовка/preparation/g' \
+        -e 's/настройка/setup/g' \
+        -e 's/конфигурирование/configuration/g' \
+        -e 's/установка/installation/g' \
+        -e 's/развертывание/deployment/g' \
+        -e 's/размещение/placement/g' \
+        -e 's/расположение/location/g' \
+        -e 's/местоположение/location/g' \
+        -e 's/позиция/position/g' \
+        -e 's/статус/status/g' \
+        -e 's/состояние/state/g' \
+        -e 's/режим/mode/g' \
+        -e 's/формат/format/g' \
+        -e 's/стиль/style/g' \
+        -e 's/шаблон/template/g' \
+        -e 's/образец/template/g' \
+        -e 's/пример/example/g' \
+        -e 's/образчик/sample/g' \
+        -e 's/демонстрация/demo/g' \
+        -e 's/показ/show/g' \
+        -e 's/отображение/display/g' \
+        -e 's/представление/view/g' \
+        -e 's/интерфейс/interface/g' \
+        -e 's/пользовательский интерфейс/user interface/g' \
+        -e 's/графический интерфейс/graphical interface/g' \
+        -e 's/командная строка/command line/g' \
+        -e 's/терминал/terminal/g' \
+        -e 's/консоль/console/g' \
+        -e 's/оболочка/shell/g' \
+        -e 's/скрипт/script/g' \
+        -e 's/программа/program/g' \
+        -e 's/приложение/application/g' \
+        -e 's/утилита/utility/g' \
+        -e 's/инструмент/tool/g' \
+        -e 's/средство/tool/g' \
+        -e 's/механизм/mechanism/g' \
+        -e 's/процедура/procedure/g' \
+        -e 's/алгоритм/algorithm/g' \
+        -e 's/метод/method/g' \
+        -e 's/способ/method/g' \
+        -e 's/подход/approach/g' \
+        -e 's/стратегия/strategy/g' \
+        -e 's/тактика/tactic/g' \
+        -e 's/план/plan/g' \
+        -e 's/схема/scheme/g' \
+        -e 's/диаграмма/diagram/g' \
+        -e 's/чертеж/blueprint/g' \
+        -e 's/модель/model/g' \
+        -e 's/макет/layout/g' \
+        -e 's/дизайн/design/g' \
+        -e 's/архитектура/architecture/g' \
+        -e 's/структура/structure/g' \
+        -e 's/организация/organization/g' \
+        -e 's/компоновка/layout/g' \
+        -e 's/расположение/arrangement/g' \
+        -e 's/порядок/order/g' \
+        -e 's/последовательность/sequence/g' \
+        -e 's/очередность/queue/g' \
+        -e 's/приоритет/priority/g' \
+        -e 's/важность/importance/g' \
+        -e 's/значимость/significance/g' \
+        -e 's/ценность/value/g' \
+        -e 's/стоимость/cost/g' \
+        -e 's/цена/price/g' \
+        -e 's/затраты/costs/g' \
+        -e 's/расходы/expenses/g' \
+        -e 's/бюджет/budget/g' \
+        -e 's/ресурсы/resources/g' \
+        -e 's/материалы/materials/g' \
+        -e 's/компоненты/components/g' \
+        -e 's/элементы/elements/g' \
+        -e 's/части/parts/g' \
+        -e 's/секции/sections/g' \
+        -e 's/разделы/sections/g' \
+        -e 's/блоки/blocks/g' \
+        -e 's/модули/modules/g' \
+        -e 's/пакеты/packages/g' \
+        -e 's/библиотеки/libraries/g' \
+        -e 's/фреймворки/frameworks/g' \
+        -e 's/платформы/platforms/g' \
+        -e 's/системы/systems/g' \
+        -e 's/сервисы/services/g' \
+        -e 's/службы/services/g' \
+        -e 's/серверы/servers/g' \
+        -e 's/клиенты/clients/g' \
+        -e 's/пользователи/users/g' \
+        -e 's/администраторы/administrators/g' \
+        -e 's/разработчики/developers/g' \
+        -e 's/программисты/programmers/g' \
+        -e 's/инженеры/engineers/g' \
+        -e 's/специалисты/specialists/g' \
+        -e 's/эксперты/experts/g' \
+        -e 's/команда/team/g' \
+        -e 's/группа/group/g' \
+        -e 's/отдел/department/g' \
+        -e 's/подразделение/division/g' \
+        -e 's/организация/organization/g' \
+        -e 's/компания/company/g' \
+        -e 's/предприятие/enterprise/g' \
+        -e 's/бизнес/business/g' \
+        -e 's/коммерция/commerce/g' \
+        -e 's/торговля/trade/g' \
+        -e 's/продажи/sales/g' \
+        -e 's/маркетинг/marketing/g' \
+        -e 's/реклама/advertising/g' \
+        -e 's/продвижение/promotion/g' \
+        -e 's/брендинг/branding/g' \
+        -e 's/клиентов/clients/g' \
+        -e 's/заказчиков/customers/g' \
+        -e 's/покупателей/buyers/g' \
+        -e 's/потребителей/consumers/g' \
+        -e 's/пользователей/users/g' \
+        "$file"
+
+    echo "Advanced converted: $file"
+done
+
+echo "Advanced conversion completed!"

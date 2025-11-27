@@ -1,0 +1,20 @@
+{
+  "name": "batch-processing",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/batch-processing/src",
+  "prefix": "workix",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/batch-processing",
+        "main": "libs/batch-processing/src/index.ts",
+        "tsConfig": "libs/batch-processing/tsconfig.lib.json",
+        "assets": ["libs/batch-processing/*.md"]
+      }
+    }
+  },
+  "tags": ["type:lib", "scope:utilities"]
+}

@@ -1,0 +1,104 @@
+<div class="settings-page-container">
+  <div class="settings-header">
+    <h2>{{ config().title }}</h2>
+    @if (config().showSaveButton !== false) {
+    <div class="header-actions">
+      @if (config().showCancelButton !== false) {
+      <workix-button
+        [label]="config().cancelLabel || 'Cancel'"
+        [variant]="'secondary'"
+        [outlined]="true"
+        [disabled]="isSaving()"
+        (onClick)="onCancel()"
+      />
+      }
+      <workix-button
+        [label]="config().saveLabel || 'Save'"
+        [variant]="'primary'"
+        [loading]="isSaving()"
+        [disabled]="isSaving()"
+        (onClick)="onSave()"
+      />
+    </div>
+    }
+  </div>
+
+  @if (isLoading()) {
+  <div class="loading">
+    <workix-spinner [loading]="true" [size]="'lg'" />
+  </div>
+  } @if (errorMessage()) {
+  <div class="error-message">
+    {{ errorMessage() }}
+  </div>
+  } @if (!isLoading() && config()) {
+  <workix-tabs [activeIndex]="activeTab()" (activeIndexChange)="onTabChange($event)">
+    @for (tab of config().tabs; track tab.label; let i = $index) {
+    <p-tabPanel [header]="tab.label">
+      <workix-card [styleClass]="'settings-tab-card'">
+        @if (tab.content === 'form' && tab.fields && tab.fields.length > 0) { @if
+        (getForm(tab.label)) {
+        <form [formGroup]="getForm(tab.label)!" class="settings-form">
+          @for (field of tab.fields; track field.name) { @if (field.type === 'select') {
+          <workix-form-field
+            [label]="field.label"
+            [error]="getFieldError(tab.label, field.name)"
+            [required]="field.required"
+            [hint]="field.hint"
+            [styleClass]="'full-width'"
+          >
+            <workix-select
+              [formControlName]="field.name"
+              [options]="field.options || []"
+              [placeholder]="field.placeholder"
+              [required]="field.required"
+            />
+          </workix-form-field>
+          } @else if (field.type === 'checkbox' || field.type === 'toggle') {
+          <workix-checkbox
+            [formControlName]="field.name"
+            [label]="field.label"
+            [required]="field.required"
+          />
+          } @else if (field.type === 'textarea') {
+          <workix-form-field
+            [label]="field.label"
+            [error]="getFieldError(tab.label, field.name)"
+            [required]="field.required"
+            [hint]="field.hint"
+            [styleClass]="'full-width'"
+          >
+            <workix-input
+              [formControlName]="field.name"
+              [type]="'text'"
+              [placeholder]="field.placeholder"
+              [required]="field.required"
+            />
+          </workix-form-field>
+          } @else {
+          <workix-form-field
+            [label]="field.label"
+            [error]="getFieldError(tab.label, field.name)"
+            [required]="field.required"
+            [hint]="field.hint"
+            [styleClass]="'full-width'"
+          >
+            <workix-input
+              [formControlName]="field.name"
+              [type]="field.type"
+              [placeholder]="field.placeholder"
+              [required]="field.required"
+            />
+          </workix-form-field>
+          } }
+        </form>
+        } } @else if (tab.content === 'custom' && tab.customContent) {
+        <!-- Custom content will be provided via ng-content or template -->
+        <ng-content></ng-content>
+        }
+      </workix-card>
+    </p-tabPanel>
+    }
+  </workix-tabs>
+  }
+</div>

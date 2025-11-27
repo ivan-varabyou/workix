@@ -1,0 +1,20 @@
+{
+  "name": "api-keys",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api-keys/src",
+  "prefix": "workix",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/api-keys",
+        "main": "libs/api-keys/src/index.ts",
+        "tsConfig": "libs/api-keys/tsconfig.lib.json",
+        "assets": ["libs/api-keys/*.md"]
+      }
+    }
+  },
+  "tags": ["type:lib", "scope:infrastructure"]
+}

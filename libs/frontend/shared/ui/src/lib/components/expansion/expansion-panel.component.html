@@ -1,0 +1,12 @@
+<div [class]="panelClass()" [class.expanded]="expanded()" [class.disabled]="disabled()">
+  <div [class]="headerClass()" (click)="toggle()">
+    <ng-content select="workix-expansion-panel-header"></ng-content>
+    <span [class]="iconClass()">{{ expanded() ? '▼' : '▶' }}</span>
+  </div>
+  @if (expanded()) {
+  <div [class]="contentClass()">
+    <ng-content select="workix-expansion-panel-content"></ng-content>
+  </div>
+  }
+</div>
+}

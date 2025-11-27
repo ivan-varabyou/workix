@@ -1,0 +1,22 @@
+{
+  "extends": [
+    "../tsconfig.spec.base.json",
+    "./tsconfig.json",
+    "../../tsconfig.spec.base.json"
+  ],
+  "compilerOptions": {
+    "outDir": "../../../../dist/out-tsc",
+    "composite": true,
+    "declaration": true,
+    "types": [
+      "jest",
+      "node"
+    ],
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+  },
+  "include": ["src/**/*.spec.ts", "src/**/*.test.ts", "src/**/*.stories.ts"],
+  "exclude": []
+}

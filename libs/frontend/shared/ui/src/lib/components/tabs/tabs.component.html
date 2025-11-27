@@ -1,0 +1,8 @@
+<p-tabView
+  [activeIndex]="activeIndex()"
+  [scrollable]="scrollable()"
+  [styleClass]="styleClass()"
+  (onChange)="onTabChange($event)"
+>
+  <ng-content></ng-content>
+</p-tabView>

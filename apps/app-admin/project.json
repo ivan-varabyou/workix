@@ -1,0 +1,50 @@
+{
+  "name": "app-admin",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/app-admin/src",
+  "prefix": "app",
+  "tags": ["type:app", "scope:frontend"],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:build",
+      "options": {
+        "outputPath": "dist/apps/app-admin",
+        "index": "apps/app-admin/src/index.html",
+        "main": "apps/app-admin/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/app-admin/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": ["apps/app-admin/src/favicon.ico", "apps/app-admin/src/assets"],
+        "styles": ["apps/app-admin/src/styles.scss"],
+        "scripts": []
+      }
+    },
+    "serve": {
+      "executor": "@nx/angular:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "app-admin:build:production"
+        },
+        "development": {
+          "buildTarget": "app-admin:build:development"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 7300
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/app-admin"],
+      "options": {
+        "jestConfig": "apps/app-admin/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

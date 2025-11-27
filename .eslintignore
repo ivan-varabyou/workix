@@ -1,0 +1,14 @@
+node_modules
+dist
+build
+coverage
+*.min.js
+*.min.css
+.cache
+.next
+.nuxt
+.vscode
+.idea
+*.log
+.DS_Store
+

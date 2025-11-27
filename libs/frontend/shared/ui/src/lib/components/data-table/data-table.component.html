@@ -1,0 +1,84 @@
+<div class="workix-data-table">
+  <div class="table-header">
+    <h2>{{ config().title || 'Data Table' }}</h2>
+    <div class="header-actions">
+      @if (config().showSearch !== false) {
+      <workix-input
+        [placeholder]="config().searchPlaceholder || 'Search...'"
+        [value]="searchTerm()"
+        (valueChange)="onSearch($event)"
+        class="search-input"
+      ></workix-input>
+      }
+      <ng-content select="[header-actions]"></ng-content>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+  <div class="loading">
+    <workix-spinner></workix-spinner>
+  </div>
+  } @else if (data().length === 0) {
+  <div class="empty-state">
+    <workix-icon name="inbox" size="lg"></workix-icon>
+    <p>No data available</p>
+  </div>
+  } @else {
+  <table class="data-table">
+    <thead>
+      <tr>
+        @for (column of config().columns; track column.key) {
+        <th>
+          @if (column.sortable !== false) {
+          <button type="button" (click)="onSort(column.key)" class="sort-button">
+            {{ column.label }}
+            @if (currentSort()?.column === column.key) {
+            <workix-icon
+              [name]="currentSort()!.direction === 'asc' ? 'arrow_upward' : 'arrow_downward'"
+            ></workix-icon>
+            }
+          </button>
+          } @else {
+          {{ column.label }}
+          }
+        </th>
+        } @if (config().actions && config().actions.length > 0) {
+        <th>Actions</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of displayedData(); track row.id || $index) {
+      <tr>
+        @for (column of config().columns; track column.key) {
+        <td>
+          {{ formatCellValue(column, row[column.key], row) }}
+        </td>
+        } @if (config().actions && config().actions.length > 0) {
+        <td class="actions-cell">
+          @for (action of config().actions; track action.label) {
+          <workix-button
+            variant="icon"
+            [color]="action.color || 'primary'"
+            (click)="onActionClick(action, row)"
+          >
+            <workix-icon [name]="action.icon"></workix-icon>
+          </workix-button>
+          }
+        </td>
+        }
+      </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (config().showPagination !== false) {
+  <workix-paginator
+    [length]="totalItems()"
+    [pageSize]="currentPageSize()"
+    [pageIndex]="currentPage()"
+    [pageSizeOptions]="config().pageSizeOptions || [5, 10, 25, 100]"
+    (page)="onPageChange($event)"
+  ></workix-paginator>
+  } }
+</div>

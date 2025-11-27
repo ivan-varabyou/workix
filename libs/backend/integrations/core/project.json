@@ -1,0 +1,19 @@
+{
+  "name": "integrations-core",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/integrations/core/src",
+  "projectType": "library",
+  "tags": ["type:lib", "scope:integrations"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{workspaceRoot}/coverage/libs/integrations/core"],
+      "options": {
+        "passWithNoTests": true
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_WORKFLOWS")
+}
+
+// ============================================
+// WORKFLOW MODELS
+// ============================================
+
+model Workflow {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @db.Uuid
+  name        String    @db.VarChar(255)
+  description String    @db.Text
+  steps       Json      @default("[]")
+  triggers    String[]  @default([])
+  enabled     Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  executions WorkflowExecution[]
+
+  @@index([userId], name: "idx_workflow_user")
+  @@index([enabled], name: "idx_workflow_enabled")
+  @@map("workflows")
+}
+
+model WorkflowExecution {
+  id          String    @id @default(uuid()) @db.Uuid
+  workflowId  String    @db.Uuid
+  status      String    @db.VarChar(20) // pending, running, completed, failed
+  startedAt   DateTime  @default(now())
+  completedAt DateTime? @db.Timestamp
+  result      Json      @default("{}")
+  error       String?   @db.Text
+
+  workflow Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@index([workflowId], name: "idx_workflow_execution_workflow")
+  @@index([status], name: "idx_workflow_execution_status")
+  @@index([startedAt], name: "idx_workflow_execution_started")
+  @@map("workflow_executions")
+}
+
+// Minimal User model for relations
+model User {
+  id String @id @default(uuid()) @db.Uuid
+
+  @@map("users")
+}

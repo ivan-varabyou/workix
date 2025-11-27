@@ -1,0 +1,274 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": [
+      "es2020",
+      "dom"
+    ],
+    "types": [],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "exactOptionalPropertyTypes": true,
+    "paths": {
+      "@workix/backend/entities/infrastructure/api-key": [
+        "libs/backend/entities/infrastructure/api-key/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/subscription": [
+        "libs/backend/entities/domain/subscription/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/trial": [
+        "libs/backend/entities/domain/trial/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/ab-test": [
+        "libs/backend/entities/domain/ab-test/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/worker": [
+        "libs/backend/entities/domain/worker/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/role": [
+        "libs/backend/entities/domain/role/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/pipeline": [
+        "libs/backend/entities/domain/pipeline/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/admin": [
+        "libs/backend/entities/domain/admin/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/user": [
+        "libs/backend/entities/domain/user/src/index.ts"
+      ],
+      "@workix/shared": [
+        "libs/shared/src/index.ts"
+      ],
+      "@workix/shared/frontend/core": [
+        "libs/shared/frontend/core/src/index.ts"
+      ],
+      "@workix/shared/frontend/ui": [
+        "libs/shared/frontend/ui/src/index.ts"
+      ],
+      "@workix/backend/shared/core": [
+        "libs/backend/shared/core/src/index.ts"
+      ],
+      "@workix/backend/domain/auth": [
+        "libs/backend/domain/auth/src/index.ts"
+      ],
+      "@workix/backend/domain/admin": [
+        "libs/backend/domain/admin/src/index.ts"
+      ],
+      "@workix/backend/domain/notifications": [
+        "libs/backend/domain/notifications/src/index.ts"
+      ],
+      "@workix/backend/domain/users": [
+        "libs/backend/domain/users/src/index.ts"
+      ],
+      "@workix/backend/domain/pipelines": [
+        "libs/backend/domain/pipelines/src/index.ts"
+      ],
+      "@workix/backend/domain/rbac": [
+        "libs/backend/domain/rbac/src/index.ts"
+      ],
+      "@workix/backend/domain/webhooks": [
+        "libs/backend/domain/webhooks/src/index.ts"
+      ],
+      "@workix/backend/domain/workflows": [
+        "libs/backend/domain/workflows/src/index.ts"
+      ],
+      "@workix/backend/domain/workers": [
+        "libs/backend/domain/workers/src/index.ts"
+      ],
+      "@workix/backend/infrastructure/database": [
+        "libs/backend/infrastructure/database/src/index.ts"
+      ],
+      "@workix/backend/infrastructure/prisma": [
+        "libs/backend/infrastructure/prisma/src/index.ts"
+      ],
+      "@workix/backend/infrastructure/message-broker": [
+        "libs/backend/infrastructure/message-broker/src/index.ts"
+      ],
+      "@workix/backend/infrastructure/i18n": [
+        "libs/backend/infrastructure/i18n/src/index.ts"
+      ],
+      "@workix/backend/infrastructure/notifications": [
+        "libs/backend/infrastructure/notifications/src/index.ts"
+      ],
+      "@workix/backend/infrastructure/api-keys": [
+        "libs/backend/infrastructure/api-keys/src/index.ts"
+      ],
+      "@workix/backend/infrastructure/testing": [
+        "libs/backend/infrastructure/testing/src/index.ts"
+      ],
+      "@workix/infrastructure/service-discovery": [
+        "libs/infrastructure/service-discovery/src/index.ts"
+      ],
+      "@workix/backend/infrastructure/performance": [
+        "libs/backend/infrastructure/performance/src/index.ts"
+      ],
+      "@workix/integrations/core": [
+        "libs/integrations/core/src/index.ts"
+      ],
+      "@workix/integrations/cloud/aws": [
+        "libs/integrations/cloud/aws/src/index.ts"
+      ],
+      "@workix/integrations/cloud/azure": [
+        "libs/integrations/cloud/azure/src/index.ts"
+      ],
+      "@workix/integrations/cloud/gcp": [
+        "libs/integrations/cloud/gcp/src/index.ts"
+      ],
+      "@workix/integrations/code/github": [
+        "libs/integrations/code/github/src/index.ts"
+      ],
+      "@workix/integrations/code/gitlab": [
+        "libs/integrations/code/gitlab/src/index.ts"
+      ],
+      "@workix/integrations/communication/slack": [
+        "libs/integrations/communication/slack/src/index.ts"
+      ],
+      "@workix/integrations/communication/telegram": [
+        "libs/integrations/communication/telegram/src/index.ts"
+      ],
+      "@workix/integrations/project-management/jira": [
+        "libs/integrations/project-management/jira/src/index.ts"
+      ],
+      "@workix/integrations/project-management/salesforce": [
+        "libs/integrations/project-management/salesforce/src/index.ts"
+      ],
+      "@workix/integrations/e-commerce/marketplaces/amazon": [
+        "libs/integrations/e-commerce/marketplaces/amazon/src/index.ts"
+      ],
+      "@workix/integrations/e-commerce/marketplaces/ebay": [
+        "libs/integrations/e-commerce/marketplaces/ebay/src/index.ts"
+      ],
+      "@workix/integrations/e-commerce/marketplaces/ozon": [
+        "libs/integrations/e-commerce/marketplaces/ozon/src/index.ts"
+      ],
+      "@workix/integrations/e-commerce/marketplaces/wildberries": [
+        "libs/integrations/e-commerce/marketplaces/wildberries/src/index.ts"
+      ],
+      "@workix/integrations/e-commerce/social-commerce/instagram": [
+        "libs/integrations/e-commerce/social-commerce/instagram/src/index.ts"
+      ],
+      "@workix/integrations/e-commerce/social-commerce/tiktok": [
+        "libs/integrations/e-commerce/social-commerce/tiktok/src/index.ts"
+      ],
+      "@workix/integrations/e-commerce/video-commerce/youtube": [
+        "libs/integrations/e-commerce/video-commerce/youtube/src/index.ts"
+      ],
+      "@workix/integrations/e-commerce/shared/analytics": [
+        "libs/integrations/e-commerce/shared/analytics/src/index.ts"
+      ],
+      "@workix/backend/domain/ai/ai-core": [
+        "libs/backend/domain/ai/ai-core/src/index.ts"
+      ],
+      "@workix/backend/domain/ai/generation": [
+        "libs/backend/domain/ai/generation/src/index.ts"
+      ],
+      "@workix/backend/domain/ai/ml-integration": [
+        "libs/backend/domain/ai/ml-integration/src/index.ts"
+      ],
+      "@workix/backend/shared/utilities/ab-testing": [
+        "libs/backend/shared/utilities/ab-testing/src/index.ts"
+      ],
+      "@workix/backend/shared/utilities/billing": [
+        "libs/backend/shared/utilities/billing/src/index.ts"
+      ],
+      "@workix/backend/shared/utilities/batch-processing": [
+        "libs/backend/shared/utilities/batch-processing/src/index.ts"
+      ],
+      "@workix/backend/shared/utilities/custom-scripts": [
+        "libs/backend/shared/utilities/custom-scripts/src/index.ts"
+      ],
+      "@workix/backend/shared/utilities/data-validation": [
+        "libs/backend/shared/utilities/data-validation/src/index.ts"
+      ],
+      "@workix/backend/shared/utilities/file-storage": [
+        "libs/backend/shared/utilities/file-storage/src/index.ts"
+      ],
+      "@workix/backend/shared/utilities/resilience": [
+        "libs/backend/shared/utilities/resilience/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/pipelines/execution": [
+        "libs/backend/entities/domain/pipelines/execution/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/pipelines/step": [
+        "libs/backend/entities/domain/pipelines/step/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/rbac/permission": [
+        "libs/backend/entities/domain/rbac/permission/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/rbac/user-role": [
+        "libs/backend/entities/domain/rbac/user-role/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/auth/email-verification": [
+        "libs/backend/entities/domain/auth/email-verification/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/auth/phone-otp": [
+        "libs/backend/entities/domain/auth/phone-otp/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/auth/social-account": [
+        "libs/backend/entities/domain/auth/social-account/src/index.ts"
+      ],
+      "@workix/backend/entities/infrastructure/integrations/provider": [
+        "libs/backend/entities/infrastructure/integrations/provider/src/index.ts"
+      ],
+      "@workix/backend/entities/infrastructure/integrations/event": [
+        "libs/backend/entities/infrastructure/integrations/event/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/ai/execution": [
+        "libs/backend/entities/domain/ai/execution/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/ai/model": [
+        "libs/backend/entities/domain/ai/model/src/index.ts"
+      ],
+      "@workix/backend/entities/domain/ai/provider": [
+        "libs/backend/entities/domain/ai/provider/src/index.ts"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "tmp",
+    "dist",
+    "apps/mcp-server",
+    "jest.config.ts",
+    "libs/infrastructure/database",
+    "libs/infrastructure/message-broker",
+    "libs/shared/frontend/ui/jest.config.ts",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/*.e2e-spec.ts",
+    "**/*.e2e-test.ts",
+    "**/*.stories.ts",
+    "**/*.stories.tsx",
+    "**/*.dev.ts",
+    "**/*.dev.tsx",
+    "**/vitest.config.*",
+    "**/jest.config.*",
+    "**/.storybook/**",
+    "**/scripts/**",
+    "**/dev/**"
+  ]
+}

@@ -1,0 +1,119 @@
+<div class="worker-detail-container">
+  @if (isLoading()) {
+  <div class="loading">
+    <workix-spinner [loading]="true" [size]="'lg'" />
+  </div>
+  } @else if (worker()) {
+  <workix-card>
+    <div class="header-content">
+      <div class="worker-info">
+        <workix-icon [name]="getWorkerIcon(worker()!.type)" [size]="'lg'" class="worker-icon" />
+        <div>
+          <h2>{{ worker()!.name }}</h2>
+          <p class="worker-type">{{ worker()!.type }}</p>
+        </div>
+      </div>
+      <span class="spacer"></span>
+      <div class="header-actions">
+        <workix-button label="Back" icon="arrow_back" variant="secondary" (onClick)="goBack()" />
+        @if (worker()!.status === 'ACTIVE' || worker()!.status === 'RUNNING') {
+        <workix-button label="Pause" icon="pause" variant="warn" (onClick)="pauseWorker()" />
+        } @else if (worker()!.status === 'PAUSED') {
+        <workix-button
+          label="Resume"
+          icon="play_arrow"
+          variant="primary"
+          (onClick)="resumeWorker()"
+        />
+        }
+        <workix-button
+          label="Assign Task"
+          icon="assignment"
+          variant="primary"
+          (onClick)="assignTask()"
+        />
+      </div>
+    </div>
+
+    <workix-tabs [activeIndex]="0">
+      <p-tabPanel header="Overview">
+        <div class="overview-content">
+          <div class="status-section">
+            <h3>Status</h3>
+            <workix-chip [label]="worker()!.status" [variant]="getStatusClass(worker()!.status)" />
+          </div>
+
+          @if (worker()!.description) {
+          <div class="description-section">
+            <h3>Description</h3>
+            <p>{{ worker()!.description }}</p>
+          </div>
+          } @if (worker()!.metrics) {
+          <div class="metrics-section">
+            <h3>Performance Metrics</h3>
+            <div class="metrics-grid">
+              <workix-card>
+                <div class="metric-value">
+                  {{ worker()!.metrics!.tasksCompleted }}
+                </div>
+                <div class="metric-label">Tasks Completed</div>
+              </workix-card>
+              <workix-card>
+                <div class="metric-value">
+                  {{ worker()!.metrics!.tasksFailed }}
+                </div>
+                <div class="metric-label">Tasks Failed</div>
+              </workix-card>
+              <workix-card>
+                <div class="metric-value">
+                  {{ (worker()!.metrics!.successRate * 100).toFixed(1) }}%
+                </div>
+                <div class="metric-label">Success Rate</div>
+              </workix-card>
+              <workix-card>
+                <div class="metric-value">{{ worker()!.metrics!.avgExecutionTime }}ms</div>
+                <div class="metric-label">Avg Execution Time</div>
+              </workix-card>
+              <workix-card>
+                <div class="metric-value">${{ formatCost(worker()?.metrics?.totalCost) }}</div>
+                <div class="metric-label">Total Cost</div>
+              </workix-card>
+            </div>
+          </div>
+          }
+
+          <div class="config-section">
+            <h3>Configuration</h3>
+            <pre class="config-json">{{ formatConfig(worker()!.config) }}</pre>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <p-tabPanel header="Tasks">
+        <div class="tasks-content">
+          @if (tasks().length === 0) {
+          <div class="empty-state">
+            <workix-icon name="assignment" [size]="'lg'" />
+            <p>No tasks assigned yet</p>
+            <workix-button
+              label="Assign First Task"
+              icon="add"
+              variant="primary"
+              (onClick)="assignTask()"
+            />
+          </div>
+          } @else {
+          <workix-data-table [data]="tasks()" [config]="tasksTableConfig()" [isLoading]="false" />
+          }
+        </div>
+      </p-tabPanel>
+
+      <p-tabPanel header="History">
+        <div class="history-content">
+          <p>Task execution history and logs will be displayed here</p>
+        </div>
+      </p-tabPanel>
+    </workix-tabs>
+  </workix-card>
+  }
+</div>

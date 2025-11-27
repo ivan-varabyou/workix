@@ -1,0 +1,14 @@
+<div [class]="datepickerClass()">
+  <label [for]="inputId()">{{ label() }}</label>
+  <input
+    type="date"
+    [id]="inputId()"
+    [value]="value() ? formatDate(value()) : ''"
+    [placeholder]="placeholder()"
+    [disabled]="disabled()"
+    [min]="min() ? formatDate(min()) : undefined"
+    [max]="max() ? formatDate(max()) : undefined"
+    (change)="handleDateChange($event)"
+  />
+</div>
+}

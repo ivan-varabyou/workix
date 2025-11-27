@@ -1,0 +1,22 @@
+{
+  "name": "backend-domain-admin",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/admin/src",
+  "projectType": "library",
+  "tags": ["type:lib", "scope:domain"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{workspaceRoot}/coverage/libs/domain/admin"],
+      "options": {
+        "passWithNoTests": true,
+        "configFile": "libs/domain/admin/vitest.config.ts"
+      }
+    }
+  }
+}
+
+

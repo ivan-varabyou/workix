@@ -1,0 +1,71 @@
+{
+  "mcpServers": {
+    "workix": {
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/apps/mcp-server/dist/main.js"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    "ollama": {
+      "command": "ollama",
+      "args": [
+        "serve"
+      ]
+    },
+    "nx": {
+      "command": "npx",
+      "args": [
+        "nx"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    "typescript": {
+      "command": "npx",
+      "args": [
+        "tsc",
+        "--noEmit",
+        "--watch"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    "eslint": {
+      "command": "npx",
+      "args": [
+        "eslint",
+        "--ext",
+        ".ts,.js,.tsx,.jsx",
+        "--format",
+        "json",
+        "--cache"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    }
+  },
+  "models": {
+    "llama3.1:8b-instruct-q4_K_M": {
+      "provider": "ollama",
+      "baseUrl": "http://localhost:11434/v1",
+      "apiKey": "ollama",
+      "model": "llama3.1:8b-instruct-q4_K_M",
+      "temperature": 0.7,
+      "maxTokens": 4096
+    },
+    "mistral:7b-instruct-q4_K_M": {
+      "provider": "ollama",
+      "baseUrl": "http://localhost:11434/v1",
+      "apiKey": "ollama",
+      "model": "mistral:7b-instruct-q4_K_M",
+      "temperature": 0.7,
+      "maxTokens": 4096
+    }
+  }
+}

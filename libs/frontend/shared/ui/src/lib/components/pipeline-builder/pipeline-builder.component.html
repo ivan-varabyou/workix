@@ -1,0 +1,136 @@
+<div class="pipeline-builder-container">
+  @if (config().showToolbar !== false) {
+  <workix-toolbar [styleClass]="'builder-toolbar'">
+    <h2>{{ config().title || 'Pipeline Builder' }}</h2>
+    <div class="toolbar-actions">
+      <workix-button
+        [label]="'Close'"
+        [variant]="'secondary'"
+        [icon]="'close'"
+        [text]="true"
+        (onClick)="onCancel()"
+      />
+      <workix-button
+        [label]="'Save'"
+        [variant]="'primary'"
+        [icon]="'save'"
+        [loading]="isSaving()"
+        [disabled]="!isValid() || isSaving()"
+        (onClick)="onSave()"
+      />
+    </div>
+  </workix-toolbar>
+  } @if (isLoading()) {
+  <div class="loading">
+    <workix-spinner [loading]="true" [size]="'lg'" />
+  </div>
+  } @if (errorMessage()) {
+  <div class="error-message">
+    {{ errorMessage() }}
+  </div>
+  } @if (!isLoading() && pipelineForm()) {
+  <div class="builder-content">
+    <!-- Left Panel - Pipeline Details -->
+    @if (config().showStepsList !== false) {
+    <div class="left-panel">
+      <workix-card [styleClass]="'details-card'">
+        <h3>Pipeline Details</h3>
+        <form [formGroup]="pipelineForm()!" class="pipeline-form">
+          <workix-form-field
+            [label]="'Pipeline Name'"
+            [required]="true"
+            [styleClass]="'full-width'"
+          >
+            <workix-input
+              formControlName="name"
+              [type]="'text'"
+              [placeholder]="'Enter pipeline name'"
+              [required]="true"
+            />
+          </workix-form-field>
+
+          <workix-form-field [label]="'Description'" [styleClass]="'full-width'">
+            <workix-input
+              formControlName="description"
+              [type]="'text'"
+              [placeholder]="'Enter description'"
+            />
+          </workix-form-field>
+        </form>
+      </workix-card>
+
+      <workix-card [styleClass]="'steps-list-card'">
+        <h3>Steps ({{ stepCount() }})</h3>
+        @if (steps().length === 0) {
+        <p class="no-steps">No steps yet. Add one from the toolbar.</p>
+        } @else {
+        <workix-list [styleClass]="'steps-list'">
+          @for (step of steps(); track step.id; let i = $index) {
+          <workix-list-item
+            [styleClass]="'step-item'"
+            [class.selected]="selectedStep()?.id === step.id"
+            (click)="selectStep(step)"
+          >
+            <div class="step-item-content">
+              <div class="step-icon">
+                <workix-icon [name]="getStepIcon(step.type)" [size]="'md'" />
+              </div>
+              <div class="step-info">
+                <div class="step-name">{{ step.name }}</div>
+                <div class="step-type">{{ step.type }}</div>
+              </div>
+              <div class="step-actions">
+                <workix-button
+                  [label]="''"
+                  [variant]="'secondary'"
+                  [icon]="'delete'"
+                  [text]="true"
+                  [size]="'sm'"
+                  (onClick)="deleteStep(step.id)"
+                />
+              </div>
+            </div>
+          </workix-list-item>
+          @if (!$last) {
+          <workix-divider />
+          } }
+        </workix-list>
+        }
+      </workix-card>
+
+      <workix-button
+        [label]="'Add Step'"
+        [variant]="'primary'"
+        [icon]="'add_circle_outline'"
+        [outlined]="true"
+        [styleClass]="'full-width add-step-btn'"
+        (onClick)="addStep()"
+      />
+    </div>
+    }
+
+    <!-- Center Panel - Visual Canvas -->
+    <div class="center-panel">
+      <workix-card [styleClass]="'canvas-card'">
+        <div class="canvas-placeholder">
+          <workix-icon [name]="'account_tree'" [size]="'lg'" />
+          <p>Canvas will be rendered here</p>
+          <p class="hint">Steps: {{ stepCount() }}</p>
+        </div>
+      </workix-card>
+    </div>
+
+    <!-- Right Panel - Step Configuration -->
+    @if (config().showStepEditor !== false && selectedStep()) {
+    <div class="right-panel">
+      <workix-card [styleClass]="'step-editor-card'">
+        <h3>Step Configuration</h3>
+        <p class="step-name">{{ selectedStep()!.name }}</p>
+        <p class="step-type">Type: {{ selectedStep()!.type }}</p>
+        <p class="hint">Step editor will be rendered here</p>
+      </workix-card>
+    </div>
+    }
+  </div>
+  }
+</div>

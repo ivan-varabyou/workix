@@ -1,0 +1,31 @@
+{
+  "name": "@workix/mcp-server",
+  "version": "1.0.0",
+  "description": "Workix MCP Server for AI Agent Integration",
+  "main": "dist/main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --loader ts-node/esm src/main.ts",
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "lint": "eslint src"
+  },
+  "keywords": [
+    "mcp",
+    "workix",
+    "ai-agent",
+    "automation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.4.0",
+    "axios": "^1.13.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.25",
+    "typescript": "^5.0.0"
+  }
+}

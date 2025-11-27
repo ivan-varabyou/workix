@@ -131,91 +131,156 @@ workix/
 
 ### Prerequisites
 
-- **Node.js** 18+ / **npm** 9+ or **pnpm** 8+
-- **Docker** & **Docker Compose** (for database & services)
+- **Node.js** 20+ / **npm** 10+
 - **Nx** CLI: `npm install -g nx`
 - **TypeScript** 5+
 
-### Installation
+### Quick Start (Development)
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Start development environment (API + MCP Server)
+npm run dev
+```
+
+This automatically starts:
+
+- 🟢 **API Server** on http://localhost:7000
+- 📡 **MCP Server** (for AI agent integration)
+- 📚 **Swagger Docs** on http://localhost:7000/api/docs
+
+### Installation (Detailed)
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/your-org/workix.git
    cd workix
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
-   # or
-   pnpm install
    ```
 
-3. **Set up environment variables**
+3. **Start development environment**
    ```bash
-   cp .env.example .env.local
-   # Edit .env.local with your configuration
-   ```
-
-4. **Start the development environment**
-   ```bash
-   docker-compose up -d
+   # Both API and MCP Server run together
    npm run dev
-   # or with Nx
-   nx serve backend-api
-   nx serve web-admin
-   nx serve web-client
    ```
 
-5. **Access the applications**
-   - Backend API: http://localhost:3333
-   - Admin Dashboard: http://localhost:4200
-   - Client App: http://localhost:4201
-   - Swagger Docs: http://localhost:3333/api/docs
+### Access Services
+
+- **API**: http://localhost:7000
+- **Swagger Docs**: http://localhost:7000/api/docs
+- **Health Check**: http://localhost:7000/api/health
+- **MCP Server**: Runs in background (Cursor/Windsurf integration)
+
+### Configuration
+
+Create `.env` file from template:
+
+```bash
+cp .env.example .env
+# Edit if you want different ports
+```
+
+**Default Ports:**
+
+- Monolith API: **7000**
+- API Gateway: **7100**
+- Debug Port: **9229**
+- MCP Server: **9000**
 
 ## 📚 Development Workflow
 
-### Spec-Driven Development (SDD)
+### Development Mode (Always Run This)
 
-This project follows **Spec-Driven Development** methodology. Start here:
+```bash
+# Start API Gateway + All MCP Servers
+npm run dev
 
-1. **Establish Principles** - Review `constitution.md`
-2. **Create Specifications** - Check `specs/` directory
-3. **Plan Implementation** - See `plan.md` files
-4. **Implement** - Follow task breakdown in `tasks.md`
+# Full development mode (Gateway + MCP + Admin + Web)
+npm run dev:full
+
+# Or run individually:
+npm run api:serve         # API only
+npm run dev:mcp-only      # MCP Server only
+
+# MCP Servers management
+npm run mcp:status        # Check MCP servers status
+npm run mcp:start-all     # Start all MCP servers
+npm run mcp:stop-all      # Stop all MCP servers
+```
+
+**Why MCP Server runs automatically?**
+
+- ✅ AI agents (Claude/Cursor) stay in sync with your code
+- ✅ New tools are instantly available
+- ✅ Full project context preserved
+- ✅ No manual updates needed
 
 ### Common Commands
 
-```bash
-# Nx Development Server
-nx serve backend-api              # Start backend
-nx serve web-admin                # Start admin dashboard
-nx serve web-client               # Start client app
+**Always use `npm run` commands instead of `nx` directly** - they handle environment variables and ports correctly.
 
-# Building
-nx build backend-api              # Build backend
-nx build web-admin                # Build admin
-nx build web-client               # Build client
+```bash
+# Development (RECOMMENDED)
+npm run dev                 # Start API + MCP Server together on port 4200
+npm run dev:mcp-only        # Start MCP Server only
+
+# API Server
+npm run api:serve           # Development server with hot reload (port 4200)
+npm run api:build           # Build for production
+npm run api:start           # Run production build
+
+# MCP Server
+npm run mcp:dev             # Development mode
+npm run mcp:build           # Build
+npm run mcp:start           # Production mode
+
+# IDE Integration
+npm run setup:cursor        # Configure Cursor/Windsurf (one-time setup)
 
 # Testing
-nx test models                    # Test models library
-nx test backend-api               # Test backend
-nx e2e e2e-tests                  # End-to-end tests
+npm run test                # Run tests in watch mode
+npm run test:run            # Run tests once
+npm run test:coverage       # Run tests with coverage
+npm run test:ui             # Run with UI
 
-# Linting & Formatting
-nx lint                           # Lint all projects
-nx format                         # Format code
-
-# Database
-npm run db:migrate                # Run migrations
-npm run db:seed                   # Seed test data
-npm run db:drop                   # Drop all tables
-
-# Docker
-docker-compose up -d              # Start services
-docker-compose down               # Stop services
-docker-compose logs -f            # View logs
+# Code Quality
+npx nx lint                 # Lint all projects
+npx tsc --noEmit            # Type check
 ```
+
+### Port Configuration
+
+All ports are configured in `.env` file:
+
+```bash
+API_PORT=4200              # API server port
+API_HOST=localhost         # API server host
+MCP_PORT=9000              # MCP server port (future)
+NODE_ENV=development
+```
+
+See [Port Configuration](./.specify/specs-optimized/architecture/ports.md) for details.
+
+### Project Documentation
+
+- 📖 [Development Guide](./DEVELOPMENT.md) - Quick start guide
+- 📊 [Project Metrics](./.specify/specs/005-development-process/PROJECT_METRICS.md) - **Total hours, KPIs, productivity stats**
+- 🏢 [Enterprise Process](./.specify/specs/008-enterprise-development-process/spec.md) - Complete enterprise development process
+- 🤖 [Automation Framework](./.specify/specs/009-automation-framework/spec.md) - **Fully automated enterprise workflows**
+- 📋 [Development Process](./.specify/specs-optimized/core/development.md) - Development process & rules
+- 🔧 [Git Workflow](./.specify/specs-optimized/core/git-workflow.md) - Git conventions
+- 🤖 [MCP Server](./.specify/specs/006-workix-mcp-server/spec.md) - AI agent integration
+- 🔌 [Port Configuration](./.specify/specs-optimized/architecture/ports.md) - Port configuration
+- ⏱️ [Task Timing Template](./.specify/specs/005-development-process/TASK_TIMING_TEMPLATE.md) - Time tracking template
+- ✅ [Task List](./.specify/specs/005-development-process/TASKS.md) - Current tasks & timing
 
 ### Project Configuration
 
@@ -228,17 +293,17 @@ docker-compose logs -f            # View logs
 
 ### Technology Stack
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| **Frontend** | Angular 20 | UI framework (zoneless, signals) |
-| **Backend** | NestJS | Modular, scalable server |
-| **Database** | PostgreSQL 15+ | Relational data store |
-| **ORM** | TypeORM | Database abstraction |
-| **Testing** | Vitest | Fast unit testing |
-| **Monorepo** | Nx | Workspace management |
-| **Containerization** | Docker | Development & deployment |
-| **Observability** | Prometheus + Grafana | Metrics & dashboards |
-| **CI/CD** | GitHub Actions | Automated pipelines |
+| Layer                | Technology           | Purpose                          |
+| -------------------- | -------------------- | -------------------------------- |
+| **Frontend**         | Angular 20           | UI framework (zoneless, signals) |
+| **Backend**          | NestJS               | Modular, scalable server         |
+| **Database**         | PostgreSQL 15+       | Relational data store            |
+| **ORM**              | TypeORM              | Database abstraction             |
+| **Testing**          | Vitest               | Fast unit testing                |
+| **Monorepo**         | Nx                   | Workspace management             |
+| **Containerization** | Docker               | Development & deployment         |
+| **Observability**    | Prometheus + Grafana | Metrics & dashboards             |
+| **CI/CD**            | GitHub Actions       | Automated pipelines              |
 
 ### Design Principles
 
@@ -392,6 +457,7 @@ See `.env.example` for all available configuration options.
 ### API Documentation
 
 Swagger documentation is auto-generated and available at:
+
 ```
 http://localhost:3333/api/docs
 ```
@@ -447,6 +513,7 @@ MIT License - see LICENSE file for details
 ## 🙌 Acknowledgments
 
 Built with ❤️ using:
+
 - [NestJS](https://nestjs.com/)
 - [Angular](https://angular.io/)
 - [TypeORM](https://typeorm.io/)

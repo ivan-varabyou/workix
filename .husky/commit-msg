@@ -1,0 +1,95 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Проверка формата коммита согласно спецификации
+# Формат: T #{номер} - {тип}({область}): описание
+# Только английские символы, первая строка до 50 символов (рекомендуется), максимум 72
+
+COMMIT_MSG=$(cat "$1")
+FIRST_LINE=$(echo "$COMMIT_MSG" | head -n1)
+
+# Проверка на переносы строк (коммит должен быть в одну строку)
+if [ "$COMMIT_MSG" != "$FIRST_LINE" ]; then
+  echo "❌ Commit message must be on a single line!"
+  echo "   No line breaks allowed"
+  echo ""
+  echo "❌ Your message:"
+  echo "  $COMMIT_MSG" | head -3
+  echo ""
+  exit 1
+fi
+
+# Проверка длины (рекомендуется до 50, максимум 72 символа)
+LENGTH=${#FIRST_LINE}
+if [ $LENGTH -gt 72 ]; then
+  echo "❌ Commit message is too long!"
+  echo "   Maximum length: 72 characters"
+  echo "   Recommended length: 50 characters"
+  echo "   Current length: $LENGTH characters"
+  echo ""
+  echo "❌ Your message:"
+  echo "  $FIRST_LINE"
+  echo ""
+  exit 1
+elif [ $LENGTH -gt 50 ]; then
+  echo "⚠️  Commit message is longer than recommended (50 chars)"
+  echo "   Current length: $LENGTH characters"
+  echo ""
+fi
+
+# Проверка на наличие только английских символов (латиница, цифры, знаки препинания, пробелы)
+# Разрешаем: a-z, A-Z, 0-9, пробелы, знаки препинания: - : ( ) . , ! ? # @
+# Используем проверку через удаление разрешенных символов
+CLEANED=$(echo "$FIRST_LINE" | tr -d 'a-zA-Z0-9 \-:().,!?#@')
+if [ -n "$CLEANED" ]; then
+  echo "❌ Commit message must contain only English characters!"
+  echo "   Allowed: letters (a-z, A-Z), numbers (0-9), spaces, and punctuation: - : ( ) . , ! ? # @"
+  echo "   Found invalid characters: $CLEANED"
+  echo ""
+  echo "❌ Your message:"
+  echo "  $FIRST_LINE"
+  echo ""
+  exit 1
+fi
+
+# Паттерн для проверки формата коммита
+# T #{номер} - {тип}({область}): [описание]
+# Описание опционально, но если есть - должно быть в нижнем регистре
+PATTERN="^T #[0-9]+ - (feat|fix|chore|docs|refactor|style|test)\([a-z]+\)(:|: [a-z].*)$"
+
+if ! echo "$FIRST_LINE" | grep -qE "$PATTERN"; then
+  echo "❌ Invalid commit message format!"
+  echo ""
+  echo "📋 Required format: T #{номер} - {тип}({область}): [описание]"
+  echo ""
+  echo "✅ Valid types: feat, fix, chore, docs, refactor, style, test"
+  echo "✅ Valid scopes: api, admin, client, auth, db, ui, deps, config, ci, docs, tests, mcp"
+  echo ""
+  echo "📝 Examples:"
+  echo "  T #1 - feat(api):"
+  echo "  T #5 - fix(admin):"
+  echo "  T #0 - chore(deps):"
+  echo "  T #1 - feat(api): add user auth"
+  echo "  T #5 - fix(admin): fix validation"
+  echo ""
+  echo "💡 Tip: Description is optional, must be in one line."
+  echo ""
+  echo "❌ Your message:"
+  echo "  $FIRST_LINE"
+  echo ""
+  exit 1
+fi
+
+# Проверка на нижний регистр в описании (если есть)
+DESCRIPTION=$(echo "$FIRST_LINE" | sed -E 's/^T #[0-9]+ - [a-z]+\([a-z]+\): //')
+if [ -n "$DESCRIPTION" ] && echo "$DESCRIPTION" | grep -qE "[A-Z]"; then
+  echo "❌ Commit message description must be in lowercase!"
+  echo "   Only lowercase English letters allowed in description"
+  echo ""
+  echo "❌ Your message:"
+  echo "  $FIRST_LINE"
+  echo ""
+  exit 1
+fi
+
+echo "✅ Commit message format is valid"

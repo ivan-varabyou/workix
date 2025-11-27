@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Автоматическое исправление через lint-staged (только измененные файлы)
+# Это запускает prettier, eslint --fix и remove-unused для измененных файлов
+npx lint-staged
+
+# Проверка типов (только проверка, без исправления)
+npx tsc --noEmit || exit 1

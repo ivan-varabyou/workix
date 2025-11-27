@@ -1,0 +1,31 @@
+{
+  "name": "message-broker",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/infrastructure/message-broker/src",
+  "projectType": "library",
+  "tags": ["type:lib", "scope:infrastructure"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/message-broker",
+        "main": "libs/infrastructure/message-broker/src/index.ts",
+        "tsConfig": "libs/message-broker/tsconfig.lib.json",
+        "assets": ["libs/message-broker/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "passWithNoTests": true,
+        "configFile": "libs/infrastructure/message-broker/vitest.config.ts"
+      }
+    }
+  }
+}

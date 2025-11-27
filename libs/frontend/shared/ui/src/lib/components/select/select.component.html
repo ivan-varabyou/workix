@@ -1,0 +1,11 @@
+<p-dropdown
+  [options]="options()"
+  [ngModel]="displayValue()"
+  [placeholder]="placeholder()"
+  [disabled]="disabled()"
+  [showClear]="showClear()"
+  [filter]="filter()"
+  [styleClass]="styleClass()"
+  (onChange)="onSelectionChange($event)"
+  (onBlur)="onBlur()"
+/>

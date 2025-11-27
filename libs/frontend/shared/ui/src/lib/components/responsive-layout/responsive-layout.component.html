@@ -1,0 +1,83 @@
+<div class="workix-responsive-layout" [class.mobile]="isMobile()">
+  <!-- Mobile Top Bar -->
+  @if (isMobile()) {
+  <workix-toolbar [color]="'primary'" [class]="'mobile-toolbar'">
+    <workix-button variant="icon" (click)="toggleSidenav()" aria-label="Toggle menu">
+      <workix-icon name="menu"></workix-icon>
+    </workix-button>
+    <span class="toolbar-spacer"></span>
+    <h1 class="app-title">{{ title() }}</h1>
+    <span class="toolbar-spacer"></span>
+    @if (showNotifications()) {
+    <workix-button variant="icon" (click)="onNotificationsClick()" aria-label="Notifications">
+      <workix-icon name="notifications"></workix-icon>
+    </workix-button>
+    }
+  </workix-toolbar>
+  } @else {
+  <!-- Desktop Top Bar -->
+  <workix-toolbar [color]="'primary'" [class]="'desktop-toolbar'">
+    <h1 class="app-title">{{ title() }}</h1>
+    <span class="toolbar-spacer"></span>
+    @if (showNotifications()) {
+    <workix-button variant="icon" (click)="onNotificationsClick()" aria-label="Notifications">
+      <workix-icon name="notifications"></workix-icon>
+    </workix-button>
+    } @if (showUserMenu()) {
+    <workix-button variant="icon" (click)="onUserMenuClick()" aria-label="User menu">
+      <workix-icon name="account_circle"></workix-icon>
+    </workix-button>
+    }
+  </workix-toolbar>
+  }
+
+  <!-- Sidenav Container -->
+  <workix-sidenav-container class="sidenav-container" [autosize]="true">
+    <!-- Sidenav -->
+    <workix-sidenav
+      #sidenav
+      [mode]="sidenavMode()"
+      [opened]="sidenavOpened()"
+      (openedChange)="onSidenavChange($event)"
+      class="sidenav"
+    >
+      <workix-list>
+        @for (item of menuItems(); track item.route) {
+        <workix-list-item [routerLink]="item.route" (click)="closeSidenavOnMobile()">
+          <workix-icon [name]="item.icon"></workix-icon>
+          <span>{{ item.label }}</span>
+        </workix-list-item>
+        }
+        <workix-divider></workix-divider>
+        <workix-list-item (click)="onLogout()">
+          <workix-icon name="logout"></workix-icon>
+          <span>Logout</span>
+        </workix-list-item>
+      </workix-list>
+    </workix-sidenav>
+
+    <!-- Main Content -->
+    <workix-sidenav-content class="main-content">
+      <div class="content-wrapper">
+        <router-outlet></router-outlet>
+      </div>
+
+      <!-- Mobile Bottom Navigation -->
+      @if (isMobile() && bottomNavItems().length > 0) {
+      <nav class="mobile-bottom-nav">
+        @for (item of bottomNavItems(); track item.route) {
+        <workix-button
+          variant="icon"
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"
+          [class]="'nav-button'"
+        >
+          <workix-icon [name]="item.icon"></workix-icon>
+        </workix-button>
+        }
+      </nav>
+      }
+    </workix-sidenav-content>
+  </workix-sidenav-container>
+</div>

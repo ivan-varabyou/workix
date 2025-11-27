@@ -1,0 +1,19 @@
+{
+  "name": "backend-domain-notifications",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/notifications/src",
+  "projectType": "library",
+  "tags": ["type:lib", "scope:domain", "type:backend"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "passWithNoTests": true
+      }
+    }
+  }
+}

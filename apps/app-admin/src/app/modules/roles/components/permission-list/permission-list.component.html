@@ -1,0 +1,18 @@
+<div class="permissions-container">
+  <h3>Permissions</h3>
+  <workix-list>
+    @for (permission of permissions; track permission.id) {
+    <workix-list-item class="permission-item">
+      <workix-checkbox
+        [checked]="isSelected(permission.id)"
+        (change)="onToggle(permission.id)"
+        class="permission-checkbox"
+      />
+      <div class="permission-info">
+        <div class="permission-name">{{ permission.name }}</div>
+        <div class="permission-description">{{ permission.description }}</div>
+      </div>
+    </workix-list-item>
+    }
+  </workix-list>
+</div>

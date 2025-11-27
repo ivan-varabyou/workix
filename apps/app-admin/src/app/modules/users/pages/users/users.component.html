@@ -1,0 +1,56 @@
+<workix-data-table
+  [config]="dataTableConfig()"
+  [data]="users()"
+  [isLoading]="isLoading()"
+  [searchTerm]="searchTerm()"
+  [totalItems]="totalUsers()"
+  [currentPage]="currentPage()"
+  [pageSize]="currentPageSize()"
+  (search)="onSearch($event)"
+  (pageChange)="onPageChange($event)"
+  (sortChange)="onSortChange($event)"
+  (actionClick)="onActionClick($event)"
+>
+  <div header-actions>
+    <workix-button
+      [label]="'Add User'"
+      [variant]="'primary'"
+      [icon]="'add'"
+      (onClick)="router.navigate(['/users/new'])"
+      [styleClass]="'mr-2'"
+    />
+    <workix-button
+      [label]="'Export CSV'"
+      [variant]="'secondary'"
+      [icon]="'download'"
+      (onClick)="exportUsers('csv')"
+      [styleClass]="'mr-2'"
+    />
+    <workix-button
+      [label]="'Export JSON'"
+      [variant]="'secondary'"
+      [icon]="'download'"
+      (onClick)="exportUsers('json')"
+    />
+  </div>
+</workix-data-table>
+
+<!-- Edit User Dialog -->
+<workix-form-dialog
+  [visible]="showEditDialog()"
+  [config]="editDialogConfig()"
+  [isLoading]="editDialogLoading()"
+  (submit)="onEditDialogSubmit($event)"
+  (cancel)="onEditDialogCancel()"
+  (visibleChange)="showEditDialog.set($event)"
+/>
+
+<!-- Delete User Dialog -->
+<workix-confirm-dialog
+  [visible]="showDeleteDialog()"
+  [config]="deleteDialogConfig()"
+  [isLoading]="deleteDialogLoading()"
+  (confirm)="onDeleteDialogConfirm()"
+  (cancel)="onDeleteDialogCancel()"
+  (visibleChange)="showDeleteDialog.set($event)"
+/>

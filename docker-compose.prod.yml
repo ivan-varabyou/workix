@@ -1,0 +1,127 @@
+version: '3.9'
+
+services:
+  postgres-auth:
+    image: postgres:16-alpine
+    container_name: workix-postgres-auth-prod
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: workix_auth
+    volumes:
+      - postgres_auth_data:/var/lib/postgresql/data
+    networks:
+      - workix-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-notifications:
+    image: postgres:16-alpine
+    container_name: workix-postgres-notifications-prod
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: workix_notifications
+    volumes:
+      - postgres_notifications_data:/var/lib/postgresql/data
+    networks:
+      - workix-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: workix-redis-prod
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - workix-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api-auth:
+    build:
+      context: .
+      dockerfile: apps/api-auth/Dockerfile
+      args:
+        NODE_ENV: production
+    container_name: workix-api-auth-prod
+    environment:
+      NODE_ENV: production
+      DATABASE_URL_AUTH: postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgres-auth:5432/workix_auth
+      API_AUTH_PORT: 7200
+      JWT_SECRET: ${JWT_SECRET}
+      SERVICE_KEY: ${SERVICE_KEY}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    ports:
+      - "7200:7200"
+    depends_on:
+      postgres-auth:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - workix-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:7200/api-auth/v1/auth/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  api-notifications:
+    build:
+      context: .
+      dockerfile: apps/api-notifications/Dockerfile
+    container_name: workix-api-notifications-prod
+    environment:
+      NODE_ENV: production
+      DATABASE_URL_NOTIFICATIONS: postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgres-notifications:5432/workix_notifications
+      API_NOTIFICATIONS_PORT: 7201
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER:-sendgrid}
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+      EMAIL_FROM: ${EMAIL_FROM:-noreply@workix.com}
+      FRONTEND_URL: ${FRONTEND_URL:-https://workix.io}
+    ports:
+      - "7201:7201"
+    depends_on:
+      postgres-notifications:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - workix-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:7201/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  postgres_auth_data:
+  postgres_notifications_data:
+  redis_data:
+
+networks:
+  workix-network:
+    driver: bridge

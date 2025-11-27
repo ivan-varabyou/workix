@@ -1,0 +1,21 @@
+{
+  "mode": "AUTOMATIC",
+  "last_updated": "2025-11-06T05:05:00Z",
+  "user_preference": "AUTOMATIC",
+  "auto_mode_rules": {
+    "ask_for_confirmation": false,
+    "continue_on_error": true,
+    "timeout_protection": true,
+    "auto_recovery": true,
+    "max_retries": 3,
+    "timeout_buffer_percent": 50
+  },
+  "command_timeouts": {
+    "npm_install": 45,
+    "npm_run_test": 30,
+    "npm_run_build": 90,
+    "git_operations": 7,
+    "nx_generate": 45,
+    "default": 30
+  }
+}

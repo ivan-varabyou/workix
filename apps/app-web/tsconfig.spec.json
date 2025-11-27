@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "../../libs/frontend/shared/tsconfig.spec.base.json",
+    "./tsconfig.json",
+    "../../tsconfig.spec.base.json"
+  ],
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+  },
+  "include": ["src/**/*.spec.ts", "src/**/*.test.ts", "src/**/*.stories.ts"],
+  "exclude": []
+}

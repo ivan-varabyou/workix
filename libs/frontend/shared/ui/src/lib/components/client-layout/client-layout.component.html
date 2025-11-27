@@ -1,0 +1,50 @@
+<div class="workix-client-layout" [class.dark-theme]="isDarkMode()">
+  <workix-toolbar [color]="'primary'" [class]="'app-toolbar'">
+    <h1>{{ title() }}</h1>
+    <span class="spacer"></span>
+    <button
+      type="button"
+      (click)="onToggleDarkMode()"
+      class="theme-toggle"
+      [attr.aria-label]="isDarkMode() ? 'Light mode' : 'Dark mode'"
+    >
+      <workix-icon [name]="themeIcon()"></workix-icon>
+    </button>
+    @if (isAuthenticated() && userMenu()) {
+    <workix-menu class="user-menu">
+      <button type="button" workix-menu-trigger aria-label="User menu">
+        <workix-icon name="account_circle"></workix-icon>
+      </button>
+      <workix-menu-content>
+        @if (userMenu()?.items && userMenu()!.items.length > 0) { @for (item of userMenu()!.items;
+        track item.label) {
+        <workix-menu-item [routerLink]="item.routerLink" (click)="item.action?.()">
+          <workix-icon [name]="item.icon"></workix-icon>
+          <span>{{ item.label }}</span>
+        </workix-menu-item>
+        } } @else { @if (userMenu()?.profileRoute) {
+        <workix-menu-item [routerLink]="userMenu()!.profileRoute!">
+          <workix-icon name="person"></workix-icon>
+          <span>Profile</span>
+        </workix-menu-item>
+        } @if (userMenu()?.settingsRoute) {
+        <workix-menu-item [routerLink]="userMenu()!.settingsRoute!">
+          <workix-icon name="settings"></workix-icon>
+          <span>Settings</span>
+        </workix-menu-item>
+        }
+        <workix-divider></workix-divider>
+        <workix-menu-item (click)="onLogout()">
+          <workix-icon name="logout"></workix-icon>
+          <span>Logout</span>
+        </workix-menu-item>
+        }
+      </workix-menu-content>
+    </workix-menu>
+    }
+  </workix-toolbar>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

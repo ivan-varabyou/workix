@@ -1,0 +1,33 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@workix/domain/auth": ["../../libs/domain/auth/src/index.ts"],
+      "@workix/domain/notifications": ["../../libs/domain/notifications/src/index.ts"],
+      "@workix/infrastructure/message-broker": ["../../libs/infrastructure/message-broker/src/index.ts"],
+      "@workix/infrastructure/notifications": ["../../libs/infrastructure/notifications/src/index.ts"],
+      "@workix/infrastructure/prisma": ["../../libs/infrastructure/prisma/src/index.ts"],
+      "@workix/infrastructure/i18n": ["../../libs/infrastructure/i18n/src/index.ts"],
+      "@workix/shared/backend/core": ["../../libs/shared/backend/core/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

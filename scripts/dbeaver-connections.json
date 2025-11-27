@@ -1,0 +1,114 @@
+{
+  "connections": [
+    {
+      "name": "workix-admin",
+      "type": "postgresql",
+      "host": "localhost",
+      "port": 5100,
+      "database": "workix_admin",
+      "user": "postgres",
+      "password": "postgres",
+      "description": "Admin microservice database"
+    },
+    {
+      "name": "workix-gateway",
+      "type": "postgresql",
+      "host": "localhost",
+      "port": 5101,
+      "database": "workix_gateway",
+      "user": "postgres",
+      "password": "postgres",
+      "description": "Gateway microservice database"
+    },
+    {
+      "name": "workix-auth",
+      "type": "postgresql",
+      "host": "localhost",
+      "port": 5102,
+      "database": "workix_auth",
+      "user": "postgres",
+      "password": "postgres",
+      "description": "Auth microservice database"
+    },
+    {
+      "name": "workix-notifications",
+      "type": "postgresql",
+      "host": "localhost",
+      "port": 5103,
+      "database": "workix_notifications",
+      "user": "postgres",
+      "password": "postgres",
+      "description": "Notifications microservice database"
+    },
+    {
+      "name": "workix-pipelines",
+      "type": "postgresql",
+      "host": "localhost",
+      "port": 5104,
+      "database": "workix_pipelines",
+      "user": "postgres",
+      "password": "postgres",
+      "description": "Pipelines microservice database"
+    },
+    {
+      "name": "workix-webhooks",
+      "type": "postgresql",
+      "host": "localhost",
+      "port": 5105,
+      "database": "workix_webhooks",
+      "user": "postgres",
+      "password": "postgres",
+      "description": "Webhooks microservice database"
+    },
+    {
+      "name": "workix-workflows",
+      "type": "postgresql",
+      "host": "localhost",
+      "port": 5106,
+      "database": "workix_workflows",
+      "user": "postgres",
+      "password": "postgres",
+      "description": "Workflows microservice database"
+    },
+    {
+      "name": "workix-workers",
+      "type": "postgresql",
+      "host": "localhost",
+      "port": 5107,
+      "database": "workix_workers",
+      "user": "postgres",
+      "password": "postgres",
+      "description": "Workers microservice database"
+    },
+    {
+      "name": "workix-ab-testing",
+      "type": "postgresql",
+      "host": "localhost",
+      "port": 5108,
+      "database": "workix_ab_testing",
+      "user": "postgres",
+      "password": "postgres",
+      "description": "AB Testing microservice database"
+    },
+    {
+      "name": "workix-audit",
+      "type": "postgresql",
+      "host": "localhost",
+      "port": 5109,
+      "database": "workix_audit",
+      "user": "postgres",
+      "password": "postgres",
+      "description": "Audit microservice database"
+    },
+    {
+      "name": "workix-integrations",
+      "type": "postgresql",
+      "host": "localhost",
+      "port": 5110,
+      "database": "workix_integrations",
+      "user": "postgres",
+      "password": "postgres",
+      "description": "Integrations microservice database"
+    }
+  ]
+}

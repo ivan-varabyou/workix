@@ -1,0 +1,181 @@
+<div class="monitor-container">
+  <div class="monitor-header">
+    <h2>{{ config().title }}</h2>
+    @if (config().actions && config().actions.length > 0) {
+    <div class="header-actions">
+      @for (action of config().actions; track action.label) {
+      <workix-button
+        [label]="action.label"
+        [variant]="action.variant || 'primary'"
+        [icon]="action.icon"
+        (onClick)="onActionClick(action.label)"
+      />
+      }
+    </div>
+    }
+  </div>
+
+  @if (isLoading()) {
+  <div class="loading">
+    <workix-spinner [loading]="true" [size]="'lg'" />
+  </div>
+  } @if (errorMessage()) {
+  <div class="error-message">
+    {{ errorMessage() }}
+  </div>
+  } @if (!isLoading() && config()) {
+  <div class="monitor-content">
+    <!-- Current Execution -->
+    @if (config().showCurrentExecution !== false && currentExecution()) {
+    <workix-card [styleClass]="'execution-card'">
+      <div class="execution-header">
+        <h3>Current Execution</h3>
+        <workix-chip
+          [label]="currentExecution()!.status.toUpperCase()"
+          [styleClass]="'status-chip status-' + currentExecution()!.status"
+        />
+      </div>
+      <div class="execution-content">
+        <div class="execution-stats">
+          <div class="stat">
+            <span class="label">Progress</span>
+            <span class="value">{{ executionProgress() }}%</span>
+          </div>
+          <div class="stat">
+            <span class="label">Steps Completed</span>
+            <span class="value">
+              {{ currentExecution()!.stepsCompleted }}/{{ currentExecution()!.totalSteps }}
+            </span>
+          </div>
+          <div class="stat">
+            <span class="label">Duration</span>
+            <span class="value">{{ executionDuration() }}</span>
+          </div>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar" [style.width.%]="executionProgress()"></div>
+        </div>
+      </div>
+    </workix-card>
+    }
+
+    <!-- Tabs -->
+    @if (config().showTabs !== false && config().tabs && config().tabs.length > 0) {
+    <workix-tabs [activeIndex]="activeTab()" (activeIndexChange)="onTabChange($event)">
+      @for (tab of config().tabs; track tab.label; let i = $index) {
+      <p-tabPanel [header]="tab.label">
+        @if (tab.content === 'history') {
+        <workix-card [styleClass]="'history-card'">
+          <workix-list [styleClass]="'execution-list'">
+            @for (execution of executions(); track execution.id) {
+            <workix-list-item
+              [styleClass]="'execution-item execution-' + execution.status"
+              (click)="onExecutionClick(execution)"
+            >
+              <div class="execution-item-content">
+                <div class="execution-icon">
+                  <workix-icon
+                    [name]="getStatusIcon(execution.status)"
+                    [size]="'md'"
+                    [color]="getStatusColor(execution.status)"
+                  />
+                </div>
+                <div class="execution-info">
+                  <div class="execution-title">
+                    {{ execution.startTime | date : 'medium' }}
+                  </div>
+                  <div class="execution-details">
+                    Progress: {{ execution.progress }}% | {{ execution.stepsCompleted }}/{{
+                      execution.totalSteps
+                    }}
+                    steps
+                  </div>
+                </div>
+                <div class="execution-actions">
+                  <workix-button
+                    [label]="''"
+                    [variant]="'secondary'"
+                    [icon]="'visibility'"
+                    [text]="true"
+                    [size]="'sm'"
+                    (onClick)="onExecutionClick(execution)"
+                  />
+                </div>
+              </div>
+            </workix-list-item>
+            @if (!$last) {
+            <workix-divider />
+            } } @empty {
+            <div class="empty-state">
+              <p>No executions yet</p>
+            </div>
+            }
+          </workix-list>
+        </workix-card>
+        } @else if (tab.content === 'performance') {
+        <workix-card [styleClass]="'performance-card'">
+          @if (config().stats && config().stats.length > 0) {
+          <div class="stats-grid">
+            @for (stat of config().stats; track stat.label) {
+            <div class="stat-box" [class]="'stat-' + (stat.color || 'primary')">
+              @if (stat.icon) {
+              <div class="stat-icon">
+                <workix-icon [name]="stat.icon" [size]="'lg'" />
+              </div>
+              }
+              <h3>{{ stat.label }}</h3>
+              <p class="stat-value">{{ stat.value }}</p>
+            </div>
+            }
+          </div>
+          }
+        </workix-card>
+        } @else if (tab.content === 'custom' && tab.customContent) {
+        <ng-container [ngTemplateOutlet]="tab.customContent"></ng-container>
+        }
+      </p-tabPanel>
+      }
+    </workix-tabs>
+    } @else {
+    <!-- Default: Show history if no tabs -->
+    <workix-card [styleClass]="'history-card'">
+      <workix-list [styleClass]="'execution-list'">
+        @for (execution of executions(); track execution.id) {
+        <workix-list-item
+          [styleClass]="'execution-item execution-' + execution.status"
+          (click)="onExecutionClick(execution)"
+        >
+          <div class="execution-item-content">
+            <div class="execution-icon">
+              <workix-icon
+                [name]="getStatusIcon(execution.status)"
+                [size]="'md'"
+                [color]="getStatusColor(execution.status)"
+              />
+            </div>
+            <div class="execution-info">
+              <div class="execution-title">
+                {{ execution.startTime | date : 'medium' }}
+              </div>
+              <div class="execution-details">
+                Progress: {{ execution.progress }}% | {{ execution.stepsCompleted }}/{{
+                  execution.totalSteps
+                }}
+                steps
+              </div>
+            </div>
+          </div>
+        </workix-list-item>
+        @if (!$last) {
+        <workix-divider />
+        } } @empty {
+        <div class="empty-state">
+          <p>No executions yet</p>
+        </div>
+        }
+      </workix-list>
+    </workix-card>
+    }
+  </div>
+  }
+</div>

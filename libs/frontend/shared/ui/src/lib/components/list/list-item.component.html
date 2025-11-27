@@ -1,0 +1,9 @@
+<li
+  [class]="itemClass()"
+  [class.disabled]="disabled()"
+  [class.selected]="selected()"
+  [routerLink]="routerLink()"
+  routerLinkActive="active"
+>
+  <ng-content></ng-content>
+</li>

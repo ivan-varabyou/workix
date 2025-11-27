@@ -1,0 +1,20 @@
+{
+  "name": "backend-domain-webhooks",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/backend/domain/webhooks/src",
+  "prefix": "workix",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/backend/domain/webhooks",
+        "main": "libs/backend/domain/webhooks/src/index.ts",
+        "tsConfig": "libs/backend/domain/webhooks/tsconfig.lib.json",
+        "assets": ["libs/backend/domain/webhooks/*.md"]
+      }
+    }
+  },
+  "tags": ["type:lib", "scope:domain"]
+}

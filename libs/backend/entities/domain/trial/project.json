@@ -1,0 +1,20 @@
+{
+  "name": "backend-entities-domain-trial",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/backend/entities/domain/trial/src",
+  "prefix": "workix",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/backend/entities/domain/trial",
+        "main": "libs/backend/entities/domain/trial/src/index.ts",
+        "tsConfig": "libs/backend/entities/domain/trial/tsconfig.lib.json",
+        "assets": ["libs/backend/entities/domain/trial/*.md"]
+      }
+    }
+  },
+  "tags": ["type:lib", "scope:backend", "scope:entities", "scope:domain"]
+}

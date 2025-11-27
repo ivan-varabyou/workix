@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swagger Test - Workix Auth Service</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        iframe {
+            width: 100%;
+            height: 800px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .endpoint {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 3px solid #007bff;
+            font-family: monospace;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Проверка Swagger - Workix Auth Service</h1>
+
+    <div class="container">
+        <h2>📡 Проверка доступности</h2>
+        <div id="health-status" class="status info">Проверка...</div>
+        <div id="swagger-status" class="status info">Проверка...</div>
+        <div id="json-status" class="status info">Проверка...</div>
+    </div>
+
+    <div class="container">
+        <h2>📚 Swagger UI</h2>
+        <iframe id="swagger-frame" src="http://localhost:7200/docs" onerror="handleFrameError()"></iframe>
+    </div>
+
+    <div class="container">
+        <h2>📋 Swagger JSON Schema</h2>
+        <div id="json-content">
+            <pre id="json-data">Загрузка...</pre>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>🔗 Endpoints</h2>
+        <div id="endpoints-list">Загрузка...</div>
+    </div>
+
+    <script>
+        async function checkHealth() {
+            try {
+                const response = await fetch('http://localhost:7200/api/health');
+                const data = await response.json();
+                document.getElementById('health-status').innerHTML =
+                    '<strong>✅ Health Check:</strong> ' + JSON.stringify(data, null, 2);
+                document.getElementById('health-status').className = 'status success';
+            } catch (error) {
+                document.getElementById('health-status').innerHTML =
+                    '<strong>❌ Health Check:</strong> ' + error.message;
+                document.getElementById('health-status').className = 'status error';
+            }
+        }
+
+        async function checkSwagger() {
+            try {
+                const response = await fetch('http://localhost:7200/docs');
+                if (response.ok) {
+                    document.getElementById('swagger-status').innerHTML =
+                        '<strong>✅ Swagger UI:</strong> Доступен на http://localhost:7200/docs';
+                    document.getElementById('swagger-status').className = 'status success';
+                } else {
+                    throw new Error('HTTP ' + response.status);
+                }
+            } catch (error) {
+                document.getElementById('swagger-status').innerHTML =
+                    '<strong>❌ Swagger UI:</strong> ' + error.message;
+                document.getElementById('swagger-status').className = 'status error';
+            }
+        }
+
+        async function checkSwaggerJson() {
+            try {
+                const response = await fetch('http://localhost:7200/docs-json');
+                const data = await response.json();
+
+                document.getElementById('json-status').innerHTML =
+                    '<strong>✅ Swagger JSON:</strong> Загружен успешно';
+                document.getElementById('json-status').className = 'status success';
+
+                document.getElementById('json-data').textContent =
+                    JSON.stringify(data, null, 2);
+
+                // Показываем endpoints
+                if (data.paths) {
+                    const endpoints = Object.keys(data.paths);
+                    const endpointsHtml = endpoints.map(path => {
+                        const methods = Object.keys(data.paths[path]);
+                        return `<div class="endpoint">${path} [${methods.join(', ').toUpperCase()}]</div>`;
+                    }).join('');
+                    document.getElementById('endpoints-list').innerHTML = endpointsHtml;
+                }
+            } catch (error) {
+                document.getElementById('json-status').innerHTML =
+                    '<strong>❌ Swagger JSON:</strong> ' + error.message;
+                document.getElementById('json-status').className = 'status error';
+                document.getElementById('json-data').textContent = 'Ошибка загрузки: ' + error.message;
+            }
+        }
+
+        function handleFrameError() {
+            document.getElementById('swagger-status').innerHTML =
+                '<strong>❌ Swagger UI:</strong> Не удалось загрузить iframe';
+            document.getElementById('swagger-status').className = 'status error';
+        }
+
+        // Запускаем проверки
+        checkHealth();
+        checkSwagger();
+        checkSwaggerJson();
+
+        // Обновляем каждые 5 секунд
+        setInterval(() => {
+            checkHealth();
+            checkSwagger();
+            checkSwaggerJson();
+        }, 5000);
+    </script>
+</body>
+</html>

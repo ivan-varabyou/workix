@@ -1,0 +1,38 @@
+:host {
+  display: block;
+}
+
+div {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  min-height: 64px;
+  background-color: var(--primary-color, #1976d2);
+  color: white;
+}
+
+div.workix-toolbar-accent {
+  background-color: var(--accent-color, #ff4081);
+}
+
+div.workix-toolbar-warn {
+  background-color: var(--warn-color, #f44336);
+}
+
+div.workix-toolbar-static {
+  position: static;
+}
+
+div.workix-toolbar-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+div.workix-toolbar-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}

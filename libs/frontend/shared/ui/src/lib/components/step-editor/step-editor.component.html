@@ -1,0 +1,282 @@
+<div class="step-editor-container">
+  <workix-card [styleClass]="'step-editor-card'">
+    <div class="step-editor-header">
+      <div class="title-section">
+        <workix-icon [name]="getStepIcon(step().type)" [size]="'md'" />
+        <h3>{{ step().name || 'Step Editor' }}</h3>
+      </div>
+      @if (showDeleteButton()) {
+      <workix-button
+        [label]="''"
+        [variant]="'secondary'"
+        [icon]="'delete'"
+        [text]="true"
+        [size]="'sm'"
+        (onClick)="onDelete()"
+      />
+      }
+    </div>
+
+    @if (isLoading()) {
+    <div class="loading">
+      <workix-spinner [loading]="true" [size]="'md'" />
+    </div>
+    } @if (!isLoading() && stepForm()) {
+    <form [formGroup]="stepForm()!" class="step-editor-form">
+      @if (showTabs()) {
+      <workix-tabs [activeIndex]="activeTab()" (activeIndexChange)="onTabChange($event)">
+        <!-- General Tab -->
+        <p-tabPanel header="General">
+          <div class="tab-content">
+            <workix-form-field [label]="'Step Name'" [required]="true" [styleClass]="'full-width'">
+              <workix-input
+                formControlName="name"
+                [type]="'text'"
+                [placeholder]="'Enter step name'"
+                [required]="true"
+              />
+            </workix-form-field>
+
+            <workix-form-field [label]="'Step Type'" [required]="true" [styleClass]="'full-width'">
+              <workix-select
+                formControlName="type"
+                [options]="[
+                  { label: 'HTTP Request', value: 'http' },
+                  { label: 'Database Query', value: 'database' },
+                  { label: 'Data Transform', value: 'transform' },
+                  { label: 'Conditional', value: 'conditional' },
+                  { label: 'Loop', value: 'loop' },
+                  { label: 'Custom Script', value: 'script' },
+                  { label: 'Send Email', value: 'email' },
+                  { label: 'Webhook', value: 'webhook' },
+                  { label: 'Delay', value: 'delay' }
+                ]"
+                [required]="true"
+              />
+            </workix-form-field>
+
+            <workix-form-field [label]="'Description'" [styleClass]="'full-width'">
+              <workix-input
+                formControlName="description"
+                [type]="'text'"
+                [placeholder]="'Enter description'"
+              />
+            </workix-form-field>
+          </div>
+        </p-tabPanel>
+
+        <!-- Configuration Tab -->
+        <p-tabPanel header="Configuration">
+          <div class="tab-content">
+            @switch (stepType()) { @case ('http') {
+            <workix-form-field [label]="'Method'" [styleClass]="'full-width'">
+              <workix-select
+                formControlName="method"
+                [options]="[
+                  { label: 'GET', value: 'GET' },
+                  { label: 'POST', value: 'POST' },
+                  { label: 'PUT', value: 'PUT' },
+                  { label: 'DELETE', value: 'DELETE' },
+                  { label: 'PATCH', value: 'PATCH' }
+                ]"
+              />
+            </workix-form-field>
+
+            <workix-form-field [label]="'URL'" [styleClass]="'full-width'">
+              <workix-input
+                formControlName="url"
+                [type]="'text'"
+                [placeholder]="'https://api.example.com/endpoint'"
+              />
+            </workix-form-field>
+
+            <workix-form-field [label]="'Headers (JSON)'" [styleClass]="'full-width'">
+              <workix-input formControlName="headers" [type]="'text'"
+              [placeholder]="'{\"Content-Type\": \"application/json\"}'" />
+            </workix-form-field>
+
+            <workix-form-field [label]="'Body (JSON)'" [styleClass]="'full-width'">
+              <workix-input formControlName="body" [type]="'text'" [placeholder]="'{\"key\":
+              \"value\"}'" />
+            </workix-form-field>
+            } @case ('database') {
+            <workix-form-field [label]="'Database'" [styleClass]="'full-width'">
+              <workix-select
+                formControlName="database"
+                [options]="[
+                  { label: 'PostgreSQL', value: 'postgresql' },
+                  { label: 'MySQL', value: 'mysql' },
+                  { label: 'MongoDB', value: 'mongodb' }
+                ]"
+              />
+            </workix-form-field>
+
+            <workix-form-field [label]="'Query'" [styleClass]="'full-width'">
+              <workix-input
+                formControlName="query"
+                [type]="'text'"
+                [placeholder]="'SELECT * FROM users;'"
+              />
+            </workix-form-field>
+            } @case ('transform') {
+            <workix-form-field [label]="'Transformation Script'" [styleClass]="'full-width'">
+              <workix-input
+                formControlName="script"
+                [type]="'text'"
+                [placeholder]="'return data.map(x => ({ ...x }));'"
+              />
+            </workix-form-field>
+            } @case ('conditional') {
+            <workix-form-field [label]="'Condition'" [styleClass]="'full-width'">
+              <workix-input formControlName="condition" [type]="'text'" [placeholder]="'e.g.,
+              data.status === \"active\"'" />
+            </workix-form-field>
+
+            <workix-form-field [label]="'True Branch'" [styleClass]="'full-width'">
+              <workix-input
+                formControlName="trueBranch"
+                [type]="'text'"
+                [placeholder]="'Step ID'"
+              />
+            </workix-form-field>
+
+            <workix-form-field [label]="'False Branch'" [styleClass]="'full-width'">
+              <workix-input
+                formControlName="falseBranch"
+                [type]="'text'"
+                [placeholder]="'Step ID'"
+              />
+            </workix-form-field>
+            } @case ('email') {
+            <workix-form-field [label]="'To Email'" [styleClass]="'full-width'">
+              <workix-input
+                formControlName="to"
+                [type]="'email'"
+                [placeholder]="'recipient@example.com'"
+              />
+            </workix-form-field>
+
+            <workix-form-field [label]="'Subject'" [styleClass]="'full-width'">
+              <workix-input
+                formControlName="subject"
+                [type]="'text'"
+                [placeholder]="'Email subject'"
+              />
+            </workix-form-field>
+
+            <workix-form-field [label]="'Body'" [styleClass]="'full-width'">
+              <workix-input
+                formControlName="emailBody"
+                [type]="'text'"
+                [placeholder]="'Email body'"
+              />
+            </workix-form-field>
+            } @case ('delay') {
+            <workix-form-field [label]="'Delay (milliseconds)'" [styleClass]="'full-width'">
+              <workix-input formControlName="delay" [type]="'number'" [placeholder]="'1000'" />
+            </workix-form-field>
+            } }
+          </div>
+        </p-tabPanel>
+
+        <!-- Retry Tab -->
+        <p-tabPanel header="Retry">
+          <div class="tab-content">
+            <workix-checkbox formControlName="retryEnabled" [label]="'Enable Retry'" />
+
+            @if (stepForm()?.get('retryEnabled')?.value) {
+            <workix-form-field [label]="'Max Retries'" [styleClass]="'full-width'">
+              <workix-input formControlName="maxRetries" [type]="'number'" [placeholder]="'3'" />
+            </workix-form-field>
+
+            <workix-form-field [label]="'Retry Delay (ms)'" [styleClass]="'full-width'">
+              <workix-input formControlName="retryDelay" [type]="'number'" [placeholder]="'1000'" />
+            </workix-form-field>
+
+            <workix-form-field [label]="'Backoff Strategy'" [styleClass]="'full-width'">
+              <workix-select
+                formControlName="backoffStrategy"
+                [options]="[
+                  { label: 'Linear', value: 'linear' },
+                  { label: 'Exponential', value: 'exponential' },
+                  { label: 'Fibonacci', value: 'fibonacci' }
+                ]"
+              />
+            </workix-form-field>
+            }
+          </div>
+        </p-tabPanel>
+
+        <!-- Timeout Tab -->
+        <p-tabPanel header="Timeout">
+          <div class="tab-content">
+            <workix-form-field [label]="'Timeout (seconds)'" [styleClass]="'full-width'">
+              <workix-input formControlName="timeout" [type]="'number'" [placeholder]="'30'" />
+            </workix-form-field>
+
+            <workix-form-field [label]="'On Timeout Action'" [styleClass]="'full-width'">
+              <workix-select
+                formControlName="onTimeoutAction"
+                [options]="[
+                  { label: 'Fail', value: 'fail' },
+                  { label: 'Skip', value: 'skip' },
+                  { label: 'Retry', value: 'retry' }
+                ]"
+              />
+            </workix-form-field>
+          </div>
+        </p-tabPanel>
+      </workix-tabs>
+      } @else {
+      <!-- Simple form without tabs -->
+      <div class="simple-form">
+        <workix-form-field [label]="'Step Name'" [required]="true" [styleClass]="'full-width'">
+          <workix-input
+            formControlName="name"
+            [type]="'text'"
+            [placeholder]="'Enter step name'"
+            [required]="true"
+          />
+        </workix-form-field>
+
+        <workix-form-field [label]="'Step Type'" [required]="true" [styleClass]="'full-width'">
+          <workix-select
+            formControlName="type"
+            [options]="[
+              { label: 'HTTP Request', value: 'http' },
+              { label: 'Database Query', value: 'database' },
+              { label: 'Data Transform', value: 'transform' },
+              { label: 'Conditional', value: 'conditional' },
+              { label: 'Loop', value: 'loop' },
+              { label: 'Custom Script', value: 'script' },
+              { label: 'Send Email', value: 'email' },
+              { label: 'Webhook', value: 'webhook' },
+              { label: 'Delay', value: 'delay' }
+            ]"
+            [required]="true"
+          />
+        </workix-form-field>
+      </div>
+      }
+    </form>
+
+    <div class="step-editor-actions">
+      <workix-button
+        [label]="'Cancel'"
+        [variant]="'secondary'"
+        [outlined]="true"
+        [disabled]="isLoading()"
+        (onClick)="onCancel()"
+      />
+      <workix-button
+        [label]="'Save Step'"
+        [variant]="'primary'"
+        [icon]="'save'"
+        [loading]="isLoading()"
+        [disabled]="stepForm()?.invalid || isLoading()"
+        (onClick)="onSave()"
+      />
+    </div>
+    }
+  </workix-card>
+</div>

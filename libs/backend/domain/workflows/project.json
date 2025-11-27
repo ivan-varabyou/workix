@@ -1,0 +1,20 @@
+{
+  "name": "backend-domain-workflows",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/backend/domain/workflows/src",
+  "prefix": "workix",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/backend/domain/workflows",
+        "main": "libs/backend/domain/workflows/src/index.ts",
+        "tsConfig": "libs/backend/domain/workflows/tsconfig.lib.json",
+        "assets": ["libs/backend/domain/workflows/*.md"]
+      }
+    }
+  },
+  "tags": ["type:lib", "scope:domain"]
+}

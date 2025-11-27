@@ -1,0 +1,110 @@
+.dashboard-container {
+  padding: 24px;
+
+  h2 {
+    margin-bottom: 24px;
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+
+  .stats-grid {
+    margin-bottom: 32px;
+
+    .stat-card {
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+      }
+
+      mat-card-content {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        height: 100%;
+
+        .stat-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          font-size: 32px;
+
+          mat-icon {
+            font-size: 32px;
+            width: 32px;
+            height: 32px;
+          }
+        }
+
+        .stat-content {
+          flex: 1;
+
+          h3 {
+            margin: 0;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+          }
+
+          .stat-value {
+            margin: 8px 0 0 0;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+          }
+        }
+      }
+
+      &.primary {
+        .stat-icon {
+          background-color: rgba(63, 81, 181, 0.1);
+          color: #3f51b5;
+        }
+      }
+
+      &.accent {
+        .stat-icon {
+          background-color: rgba(255, 64, 129, 0.1);
+          color: #ff4081;
+        }
+      }
+
+      &.success {
+        .stat-icon {
+          background-color: rgba(76, 175, 80, 0.1);
+          color: #4caf50;
+        }
+      }
+
+      &.error {
+        .stat-icon {
+          background-color: rgba(244, 67, 54, 0.1);
+          color: #f44336;
+        }
+      }
+    }
+  }
+
+  .recent-activity {
+    mat-card-header {
+      margin-bottom: 16px;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  mat-grid-list {
+    cols: 2 !important;
+  }
+}
+
+@media (max-width: 600px) {
+  mat-grid-list {
+    cols: 1 !important;
+  }
+}

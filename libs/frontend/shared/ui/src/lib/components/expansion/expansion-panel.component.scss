@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+div {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+div.expanded {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+div.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+div.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  cursor: pointer;
+  user-select: none;
+}
+
+div.header:hover:not(.disabled) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+div.content {
+  padding: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+span.icon {
+  font-size: 12px;
+  transition: transform 0.2s;
+}

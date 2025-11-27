@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_INTEGRATIONS")
+}
+
+// ============================================
+// INTEGRATION MODELS
+// ============================================
+
+model IntegrationProvider {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String   @unique @db.VarChar(100) // youtube, github, slack, etc.
+  type        String   @db.VarChar(50) // analytics, upload, content, etc.
+  config      Json?    @default("{}") // Provider-specific configuration
+  credentials Json?    @default("{}") // Encrypted credentials (managed by CredentialManagerService)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now()) @db.Timestamp
+  updatedAt   DateTime @updatedAt @db.Timestamp
+
+  events      IntegrationEvent[]
+
+  @@index([name], name: "idx_integration_provider_name")
+  @@index([isActive], name: "idx_integration_provider_active")
+  @@map("integration_providers")
+}
+
+model IntegrationEvent {
+  id          String   @id @default(uuid()) @db.Uuid
+  providerId  String   @db.Uuid
+  eventType   String   @db.VarChar(100) // sync, webhook, manual, etc.
+  payload     Json?    @default("{}") // Event payload data
+  status      String   @db.VarChar(50) // success, failed, pending
+  error       String?  @db.Text
+  metadata    Json?    @default("{}") // Additional metadata
+  createdAt   DateTime @default(now()) @db.Timestamp
+  updatedAt   DateTime @updatedAt @db.Timestamp
+
+  provider IntegrationProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@index([providerId], name: "idx_integration_event_provider")
+  @@index([eventType], name: "idx_integration_event_type")
+  @@index([status], name: "idx_integration_event_status")
+  @@index([createdAt], name: "idx_integration_event_created")
+  @@map("integration_events")
+}

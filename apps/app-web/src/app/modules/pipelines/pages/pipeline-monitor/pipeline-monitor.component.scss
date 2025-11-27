@@ -1,0 +1,208 @@
+.monitor-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .monitor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    h2 {
+      margin: 0;
+      font-size: 1.75rem;
+      font-weight: 600;
+    }
+  }
+
+  .execution-card {
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    mat-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+
+      mat-card-title {
+        margin: 0;
+      }
+
+      mat-chip-set {
+        .status-running {
+          background: #fff3cd !important;
+          color: #856404 !important;
+        }
+
+        .status-success {
+          background: #d4edda !important;
+          color: #155724 !important;
+        }
+
+        .status-failed {
+          background: #f8d7da !important;
+          color: #721c24 !important;
+        }
+
+        .status-pending {
+          background: #e2e3e5 !important;
+          color: #383d41 !important;
+        }
+      }
+    }
+
+    .execution-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+
+      .stat {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .label {
+          font-size: 0.875rem;
+          color: var(--text-secondary);
+          font-weight: 500;
+        }
+
+        .value {
+          font-size: 1.5rem;
+          font-weight: 600;
+          color: var(--text-primary);
+        }
+      }
+    }
+
+    .progress-bar {
+      height: 8px;
+      border-radius: 4px;
+    }
+  }
+
+  .logs-card,
+  .performance-card {
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+  }
+
+  .logs-card {
+    mat-list {
+      .execution-item {
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border-color);
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        mat-icon {
+          color: var(--primary-color);
+        }
+
+        &.success {
+          mat-icon {
+            color: #4caf50;
+          }
+        }
+
+        &.failed {
+          mat-icon {
+            color: #f44336;
+          }
+        }
+
+        &.running {
+          mat-icon {
+            color: #ff9800;
+            animation: spin 1s linear infinite;
+          }
+        }
+      }
+
+      .empty {
+        text-align: center;
+        color: var(--text-secondary);
+        padding: 40px 20px;
+      }
+    }
+  }
+
+  .performance-card {
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+
+      .stat-box {
+        padding: 20px;
+        background: var(--background-color);
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+
+        h3 {
+          margin: 0 0 8px 0;
+          font-size: 0.875rem;
+          color: var(--text-secondary);
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+
+        .stat-value {
+          margin: 0;
+          font-size: 2rem;
+          font-weight: 700;
+          color: var(--primary-color);
+        }
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .monitor-container {
+    padding: 16px;
+
+    .monitor-header {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .actions {
+        width: 100%;
+
+        button {
+          width: 100%;
+        }
+      }
+    }
+
+    .execution-card {
+      .execution-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .performance-card {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}

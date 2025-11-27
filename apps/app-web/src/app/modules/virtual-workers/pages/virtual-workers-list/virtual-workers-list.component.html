@@ -1,0 +1,34 @@
+<div class="virtual-workers-container">
+  <div class="header">
+    <h2>Virtual Workers</h2>
+    <div class="header-actions">
+      <workix-button label="Refresh" icon="refresh" variant="secondary" (onClick)="loadWorkers()" />
+      <workix-button
+        label="Create Worker"
+        icon="add"
+        variant="primary"
+        (onClick)="openCreateDialog()"
+      />
+    </div>
+  </div>
+
+  @if (isLoading()) {
+  <div class="loading">
+    <workix-spinner [loading]="true" [size]="'lg'" />
+  </div>
+  } @else if (workers().length === 0) {
+  <div class="empty-state">
+    <workix-icon name="work_off" [size]="'lg'" />
+    <h3>No Virtual Workers</h3>
+    <p>Create your first virtual worker to get started</p>
+    <workix-button
+      label="Create Worker"
+      icon="add"
+      variant="primary"
+      (onClick)="openCreateDialog()"
+    />
+  </div>
+  } @else {
+  <workix-data-table [data]="workers()" [config]="dataTableConfig()" [isLoading]="isLoading()" />
+  }
+</div>

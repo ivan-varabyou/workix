@@ -1,0 +1,184 @@
+{
+  "common": {
+    "welcome": "Добро пожаловать в Workix!",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "create": "Создать",
+    "update": "Обновить",
+    "search": "Поиск",
+    "filter": "Фильтр",
+    "loading": "Загрузка...",
+    "success": "Успешно",
+    "error": "Ошибка",
+    "confirm": "Подтвердить",
+    "close": "Закрыть",
+    "back": "Назад",
+    "next": "Далее",
+    "previous": "Назад",
+    "submit": "Отправить",
+    "reset": "Сбросить",
+    "daily": "Ежедневный",
+    "weekly": "Еженедельный",
+    "monthly": "Ежемесячный",
+    "user": "Пользователь"
+  },
+  "errors": {
+    "user_not_found": "Пользователь не найден",
+    "validation_failed": "Ошибка валидации",
+    "unauthorized": "Не авторизован",
+    "forbidden": "Доступ запрещен",
+    "not_found": "Не найдено",
+    "internal_error": "Внутренняя ошибка сервера",
+    "bad_request": "Неверный запрос",
+    "email_already_exists": "Email уже существует",
+    "invalid_credentials": "Неверные учетные данные",
+    "token_expired": "Токен истек",
+    "token_invalid": "Неверный токен",
+    "user_no_email": "У пользователя {{userId}} нет адреса электронной почты"
+  },
+  "notifications": {
+    "welcome": "Добро пожаловать, {{userId}}!",
+    "pipeline_completed": "Пайплайн {{pipelineId}} успешно завершен",
+    "pipeline_failed": "Пайплайн {{pipelineId}} завершился с ошибкой",
+    "approval_requested": "Запрошено одобрение для {{item}}",
+    "email_verification_sent": "Письмо для подтверждения отправлено",
+    "password_reset_sent": "Письмо для сброса пароля отправлено",
+    "user_created": "Пользователь успешно создан",
+    "user_updated": "Пользователь успешно обновлен",
+    "user_deleted": "Пользователь успешно удален"
+  },
+  "alerts": {
+    "pipeline_failed": "Предупреждение: Пайплайн {{pipelineId}} завершился с ошибкой",
+    "system_error": "Произошла системная ошибка",
+    "quota_exceeded": "Квота превышена",
+    "trial_expiring": "Пробный период скоро истечет",
+    "title": "Предупреждение: {{alertType}}",
+    "greeting": "Здравствуйте, {{userName}},",
+    "footer": "Это автоматическое сообщение от Workix."
+  },
+  "email": {
+    "digest": {
+      "title": "{{period}} Сводный отчет",
+      "greeting": "Здравствуйте, {{userName}},",
+      "summary": "Ваша {{period}} сводка:",
+      "metrics": "Метрики",
+      "events": "События",
+      "alerts": "Предупреждения",
+      "recent_events": "Последние события",
+      "no_events": "Событий за этот период нет.",
+      "no_alerts": "Предупреждений за этот период нет.",
+      "footer": "Это автоматическая сводка от Workix.",
+      "pipelines_executed": "Выполнено пайплайнов",
+      "tokens_used": "Использовано токенов",
+      "api_calls": "API вызовов"
+    }
+  },
+  "auth": {
+    "login": "Войти",
+    "logout": "Выйти",
+    "register": "Регистрация",
+    "forgot_password": "Забыли пароль?",
+    "reset_password": "Сброс пароля",
+    "email_verification": "Подтверждение email",
+    "two_factor": "Двухфакторная аутентификация",
+    "password_reset": {
+      "email_sent": "Если аккаунт с таким email существует, ссылка для сброса пароля будет отправлена",
+      "too_many_requests": "Слишком много запросов на сброс пароля. Попробуйте позже.",
+      "success": "Пароль успешно изменен. Теперь вы можете войти с новым паролем.",
+      "token_expired": "Токен для сброса пароля истек. Запросите новый.",
+      "token_invalid": "Неверный токен для сброса пароля.",
+      "token_used": "Токен для сброса пароля не найден или уже использован"
+    },
+    "email_verification": {
+      "already_verified": "Email уже подтвержден",
+      "success": "Email успешно подтвержден.",
+      "token_expired": "Токен для подтверждения email истек. Запросите новый.",
+      "token_invalid": "Неверный токен для подтверждения email.",
+      "token_used": "Токен для подтверждения email не найден или уже использован",
+      "no_pending": "Не найдено ожидающих подтверждений для этого email",
+      "max_resends_exceeded": "Превышено максимальное количество попыток повторной отправки. Обратитесь в поддержку.",
+      "resend_cooldown": "Пожалуйста, подождите {{seconds}} секунд перед повторной отправкой письма для подтверждения",
+      "resend_success": "Письмо для подтверждения успешно отправлено повторно (осталось {{remaining}} попыток)"
+    },
+    "account_locked": "Аккаунт заблокирован. Попробуйте позже",
+    "password_validation": {
+      "min_length": "Пароль должен содержать не менее 12 символов",
+      "lowercase": "Пароль должен содержать строчные буквы",
+      "uppercase": "Пароль должен содержать заглавные буквы",
+      "numbers": "Пароль должен содержать цифры",
+      "special": "Пароль должен содержать специальные символы (@$!%*?&)"
+    },
+    "oauth": {
+      "email_required": "Требуется email от OAuth провайдера",
+      "cannot_unlink_no_password": "Невозможно отвязать социальный аккаунт: у пользователя должен быть установлен пароль"
+    },
+    "phone_otp": {
+      "too_many_requests": "Слишком много запросов OTP. Попробуйте позже.",
+      "no_active_otp": "Не найден активный OTP для этого номера телефона",
+      "too_many_failed_attempts": "Слишком много неудачных попыток. Попробуйте позже.",
+      "expired": "OTP истек. Запросите новый.",
+      "email_required": "Требуется email для регистрации с помощью OTP по телефону",
+      "sent_success": "OTP успешно отправлен"
+    }
+  },
+  "dashboard": {
+    "title": "Панель управления",
+    "overview": "Обзор",
+    "pipelines": "Пайплайны",
+    "executions": "Выполнения",
+    "settings": "Настройки"
+  },
+  "slack": {
+    "integration_not_found": "Интеграция Slack не найдена",
+    "no_channel_specified": "Канал не указан",
+    "notification": "Уведомление"
+  },
+  "rbac": {
+    "role_already_exists": "Роль уже существует",
+    "user_or_role_not_found": "Пользователь или роль не найдены",
+    "permission_already_exists": "Разрешение уже существует",
+    "cannot_change_system_role_level": "Невозможно изменить уровень системной роли",
+    "cannot_delete_system_role": "Невозможно удалить системную роль"
+  },
+  "users": {
+    "avatar": {
+      "no_file_provided": "Файл не предоставлен",
+      "file_size_exceeded": "Размер файла превышает лимит 5MB",
+      "invalid_file_type": "Разрешены только изображения JPEG, PNG и WebP",
+      "invalid_file_extension": "Неверное расширение файла"
+    },
+    "user_id_required": "Требуется ID пользователя",
+    "user_id_and_avatar_required": "Требуются ID пользователя и URL аватара",
+    "profile_not_found": "Профиль пользователя не найден"
+  },
+  "pipelines": {
+    "not_found": "Пайплайн не найден",
+    "step_not_found": "Шаг не найден",
+    "execution_not_found": "Выполнение не найдено",
+    "name_and_steps_required": "Требуются название пайплайна и шаги",
+    "cannot_edit_published": "Невозможно редактировать опубликованный пайплайн",
+    "must_have_at_least_one_step": "Пайплайн должен содержать хотя бы один шаг",
+    "no_access": "У вас нет доступа к этому пайплайну",
+    "can_only_update_own": "Вы можете обновлять только свои пайплайны",
+    "can_only_delete_own": "Вы можете удалять только свои пайплайны",
+    "can_only_publish_own": "Вы можете публиковать только свои пайплайны",
+    "can_only_manage_own": "Вы можете управлять только своими пайплайнами",
+    "only_templates_can_be_cloned": "Только шаблоны могут быть клонированы"
+  },
+  "api_keys": {
+    "required": "Требуется API ключ",
+    "invalid_format": "Неверный формат API ключа",
+    "invalid_or_expired": "Неверный или истекший API ключ",
+    "rate_limit_exceeded": "Превышен лимит запросов"
+  },
+  "service_discovery": {
+    "name_url_port_required": "Требуются название сервиса, URL и порт",
+    "not_found": "Сервис не найден",
+    "no_healthy_instances": "Не найдено здоровых экземпляров {{serviceName}}"
+  },
+  "service_auth": {
+    "invalid_service_key": "Неверный ключ сервиса"
+  }
+}

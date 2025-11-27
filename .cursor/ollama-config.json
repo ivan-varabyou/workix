@@ -1,0 +1,44 @@
+{
+  "ollama": {
+    "base_url": "http://localhost:11434/v1",
+    "api_key": "ollama",
+    "api_type": "open_ai",
+    "default_model": "mistral:7b-instruct-q4_K_M",
+    "temperature": 0.7,
+    "max_tokens": 4096,
+    "timeout": 300
+  },
+  "agents": {
+    "coder": {
+      "model": "mistral:7b-instruct-q4_K_M",
+      "temperature": 0.7,
+      "system_message": "Ты опытный TypeScript/NestJS/Angular разработчик для проекта Workix."
+    },
+    "tester": {
+      "model": "mistral:7b-instruct-q4_K_M",
+      "temperature": 0.5,
+      "system_message": "Ты QA инженер для проекта Workix."
+    },
+    "reviewer": {
+      "model": "mistral:7b-instruct-q4_K_M",
+      "temperature": 0.3,
+      "system_message": "Ты code reviewer для проекта Workix."
+    }
+  },
+  "models": {
+    "llama3.1:8b-instruct-q4_K_M": {
+      "name": "llama3.1:8b-instruct-q4_K_M",
+      "description": "LLaMA 3.1 8B Instruct (Q4_K_M) - оптимальный баланс качества и скорости",
+      "context_window": 128000,
+      "size": "4.9 GB",
+      "recommended_for": ["coding", "review", "testing"]
+    },
+    "mistral:7b-instruct-q4_K_M": {
+      "name": "mistral:7b-instruct-q4_K_M",
+      "description": "Mistral 7B Instruct (Q4_K_M) - быстрая модель для прототипирования",
+      "context_window": 32000,
+      "size": "4.4 GB",
+      "recommended_for": ["quick_coding", "prototyping"]
+    }
+  }
+}

@@ -1,0 +1,17 @@
+:host {
+  display: block;
+}
+
+hr.vertical {
+  border-left: 1px solid currentColor;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  height: 100%;
+  width: 1px;
+}
+
+hr.inset {
+  margin-left: 16px;
+  margin-right: 16px;
+}

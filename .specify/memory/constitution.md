@@ -7,17 +7,20 @@ Workix is a visual automation platform that empowers non-technical users to crea
 ## 🏗️ Core Principles
 
 ### 1. **No-Code First**
+
 - Everything must be achievable through the visual editor
 - AI-agent decisions must be explainable and transparent
 - Users should never need to understand code or technical details
 
 ### 2. **Explainability & Trust**
+
 - All AI-agent actions must be logged and explained
 - Approval gating for write operations ensures human control
 - Audit logs provide full traceability for compliance (GDPR)
 - Users understand WHY the system made each decision
 
 ### 3. **Security First**
+
 - Multi-tenant isolation with strong data boundaries (db-per-tenant or schema-per-tenant)
 - Secrets scanning and prevention of credential leakage
 - Approval flow for all critical operations
@@ -25,6 +28,7 @@ Workix is a visual automation platform that empowers non-technical users to crea
 - No secrets in logs or UI outputs
 
 ### 4. **Reliability & Observability**
+
 - Dry-run capability for all pipelines before execution
 - Snapshot-based testing for reproducibility
 - Rollback capability without data loss
@@ -32,6 +36,7 @@ Workix is a visual automation platform that empowers non-technical users to crea
 - All operations are recoverable
 
 ### 5. **Clean Architecture**
+
 - SOLID principles guide all design decisions
 - DRY (Don't Repeat Yourself) - no code duplication
 - YAGNI (You Aren't Gonna Need It) - implement only what's needed
@@ -39,6 +44,7 @@ Workix is a visual automation platform that empowers non-technical users to crea
 - Modular design enables microservices extraction
 
 ### 6. **Performance & Scalability**
+
 - Lazy loading and efficient rendering
 - Serverless-ready sandbox execution for AI-agent
 - Connection pooling and query optimization
@@ -46,6 +52,7 @@ Workix is a visual automation platform that empowers non-technical users to crea
 - Caching strategies for high throughput
 
 ### 7. **Developer Experience**
+
 - Type-safe throughout the stack (TypeScript)
 - Swagger/OpenAPI auto-generation
 - Clear API contracts
@@ -53,6 +60,7 @@ Workix is a visual automation platform that empowers non-technical users to crea
 - Comprehensive test coverage (TDD approach)
 
 ### 8. **User Experience**
+
 - Intuitive drag-and-drop visual editor
 - Real-time feedback and validation
 - Clear error messages with AI-suggested fixes
@@ -62,6 +70,7 @@ Workix is a visual automation platform that empowers non-technical users to crea
 ## 🛠️ Technical Standards
 
 ### Code Quality
+
 - All code must be type-safe (TypeScript, strong typing)
 - TDD approach: tests written before implementation
 - All functions must be tested with realistic scenarios
@@ -69,13 +78,15 @@ Workix is a visual automation platform that empowers non-technical users to crea
 - Zero hardcoded values - use configuration
 
 ### Testing Strategy
-- **Unit Tests**: libs/**/__tests__/*.spec.ts (Vitest)
+
+- **Unit Tests**: libs/\*_/**tests**/_.spec.ts (Vitest)
 - **Snapshot Tests**: for UI and API responses
 - **E2E Tests**: real workflows through the platform
 - **Security Tests**: secrets scanning, injection attacks
 - **Load Tests**: for scalability validation
 
 ### Architecture Layers
+
 ```
 apps/
   ├── web-admin/          # Admin dashboard (Angular SSR)
@@ -94,6 +105,7 @@ libs/
 ```
 
 ### Database
+
 - PostgreSQL with TypeORM
 - Migrations tracked in version control
 - Schema-per-tenant or db-per-tenant isolation
@@ -101,6 +113,7 @@ libs/
 - Audit logs for all data mutations
 
 ### Security
+
 - API authentication via JWT or OAuth2
 - Rate limiting and DDoS protection
 - Input validation on all endpoints
@@ -110,6 +123,7 @@ libs/
 - Regular penetration testing
 
 ### Multi-Tenancy
+
 - Complete data isolation between tenants
 - Per-tenant quota and rate limiting
 - Separate audit logs per tenant
@@ -117,6 +131,7 @@ libs/
 - Tenant-scoped APIs and permissions
 
 ### CI/CD Pipeline
+
 - GitHub Actions for automation
 - Linting, type-checking, tests must pass
 - Security scanning (secrets, dependencies, SAST)
@@ -127,6 +142,7 @@ libs/
 ## 📊 Approval Flow & Governance
 
 ### Pipeline Execution
+
 1. **Dry-Run**: Simulate execution without side effects ✓
 2. **Snapshot**: Capture expected output state ✓
 3. **Approval**: Human review for write operations ✓
@@ -134,6 +150,7 @@ libs/
 5. **Validation**: Compare with snapshot, alert on divergence ✓
 
 ### AI-Agent Decisions
+
 - Every AI decision must have an explanation
 - Users can override AI decisions
 - All overrides are logged for audit

@@ -1,0 +1,10 @@
+<div [class]="menuClass()">
+  <button [class]="triggerClass()" (click)="toggleMenu()">
+    <ng-content select="[workix-menu-trigger]"></ng-content>
+  </button>
+  @if (isOpen()) {
+  <div [class]="menuPanelClass()" [style.position]="'absolute'">
+    <ng-content select="workix-menu-content"></ng-content>
+  </div>
+  }
+</div>

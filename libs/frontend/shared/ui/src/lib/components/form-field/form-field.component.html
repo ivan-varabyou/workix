@@ -1,0 +1,23 @@
+<div
+  class="form-field"
+  [class.error]="isError()"
+  [class.required]="required()"
+  [class]="styleClass()"
+>
+  @if (label()) {
+  <label class="form-label">
+    {{ label() }}
+    @if (required()) {
+    <span class="required-marker">*</span>
+    }
+  </label>
+  }
+  <div class="form-control-wrapper">
+    <ng-content></ng-content>
+  </div>
+  @if (isError() && errorMessage()) {
+  <span class="form-error">{{ errorMessage() }}</span>
+  } @if (hint() && !isError()) {
+  <span class="form-hint">{{ hint() }}</span>
+  }
+</div>

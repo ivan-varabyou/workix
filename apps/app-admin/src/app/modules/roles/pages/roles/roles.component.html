@@ -1,0 +1,39 @@
+<div class="roles-container">
+  <div class="roles-header">
+    <h2>Role Management</h2>
+    <workix-button label="Create Role" variant="primary" icon="add" (onClick)="createRole()" />
+  </div>
+
+  <workix-data-table
+    [data]="roles()"
+    [config]="dataTableConfig()"
+    [isLoading]="isLoading()"
+    [totalItems]="totalRoles()"
+    [currentPage]="currentPage()"
+    [pageSize]="currentPageSize()"
+    (onSearch)="onSearch($event)"
+    (onPageChange)="onPageChange($event.page, $event.pageSize)"
+    (onSortChange)="onSortChange($event.sortKey, $event.sortDirection)"
+    (onActionClick)="onActionClick($event.action, $event.row)"
+  />
+</div>
+
+<!-- Edit Role Dialog -->
+<workix-form-dialog
+  [visible]="showEditDialog()"
+  [config]="editDialogConfig()"
+  [isLoading]="editDialogLoading()"
+  (submit)="onEditDialogSubmit($event)"
+  (cancel)="onEditDialogCancel()"
+  (visibleChange)="showEditDialog.set($event)"
+/>
+
+<!-- Delete Role Dialog -->
+<workix-confirm-dialog
+  [visible]="showDeleteDialog()"
+  [config]="deleteDialogConfig()"
+  [isLoading]="deleteDialogLoading()"
+  (confirm)="onDeleteDialogConfirm()"
+  (cancel)="onDeleteDialogCancel()"
+  (visibleChange)="showDeleteDialog.set($event)"
+/>

@@ -1,0 +1,6 @@
+{
+  "*.{ts,tsx}": ["prettier --write", "eslint --fix", "node scripts/remove-unused-simple.js"],
+  "*.{js,jsx}": ["prettier --write", "eslint --fix"],
+  "scripts/**/*.{js,jsx}": ["prettier --write"],
+  "*.{json,md,html,css,scss}": ["prettier --write"]
+}

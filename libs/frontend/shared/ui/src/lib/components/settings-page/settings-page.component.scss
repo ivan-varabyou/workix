@@ -1,0 +1,59 @@
+.settings-page-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    h2 {
+      font-size: 2rem;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+  }
+
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+  }
+
+  .error-message {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 0.875rem;
+  }
+
+  .settings-tab-card {
+    padding: 24px;
+
+    .settings-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      workix-form-field {
+        display: block;
+      }
+    }
+  }
+}
+
+.full-width {
+  width: 100%;
+}

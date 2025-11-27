@@ -1,0 +1,27 @@
+{
+  "name": "backend-entities-infrastructure-integrations-provider",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/backend/entities/infrastructure/integrations/provider/src",
+  "projectType": "library",
+  "tags": ["infrastructure", "entities", "integrations"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/backend/entities/infrastructure/integrations/provider",
+        "main": "libs/backend/entities/infrastructure/integrations/provider/src/index.ts",
+        "tsConfig": "libs/backend/entities/infrastructure/integrations/provider/tsconfig.lib.json",
+        "assets": []
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../../../../coverage/libs/backend/entities/infrastructure/integrations/provider"
+      }
+    }
+  }
+}

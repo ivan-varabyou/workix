@@ -1,0 +1,99 @@
+.auth-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--primary-color, #1976d2), var(--accent-color, #ff4081));
+  padding: 16px;
+
+  .auth-card {
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .auth-header {
+    margin-bottom: 24px;
+    text-align: center;
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      margin-top: 0;
+    }
+
+    .subtitle {
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 0.875rem;
+      margin: 0;
+    }
+  }
+
+  .auth-content {
+    .error-message {
+      background-color: #ffebee;
+      color: #c62828;
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+      font-size: 0.875rem;
+    }
+
+    form {
+      workix-form-field {
+        display: block;
+        margin-bottom: 16px;
+      }
+
+      .remember-forgot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        font-size: 0.875rem;
+
+        a {
+          color: var(--primary-color, #1976d2);
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .agree-terms {
+        margin-bottom: 24px;
+      }
+
+      .submit-button {
+        margin-bottom: 16px;
+      }
+    }
+
+    .social-button {
+      margin-bottom: 16px;
+    }
+
+    .auth-link {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.875rem;
+      color: rgba(0, 0, 0, 0.6);
+
+      a {
+        color: var(--primary-color, #1976d2);
+        text-decoration: none;
+        font-weight: 600;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+.full-width {
+  width: 100%;
+}

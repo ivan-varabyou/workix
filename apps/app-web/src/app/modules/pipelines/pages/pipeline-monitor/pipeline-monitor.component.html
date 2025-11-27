@@ -1,0 +1,11 @@
+<div class="monitor-container">
+  <workix-monitor
+    [config]="monitorConfig()"
+    [currentExecution]="currentExecution()"
+    [executions]="executions()"
+    [isLoading]="false"
+    (actionClick)="onActionClick($event)"
+    (executionClick)="onExecutionClick($event)"
+    (tabChange)="onTabChange($event)"
+  />
+</div>

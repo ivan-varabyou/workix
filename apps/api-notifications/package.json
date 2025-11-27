@@ -1,0 +1,50 @@
+{
+  "name": "@workix/api-notifications",
+  "version": "1.0.0",
+  "description": "Workix Notifications Microservice - Worker service for processing email notifications from Redis queue",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "NODE_ENV=development API_NOTIFICATIONS_PORT=7201 REDIS_HOST=localhost REDIS_PORT=5900 DATABASE_URL_AUTH=postgresql://postgres:postgres@localhost:5200/workix_auth DATABASE_URL_NOTIFICATIONS=postgresql://postgres:postgres@localhost:5201/workix_notifications npx tsx watch --tsconfig ../../tsconfig.base.json src/main.ts",
+    "start:dev": "NODE_ENV=development API_NOTIFICATIONS_PORT=7201 REDIS_HOST=localhost REDIS_PORT=5900 DATABASE_URL_AUTH=postgresql://postgres:postgres@localhost:5200/workix_auth DATABASE_URL_NOTIFICATIONS=postgresql://postgres:postgres@localhost:5201/workix_notifications npx tsx --tsconfig ../../tsconfig.base.json src/main.ts",
+    "build": "nx build api-notifications",
+    "build:local": "tsc",
+    "start": "node ../../dist/apps/api-notifications/main.js",
+    "start:local": "node dist/main.js",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/config": "^3.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/bull": "^10.1.1",
+    "@nestjs/platform-express": "^11.0.0",
+    "bull": "^4.12.2",
+    "pg": "^8.10.0",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.0",
+    "web-push": "^3.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/web-push": "^3.6.4",
+    "tsx": "^3.14.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.0.0"
+  },
+  "keywords": [
+    "workix",
+    "notifications",
+    "microservice",
+    "worker",
+    "email",
+    "redis",
+    "bull",
+    "nestjs"
+  ],
+  "author": "Workix Team",
+  "license": "ISC"
+}

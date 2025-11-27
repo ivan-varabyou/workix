@@ -1,0 +1,25 @@
+{
+  "extends": "../../../../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true
+  },
+  "exclude": ["../**/*.spec.ts"],
+  "include": [
+    "../src/**/*.stories.ts",
+    "../src/**/*.stories.js",
+    "../src/**/*.stories.jsx",
+    "../src/**/*.stories.tsx",
+    "../src/**/*.stories.mdx",
+    "../src/**/*.ts",
+    "../src/lib/**/*.ts",
+    "../src/lib/components/**/*.ts",
+    "../src/lib/components/snackbar/snackbar.component.ts",
+    "../src/lib/components/sort/sort.component.ts",
+    "*.js",
+    "*.ts"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "../../../shared/backend/tsconfig.spec.base.json",
+    "./tsconfig.json",
+    "../../../../tsconfig.spec.base.json"
+  ],
+  "compilerOptions": {
+    "outDir": "../../../../dist/out-tsc",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+  }
+}

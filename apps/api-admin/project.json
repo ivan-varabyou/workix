@@ -1,0 +1,66 @@
+{
+  "name": "api-admin",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/api-admin/src",
+  "projectType": "application",
+  "tags": [
+    "type:app",
+    "scope:backend"
+  ],
+  "implicitDependencies": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/apps/api-admin",
+        "main": "apps/api-admin/src/main.ts",
+        "tsConfig": "apps/api-admin/tsconfig.json",
+        "assets": [
+          "apps/api-admin/src/assets"
+        ],
+        "configFile": "apps/api-admin/vite.config.ts"
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "api-admin:build",
+        "runBuildTargetDependencies": false,
+        "watch": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "api-admin:build"
+        },
+        "production": {
+          "buildTarget": "api-admin:build:production"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": [
+        "{workspaceRoot}/coverage/apps/api-admin"
+      ],
+      "options": {
+        "passWithNoTests": true,
+        "configFile": "apps/api-admin/vitest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "typecheck": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "tsConfig": "apps/api-admin/tsconfig.json",
+        "main": "apps/api-admin/src/main.ts",
+        "outputPath": "dist/apps/api-admin"
+      }
+    }
+  }
+}

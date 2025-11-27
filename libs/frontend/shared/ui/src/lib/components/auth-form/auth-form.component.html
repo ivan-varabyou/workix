@@ -1,0 +1,80 @@
+<div class="auth-form-container">
+  <workix-card [styleClass]="'auth-card'">
+    <div class="auth-header">
+      <h2>{{ config().title }}</h2>
+      @if (config().subtitle) {
+      <p class="subtitle">{{ config().subtitle }}</p>
+      }
+    </div>
+
+    <div class="auth-content">
+      @if (errorMessage()) {
+      <div class="error-message">
+        {{ errorMessage() }}
+      </div>
+      } @if (form()) {
+      <form [formGroup]="form()!" (ngSubmit)="onSubmit()">
+        @for (field of config().fields; track field.name) {
+        <workix-form-field
+          [label]="field.label"
+          [error]="getFieldError(field.name)"
+          [required]="field.required"
+        >
+          <workix-input
+            [formControlName]="field.name"
+            [type]="field.type"
+            [placeholder]="field.placeholder"
+            [required]="field.required"
+          />
+        </workix-form-field>
+        } @if (config().showRememberMe) {
+        <div class="remember-forgot">
+          <workix-checkbox formControlName="rememberMe" [label]="'Remember me'" />
+          @if (config().showForgotPassword && config().forgotPasswordLink) {
+          <a [routerLink]="config().forgotPasswordLink">Forgot password?</a>
+          }
+        </div>
+        } @if (mode() === 'register' && hasAgreeTermsField()) {
+        <div class="agree-terms">
+          <workix-checkbox
+            formControlName="agreeTerms"
+            [label]="'I agree to the Terms of Service'"
+            [required]="true"
+          />
+        </div>
+        }
+
+        <workix-button
+          [label]="config().submitLabel"
+          [variant]="'primary'"
+          [icon]="config().submitIcon"
+          [loading]="isLoading()"
+          [disabled]="form()?.invalid || isLoading()"
+          [styleClass]="'full-width submit-button'"
+          (onClick)="onSubmit()"
+        />
+      </form>
+      } @if (config().showSocialLogin) {
+      <workix-divider [text]="'OR'" />
+      <workix-button
+        [label]="config().socialLoginLabel || 'Sign in with Google'"
+        [variant]="'secondary'"
+        [icon]="config().socialLoginIcon || 'google'"
+        [outlined]="true"
+        [styleClass]="'full-width social-button'"
+        (onClick)="onSocialLogin()"
+      />
+      } @if (config().showSignupLink && config().signupLinkRoute) {
+      <div class="auth-link">
+        Don't have an account?
+        <a [routerLink]="config().signupLinkRoute">Sign up</a>
+      </div>
+      } @if (config().showLoginLink && config().loginLinkRoute) {
+      <div class="auth-link">
+        Already have an account?
+        <a [routerLink]="config().loginLinkRoute">Sign in</a>
+      </div>
+      }
+    </div>
+  </workix-card>
+</div>

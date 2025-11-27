@@ -1,0 +1,10 @@
+<workix-client-layout
+  [title]="title()"
+  [userMenu]="userMenu()"
+  [isAuthenticated]="isAuthenticated()"
+  [isDarkMode]="isDarkMode()"
+  (toggleDarkMode)="toggleDarkMode()"
+  (logout)="logout()"
+>
+  <router-outlet></router-outlet>
+</workix-client-layout>

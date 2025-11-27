@@ -1,0 +1,295 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Design System/Patterns" />
+
+# Component Patterns
+
+Reusable patterns for common UI interactions and workflows.
+
+## Form Patterns
+
+### Login Form Pattern
+```html
+<form (ngSubmit)="onLogin()">
+  <app-input label="Email" type="email" [(ngModel)]="email"></app-input>
+  <app-input label="Password" type="password" [(ngModel)]="password"></app-input>
+  <app-checkbox label="Remember me" [(ngModel)]="rememberMe"></app-checkbox>
+  <app-button [disabled]="!isFormValid()">Sign In</app-button>
+  <p><a href="/forgot-password">Forgot password?</a></p>
+</form>
+```
+
+### Registration Form Pattern
+```html
+<form (ngSubmit)="onRegister()">
+  <app-input label="Full Name" [(ngModel)]="fullName"></app-input>
+  <app-input label="Email" type="email" [(ngModel)]="email"></app-input>
+  <app-input label="Password" type="password" [(ngModel)]="password"></app-input>
+  <app-input label="Confirm Password" type="password" [(ngModel)]="confirmPassword"></app-input>
+  <app-checkbox label="I agree to Terms of Service" [(ngModel)]="agreeToTerms"></app-checkbox>
+  <app-button [disabled]="!isFormValid()">Create Account</app-button>
+  <p>Already have an account? <a href="/login">Sign In</a></p>
+</form>
+```
+
+### Multi-Step Form Pattern
+```html
+<div class="multi-step-form">
+  <app-stepper [steps]="['Personal', 'Address', 'Billing', 'Review']" [activeStep]="currentStep"></app-stepper>
+  
+  @if (currentStep === 0) {
+    <!-- Personal information form -->
+  }
+  @if (currentStep === 1) {
+    <!-- Address form -->
+  }
+  @if (currentStep === 2) {
+    <!-- Billing form -->
+  }
+  @if (currentStep === 3) {
+    <!-- Review summary -->
+  }
+  
+  <div class="form-actions">
+    <app-button [disabled]="currentStep === 0" (click)="previousStep()">Previous</app-button>
+    @if (currentStep < 3) {
+      <app-button (click)="nextStep()">Next</app-button>
+    }
+    @if (currentStep === 3) {
+      <app-button variant="success" (click)="submit()">Complete</app-button>
+    }
+  </div>
+</div>
+```
+
+## CRUD Patterns
+
+### List View with Actions
+```html
+<div class="crud-container">
+  <div class="list-header">
+    <h2>Items</h2>
+    <app-button variant="primary" (click)="openCreateDialog()">+ Add New</app-button>
+  </div>
+  
+  <div class="filters">
+    <app-input placeholder="Search..." [(ngModel)]="searchQuery"></app-input>
+    <app-dropdown label="Sort By" [(ngModel)]="sortBy"></app-dropdown>
+  </div>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of items; track item.id) {
+        <tr>
+          <td>{{ item.name }}</td>
+          <td><app-badge [variant]="item.status">{{ item.status }}</app-badge></td>
+          <td>{{ item.date | date }}</td>
+          <td>
+            <app-button size="sm" variant="secondary" (click)="edit(item)">Edit</app-button>
+            <app-button size="sm" variant="danger" (click)="delete(item)">Delete</app-button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  
+  <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" (onChange)="onPageChange($event)"></app-pagination>
+</div>
+```
+
+### Create/Edit Modal Pattern
+```html
+@if (isModalOpen) {
+  <app-modal title="Create Item" [isOpen]="isModalOpen" (onConfirm)="save()" (onClose)="closeModal()">
+    <form>
+      <app-input label="Name" [(ngModel)]="form.name"></app-input>
+      <app-input label="Description" [(ngModel)]="form.description"></app-input>
+      <app-dropdown label="Category" [(ngModel)]="form.category" [options]="categories"></app-dropdown>
+      <app-checkbox label="Active" [(ngModel)]="form.active"></app-checkbox>
+    </form>
+  </app-modal>
+}
+```
+
+## Error Handling Patterns
+
+### Form Validation Feedback
+```html
+<div class="form-field">
+  <app-input 
+    label="Email" 
+    type="email" 
+    [(ngModel)]="email"
+    [error]="getEmailError()"
+    [hint]="'example@domain.com'">
+  </app-input>
+</div>
+
+<!-- Error messages -->
+@if (hasErrors) {
+  <app-alert variant="danger" title="Please fix the following errors:">
+    <ul>
+      @for (error of errors; track error) {
+        <li>{{ error }}</li>
+      }
+    </ul>
+  </app-alert>
+}
+```
+
+### Success/Error Toast Pattern
+```typescript
+// Success case
+this.userService.createUser(data).subscribe(
+  (result) => {
+    this.toastService.show({
+      type: 'success',
+      title: 'Success',
+      message: 'User created successfully'
+    });
+    this.redirect();
+  },
+  (error) => {
+    this.toastService.show({
+      type: 'error',
+      title: 'Error',
+      message: error.message
+    });
+  }
+);
+```
+
+## Loading States Pattern
+
+```html
+@if (isLoading) {
+  <div class="loading-container">
+    <app-spinner size="lg"></app-spinner>
+    <p>Loading data...</p>
+  </div>
+} @else if (items.length === 0) {
+  <app-empty-state 
+    icon="inbox"
+    title="No items"
+    description="Create your first item to get started">
+    <app-button (click)="openCreateDialog()">Create Item</app-button>
+  </app-empty-state>
+} @else {
+  <!-- Content here -->
+}
+```
+
+## Empty/Error States
+
+### Empty State Pattern
+```html
+<app-empty-state
+  icon="folder-open"
+  title="No Results"
+  description="Your search didn't match any items"
+  action="Create New">
+</app-empty-state>
+```
+
+### Error State Pattern
+```html
+@if (error) {
+  <app-alert variant="danger" title="Error">
+    <p>{{ error.message }}</p>
+    @if (error.details) {
+      <details>
+        <summary>Details</summary>
+        <pre>{{ error.details }}</pre>
+      </details>
+    }
+    <app-button (click)="retry()">Try Again</app-button>
+  </app-alert>
+}
+```
+
+## Search/Filter Pattern
+
+```html
+<div class="search-filter">
+  <app-input 
+    placeholder="Search items..." 
+    [(ngModel)]="searchQuery"
+    (onChange)="onSearch($event)">
+  </app-input>
+  
+  <div class="filters">
+    @for (filter of activeFilters; track filter.key) {
+      <app-tag removable="true" (onRemove)="removeFilter(filter)">
+        {{ filter.key }}: {{ filter.value }}
+      </app-tag>
+    }
+  </div>
+  
+  <div class="filter-options">
+    <app-dropdown label="Category" (onChange)="addFilter('category', $event)"></app-dropdown>
+    <app-dropdown label="Status" (onChange)="addFilter('status', $event)"></app-dropdown>
+    <app-dropdown label="Date Range" (onChange)="addFilter('dateRange', $event)"></app-dropdown>
+  </div>
+</div>
+```
+
+## Real-time Data Pattern
+
+```html
+<div class="real-time-list">
+  <div class="list-header">
+    <h2>Live Activity</h2>
+    @if (isConnected) {
+      <app-badge variant="success">Live</app-badge>
+    } @else {
+      <app-badge variant="warning">Offline</app-badge>
+    }
+  </div>
+  
+  @for (item of liveItems$ | async; track item.id) {
+    <div class="item" [class.new]="isNewItem(item)">
+      {{ item.data }}
+    </div>
+  }
+</div>
+```
+
+## Pagination Pattern
+
+```html
+<div class="data-display">
+  <table>
+    <!-- Table content -->
+  </table>
+  
+  <div class="pagination-footer">
+    <div class="items-info">
+      Showing {{ startIndex }} to {{ endIndex }} of {{ totalItems }} items
+    </div>
+    <app-pagination 
+      [currentPage]="currentPage"
+      [totalPages]="totalPages"
+      (onChange)="onPageChange($event)">
+    </app-pagination>
+  </div>
+</div>
+```
+
+---
+
+**Best Practices:**
+1. Always provide loading states
+2. Show clear error messages
+3. Use consistent patterns across the app
+4. Test all states (empty, loading, error, success)
+5. Ensure keyboard navigation works
+6. Follow accessibility guidelines
+

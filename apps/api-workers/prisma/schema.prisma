@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_WORKERS")
+}
+
+// ============================================
+// WORKER MODELS
+// ============================================
+
+model VirtualWorker {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String    @db.VarChar(255)
+  type        String    @db.VarChar(100)
+  state       String    @db.VarChar(50) // idle, running, paused, stopped
+  config      Json      @default("{}")
+  metadata    Json?     @default("{}")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  taskExecutions TaskExecution[]
+
+  @@index([type], name: "idx_virtual_worker_type")
+  @@index([state], name: "idx_virtual_worker_state")
+  @@map("virtual_workers")
+}
+
+model TaskExecution {
+  id          String    @id @default(uuid()) @db.Uuid
+  workerId    String    @db.Uuid
+  taskType    String    @db.VarChar(100)
+  status      String    @db.VarChar(50) // pending, running, completed, failed
+  input       Json?     @default("{}")
+  output      Json?     @default("{}")
+  error       String?   @db.Text
+  startedAt   DateTime? @db.Timestamp
+  completedAt DateTime? @db.Timestamp
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  worker VirtualWorker @relation(fields: [workerId], references: [id], onDelete: Cascade)
+
+  @@index([workerId], name: "idx_task_execution_worker")
+  @@index([status], name: "idx_task_execution_status")
+  @@index([createdAt], name: "idx_task_execution_created")
+  @@map("task_executions")
+}

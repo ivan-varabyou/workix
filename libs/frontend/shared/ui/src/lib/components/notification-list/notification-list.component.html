@@ -1,0 +1,120 @@
+<div class="notification-list-container">
+  @if (config().title) {
+  <div class="notification-header">
+    <h2>{{ config().title }}</h2>
+    <div class="header-actions">
+      @if (config().showMarkAllAsRead !== false && unreadCount() > 0) {
+      <workix-button
+        [label]="'Mark All as Read'"
+        [variant]="'primary'"
+        [icon]="'done_all'"
+        (onClick)="onMarkAllAsRead()"
+      />
+      } @if (config().showClearAll !== false && notifications().length > 0) {
+      <workix-button
+        [label]="'Clear All'"
+        [variant]="'secondary'"
+        [icon]="'delete_sweep'"
+        (onClick)="onClearAll()"
+      />
+      }
+    </div>
+  </div>
+  } @if (isLoading()) {
+  <div class="loading">
+    <workix-spinner [loading]="true" [size]="'lg'" />
+  </div>
+  } @if (errorMessage()) {
+  <div class="error-message">
+    {{ errorMessage() }}
+  </div>
+  } @if (!isLoading() && notifications().length === 0) {
+  <workix-card [styleClass]="'empty-state'">
+    <div class="empty-content">
+      <workix-icon [name]="config().emptyIcon || 'notifications_none'" [size]="'lg'" />
+      <p>{{ config().emptyMessage || 'No notifications' }}</p>
+    </div>
+  </workix-card>
+  } @if (!isLoading() && notifications().length > 0) {
+  <workix-card [styleClass]="'notifications-card'">
+    @if (config().showFilters !== false && config().filters && config().filters.length > 0) {
+    <div class="filter-tabs">
+      @for (filter of config().filters; track filter.value) {
+      <button [class.active]="filterType() === filter.value" (click)="onFilterChange(filter.value)">
+        {{ filter.label }}
+        @if (filter.count !== undefined) {
+        <workix-badge [value]="filter.count" [variant]="'info'" />
+        }
+      </button>
+      }
+    </div>
+    <workix-divider />
+    }
+
+    <workix-list [styleClass]="'notifications-list'">
+      @for (notification of paginatedNotifications(); track notification.id) {
+      <workix-list-item
+        [styleClass]="'notification-item notification-' + notification.type"
+        [class.unread]="!notification.read"
+      >
+        <div class="notification-content">
+          <div class="notification-icon">
+            <workix-icon
+              [name]="notification.icon || getTypeIcon(notification.type)"
+              [size]="'md'"
+              [color]="getTypeColor(notification.type)"
+            />
+          </div>
+          <div class="notification-info">
+            <div class="notification-title">
+              {{ notification.title }}
+              @if (!notification.read) {
+              <workix-chip [label]="'New'" [variant]="'info'" [size]="'sm'" />
+              }
+            </div>
+            <div class="notification-message">{{ notification.message }}</div>
+            <div class="notification-meta">
+              <span class="notification-timestamp">{{
+                notification.timestamp | date : 'medium'
+              }}</span>
+            </div>
+          </div>
+          <div class="notification-actions">
+            @if (notification.action) {
+            <workix-button
+              [label]="notification.action.label"
+              [variant]="'secondary'"
+              [size]="'sm'"
+              [outlined]="true"
+              [routerLink]="notification.action.url"
+              (onClick)="onActionClick(notification, notification.action!.label)"
+            />
+            }
+            <workix-button
+              [label]="''"
+              [variant]="'secondary'"
+              [icon]="'delete'"
+              [text]="true"
+              [size]="'sm'"
+              (onClick)="onDelete(notification.id)"
+            />
+          </div>
+        </div>
+      </workix-list-item>
+      @if (!$last) {
+      <workix-divider />
+      } }
+    </workix-list>
+
+    @if (config().showPagination !== false) {
+    <workix-divider />
+    <workix-paginator
+      [length]="filteredNotifications().length"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="config().pageSizeOptions || [5, 10, 20, 50]"
+      (pageChange)="onPageChange($event)"
+    />
+    }
+  </workix-card>
+  }
+</div>

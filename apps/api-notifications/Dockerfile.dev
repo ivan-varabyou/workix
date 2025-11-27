@@ -1,0 +1,29 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY nx.json ./
+COPY tsconfig.base.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy source code
+COPY . .
+
+# Expose port
+EXPOSE 7201
+
+# Default command (will be overridden in docker-compose.yml)
+CMD ["node", "dist/apps/api-notifications/main.js"]
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,20 @@
+{
+  "name": "backend-domain-auth",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/auth/src",
+  "projectType": "library",
+  "tags": ["type:lib", "scope:domain"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{workspaceRoot}/coverage/libs/domain/auth"],
+      "options": {
+        "passWithNoTests": true,
+        "configFile": "libs/domain/auth/vitest.config.ts"
+      }
+    }
+  }
+}

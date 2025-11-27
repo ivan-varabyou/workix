@@ -1,0 +1,22 @@
+<div class="analytics-container">
+  <div class="analytics-header">
+    <h2>Analytics Dashboard</h2>
+    <div class="header-actions">
+      <!-- TODO: Use WorkixSelectComponent when available -->
+      <select [value]="selectedPeriod()" (change)="changePeriod($any($event.target).value)">
+        <option value="1d">Last Day</option>
+        <option value="7d">Last 7 Days</option>
+        <option value="30d">Last 30 Days</option>
+        <option value="90d">Last 90 Days</option>
+      </select>
+      <workix-button
+        label="Refresh"
+        variant="primary"
+        icon="refresh"
+        (onClick)="loadAllAnalytics()"
+      />
+    </div>
+  </div>
+
+  <workix-dashboard [config]="dashboardConfig()" [isLoading]="isLoading()" />
+</div>

@@ -1,0 +1,101 @@
+<workix-modal
+  [visible]="visible()"
+  [title]="config().title"
+  [width]="config().width || '600px'"
+  [height]="config().height || 'auto'"
+  [closable]="true"
+  [showFooter]="false"
+  (visibleChange)="onModalClose()"
+>
+  @if (config().subtitle) {
+  <p class="form-subtitle">{{ config().subtitle }}</p>
+  } @if (errorMessage()) {
+  <div class="error-message">
+    {{ errorMessage() }}
+  </div>
+  } @if (form()) {
+  <form [formGroup]="form()!" class="form-dialog-form">
+    @for (field of config().fields; track field.name) { @if (field.type === 'select') {
+    <workix-form-field
+      [label]="field.label"
+      [error]="getFieldError(field.name)"
+      [required]="field.required"
+      [styleClass]="'full-width'"
+    >
+      <workix-select
+        [formControlName]="field.name"
+        [options]="field.options || []"
+        [placeholder]="field.placeholder"
+        [required]="field.required"
+      />
+    </workix-form-field>
+    } @else if (field.type === 'checkbox') {
+    <workix-checkbox
+      [formControlName]="field.name"
+      [label]="field.label"
+      [required]="field.required"
+    />
+    } @else if (field.type === 'date') {
+    <workix-form-field
+      [label]="field.label"
+      [error]="getFieldError(field.name)"
+      [required]="field.required"
+      [styleClass]="'full-width'"
+    >
+      <workix-datepicker
+        [formControlName]="field.name"
+        [placeholder]="field.placeholder"
+        [required]="field.required"
+      />
+    </workix-form-field>
+    } @else if (field.type === 'textarea') {
+    <workix-form-field
+      [label]="field.label"
+      [error]="getFieldError(field.name)"
+      [required]="field.required"
+      [hint]="field.hint"
+      [styleClass]="'full-width'"
+    >
+      <workix-input
+        [formControlName]="field.name"
+        [type]="'text'"
+        [placeholder]="field.placeholder"
+        [required]="field.required"
+      />
+    </workix-form-field>
+    } @else {
+    <workix-form-field
+      [label]="field.label"
+      [error]="getFieldError(field.name)"
+      [required]="field.required"
+      [hint]="field.hint"
+      [styleClass]="'full-width'"
+    >
+      <workix-input
+        [formControlName]="field.name"
+        [type]="field.type"
+        [placeholder]="field.placeholder"
+        [required]="field.required"
+      />
+    </workix-form-field>
+    } }
+  </form>
+  }
+
+  <div class="form-dialog-actions">
+    <workix-button
+      [label]="config().cancelLabel || 'Cancel'"
+      [variant]="'secondary'"
+      [outlined]="true"
+      (onClick)="onCancel()"
+      [disabled]="isLoading()"
+    />
+    <workix-button
+      [label]="config().submitLabel || (config().mode === 'edit' ? 'Update' : 'Create')"
+      [variant]="'primary'"
+      [loading]="isLoading()"
+      [disabled]="form()?.invalid || isLoading()"
+      (onClick)="onSubmit()"
+    />
+  </div>
+</workix-modal>

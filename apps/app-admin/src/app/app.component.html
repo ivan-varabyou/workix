@@ -1,0 +1,10 @@
+<workix-admin-layout
+  [title]="title()"
+  [menuItems]="menuItems()"
+  [userMenu]="userMenu()"
+  [isDarkMode]="isDarkMode()"
+  (toggleDarkModeOutput)="toggleDarkMode()"
+  (logout)="logout()"
+>
+  <router-outlet></router-outlet>
+</workix-admin-layout>

@@ -1,0 +1,10 @@
+@if (loading()) {
+<p-progressSpinner
+  [style]="{
+    width: spinnerSize() === 'small' ? '20px' : spinnerSize() === 'medium' ? '40px' : '60px',
+    height: spinnerSize() === 'small' ? '20px' : spinnerSize() === 'medium' ? '40px' : '60px'
+  }"
+  [strokeWidth]="strokeWidth()"
+  [styleClass]="styleClass()"
+/>
+}

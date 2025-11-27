@@ -1,0 +1,68 @@
+{
+  "name": "cursor-auto-continue",
+  "displayName": "Cursor Auto Continue",
+  "description": "Автоматически отправляет 'продолжай' в чат Cursor после завершения работы",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:cursorAutoContinue.continue",
+    "onCommand:cursorAutoContinue.autoContinue",
+    "onCommand:cursorAutoContinue.onComplete"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "cursorAutoContinue.webview",
+          "name": "Auto Continue",
+          "when": "true"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "cursorAutoContinue.continue",
+        "title": "Auto Continue: Отправить 'продолжай' в чат",
+        "icon": "$(play)"
+      },
+      {
+        "command": "cursorAutoContinue.autoContinue",
+        "title": "Auto Continue: Полный цикл (создать команду + отправить)",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "cursorAutoContinue.onComplete",
+        "title": "Auto Continue: После завершения работы",
+        "icon": "$(check)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "cursorAutoContinue.continue",
+        "key": "ctrl+alt+c",
+        "mac": "cmd+alt+c"
+      },
+      {
+        "command": "cursorAutoContinue.autoContinue",
+        "key": "ctrl+alt+shift+c",
+        "mac": "cmd+alt+shift+c"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@types/node": "^18.0.0",
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,0 +1,845 @@
+{
+  "graph": {
+    "nodes": {
+      "salesforce-integration": {
+        "name": "salesforce-integration",
+        "type": "lib",
+        "data": {
+          "root": "libs/salesforce-integration",
+          "name": "salesforce-integration",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/salesforce-integration/src",
+          "prefix": "workix",
+          "targets": {
+            "test": {
+              "executor": "@nx/jest:jest",
+              "options": {
+                "jestConfig": "libs/salesforce-integration/jest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/linter:eslint",
+              "options": {
+                "lintFilePatterns": ["libs/salesforce-integration/**/*.ts"]
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": [],
+          "tags": []
+        }
+      },
+      "github-integration": {
+        "name": "github-integration",
+        "type": "lib",
+        "data": {
+          "root": "libs/github-integration",
+          "name": "github-integration",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/github-integration/src",
+          "prefix": "workix",
+          "tags": [],
+          "targets": {
+            "test": {
+              "executor": "@nx/jest:jest",
+              "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+              "options": {
+                "jestConfig": "libs/github-integration/jest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/linter:eslint",
+              "options": {
+                "lintFilePatterns": ["libs/github-integration/**/*.ts"]
+              },
+              "outputs": ["{options.outputFile}"],
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "gitlab-integration": {
+        "name": "gitlab-integration",
+        "type": "lib",
+        "data": {
+          "root": "libs/gitlab-integration",
+          "name": "gitlab-integration",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/gitlab-integration/src",
+          "prefix": "workix",
+          "tags": [],
+          "targets": {
+            "test": {
+              "executor": "@nx/jest:jest",
+              "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+              "options": {
+                "jestConfig": "libs/gitlab-integration/jest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/linter:eslint",
+              "options": {
+                "lintFilePatterns": ["libs/gitlab-integration/**/*.ts"]
+              },
+              "outputs": ["{options.outputFile}"],
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "azure-integration": {
+        "name": "azure-integration",
+        "type": "lib",
+        "data": {
+          "root": "libs/azure-integration",
+          "name": "azure-integration",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/azure-integration/src",
+          "prefix": "workix",
+          "targets": {
+            "test": {
+              "executor": "@nx/jest:jest",
+              "options": {
+                "jestConfig": "libs/azure-integration/jest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/linter:eslint",
+              "options": {
+                "lintFilePatterns": ["libs/azure-integration/**/*.ts"]
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": [],
+          "tags": []
+        }
+      },
+      "slack-integration": {
+        "name": "slack-integration",
+        "type": "lib",
+        "data": {
+          "root": "libs/slack-integration",
+          "name": "slack-integration",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/slack-integration/src",
+          "prefix": "workix",
+          "tags": [],
+          "targets": {
+            "test": {
+              "executor": "@nx/jest:jest",
+              "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+              "options": {
+                "jestConfig": "libs/slack-integration/jest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/linter:eslint",
+              "options": {
+                "lintFilePatterns": ["libs/slack-integration/**/*.ts"]
+              },
+              "outputs": ["{options.outputFile}"],
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "batch-processing": {
+        "name": "batch-processing",
+        "type": "lib",
+        "data": {
+          "root": "libs/batch-processing",
+          "name": "batch-processing",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "projectType": "library",
+          "sourceRoot": "libs/batch-processing/src",
+          "prefix": "workix",
+          "tags": [],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": ["{options.outputPath}"],
+              "options": {
+                "outputPath": "dist/libs/batch-processing",
+                "main": "libs/batch-processing/src/index.ts",
+                "tsConfig": "libs/batch-processing/tsconfig.lib.json",
+                "assets": ["libs/batch-processing/*.md"]
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "jira-integration": {
+        "name": "jira-integration",
+        "type": "lib",
+        "data": {
+          "root": "libs/jira-integration",
+          "name": "jira-integration",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/jira-integration/src",
+          "prefix": "workix",
+          "tags": [],
+          "targets": {
+            "test": {
+              "executor": "@nx/jest:jest",
+              "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+              "options": {
+                "jestConfig": "libs/jira-integration/jest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/linter:eslint",
+              "options": {
+                "lintFilePatterns": ["libs/jira-integration/**/*.ts"]
+              },
+              "outputs": ["{options.outputFile}"],
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "admin-dashboard": {
+        "name": "admin-dashboard",
+        "type": "app",
+        "data": {
+          "root": "apps/admin-dashboard",
+          "name": "admin-dashboard",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "projectType": "application",
+          "sourceRoot": "apps/admin-dashboard/src",
+          "prefix": "app",
+          "tags": [],
+          "targets": {
+            "build": {
+              "executor": "@angular-eslint/builder:lint",
+              "options": {
+                "lintFilePatterns": ["apps/admin-dashboard/**/*.ts"]
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve": {
+              "executor": "@nx/angular:dev-server",
+              "configurations": {
+                "production": {
+                  "buildTarget": "admin-dashboard:build:production"
+                },
+                "development": {
+                  "buildTarget": "admin-dashboard:build:development"
+                }
+              },
+              "defaultConfiguration": "development",
+              "options": {
+                "port": 4200
+              },
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "aws-integration": {
+        "name": "aws-integration",
+        "type": "lib",
+        "data": {
+          "root": "libs/aws-integration",
+          "name": "aws-integration",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/aws-integration/src",
+          "prefix": "workix",
+          "tags": [],
+          "targets": {
+            "test": {
+              "executor": "@nx/jest:jest",
+              "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+              "options": {
+                "jestConfig": "libs/aws-integration/jest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/linter:eslint",
+              "options": {
+                "lintFilePatterns": ["libs/aws-integration/**/*.ts"]
+              },
+              "outputs": ["{options.outputFile}"],
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "gcp-integration": {
+        "name": "gcp-integration",
+        "type": "lib",
+        "data": {
+          "root": "libs/gcp-integration",
+          "name": "gcp-integration",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "libs/gcp-integration/src",
+          "prefix": "workix",
+          "targets": {
+            "test": {
+              "executor": "@nx/jest:jest",
+              "options": {
+                "jestConfig": "libs/gcp-integration/jest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/linter:eslint",
+              "options": {
+                "lintFilePatterns": ["libs/gcp-integration/**/*.ts"]
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": [],
+          "tags": []
+        }
+      },
+      "client-app": {
+        "name": "client-app",
+        "type": "app",
+        "data": {
+          "root": "apps/client-app",
+          "name": "client-app",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "projectType": "application",
+          "sourceRoot": "apps/client-app/src",
+          "prefix": "app",
+          "tags": [],
+          "targets": {
+            "build": {
+              "executor": "@nx/angular:build",
+              "options": {
+                "outputPath": "dist/apps/client-app",
+                "index": "apps/client-app/src/index.html",
+                "main": "apps/client-app/src/main.ts",
+                "polyfills": ["zone.js"],
+                "tsConfig": "apps/client-app/tsconfig.app.json",
+                "inlineStyleLanguage": "scss",
+                "assets": ["apps/client-app/src/favicon.ico", "apps/client-app/src/assets"],
+                "styles": ["apps/client-app/src/styles.scss"],
+                "scripts": []
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve": {
+              "executor": "@nx/angular:dev-server",
+              "configurations": {
+                "production": {
+                  "buildTarget": "client-app:build:production"
+                },
+                "development": {
+                  "buildTarget": "client-app:build:development"
+                }
+              },
+              "defaultConfiguration": "development",
+              "options": {
+                "port": 4201
+              },
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "workflows": {
+        "name": "workflows",
+        "type": "lib",
+        "data": {
+          "root": "libs/workflows",
+          "name": "workflows",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "projectType": "library",
+          "sourceRoot": "libs/workflows/src",
+          "prefix": "workix",
+          "tags": [],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": ["{options.outputPath}"],
+              "options": {
+                "outputPath": "dist/libs/workflows",
+                "main": "libs/workflows/src/index.ts",
+                "tsConfig": "libs/workflows/tsconfig.lib.json",
+                "assets": ["libs/workflows/*.md"]
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "api-keys": {
+        "name": "api-keys",
+        "type": "lib",
+        "data": {
+          "root": "libs/api-keys",
+          "name": "api-keys",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "projectType": "library",
+          "sourceRoot": "libs/api-keys/src",
+          "prefix": "workix",
+          "tags": [],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": ["{options.outputPath}"],
+              "options": {
+                "outputPath": "dist/libs/api-keys",
+                "main": "libs/api-keys/src/index.ts",
+                "tsConfig": "libs/api-keys/tsconfig.lib.json",
+                "assets": ["libs/api-keys/*.md"]
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "monolith": {
+        "name": "monolith",
+        "type": "app",
+        "data": {
+          "root": "apps/monolith",
+          "name": "monolith",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "projectType": "application",
+          "sourceRoot": "apps/monolith/src",
+          "prefix": "app",
+          "tags": [],
+          "targets": {
+            "build": {
+              "executor": "@nx/node:build",
+              "outputs": ["{options.outputPath}"],
+              "options": {
+                "outputPath": "dist/apps/monolith",
+                "main": "apps/monolith/src/main.ts",
+                "tsConfig": "apps/monolith/tsconfig.app.json",
+                "assets": ["apps/monolith/src/assets"]
+              },
+              "configurations": {
+                "production": {
+                  "optimization": true,
+                  "extractLicenses": true,
+                  "inspect": false,
+                  "fileReplacements": [
+                    {
+                      "replace": "apps/monolith/src/environments/environment.ts",
+                      "with": "apps/monolith/src/environments/environment.prod.ts"
+                    }
+                  ]
+                },
+                "development": {}
+              },
+              "defaultConfiguration": "production",
+              "parallelism": true
+            },
+            "serve": {
+              "executor": "@nx/node:execute",
+              "options": {
+                "buildTarget": "monolith:build",
+                "args": []
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "lint": {
+              "executor": "@nx/linter:eslint",
+              "outputs": ["{options.outputFile}"],
+              "options": {
+                "lintFilePatterns": ["apps/monolith/**/*.ts"]
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "webhooks": {
+        "name": "webhooks",
+        "type": "lib",
+        "data": {
+          "root": "libs/webhooks",
+          "name": "webhooks",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "projectType": "library",
+          "sourceRoot": "libs/webhooks/src",
+          "prefix": "workix",
+          "tags": [],
+          "targets": {
+            "build": {
+              "executor": "@nx/js:tsc",
+              "outputs": ["{options.outputPath}"],
+              "options": {
+                "outputPath": "dist/libs/webhooks",
+                "main": "libs/webhooks/src/index.ts",
+                "tsConfig": "libs/webhooks/tsconfig.lib.json",
+                "assets": ["libs/webhooks/*.md"]
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "ai-core": {
+        "name": "ai-core",
+        "type": "lib",
+        "data": {
+          "root": "libs/ai-core",
+          "name": "ai-core",
+          "sourceRoot": "libs/ai-core/src",
+          "projectType": "library",
+          "prefix": "workix",
+          "tags": [],
+          "targets": {
+            "lint": {
+              "executor": "@nx/linter:eslint",
+              "outputs": ["{options.outputFile}"],
+              "options": {
+                "lintFilePatterns": ["libs/ai-core/**/*.ts"]
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "test": {
+              "executor": "@nx/jest:jest",
+              "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+              "options": {
+                "jestConfig": "libs/ai-core/jest.config.ts",
+                "passWithNoTests": true
+              },
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "implicitDependencies": []
+        }
+      },
+      "api-e2e": {
+        "name": "api-e2e",
+        "type": "e2e",
+        "data": {
+          "root": "apps/api-e2e",
+          "name": "api-e2e",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "projectType": "application",
+          "implicitDependencies": ["api"],
+          "targets": {
+            "e2e": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "vitest run --config apps/api-e2e/vitest.config.ts",
+                "cwd": ""
+              },
+              "configurations": {
+                "ci": {
+                  "command": "vitest run --config apps/api-e2e/vitest.config.ts --reporter=json --outputFile=e2e-results.json"
+                }
+              },
+              "env": {
+                "PORT": "4200",
+                "HOST": "localhost",
+                "API_URL": "http://localhost:4200"
+              },
+              "dependsOn": ["api:build"],
+              "parallelism": true
+            }
+          },
+          "tags": []
+        }
+      },
+      "api": {
+        "name": "api",
+        "type": "app",
+        "data": {
+          "root": "apps/api",
+          "projectType": "application",
+          "metadata": {},
+          "targets": {
+            "webpack:build": {
+              "options": {
+                "cwd": "apps/api",
+                "args": ["--node-env=production"],
+                "command": "webpack-cli build"
+              },
+              "cache": true,
+              "dependsOn": ["^webpack:build"],
+              "inputs": [
+                "default",
+                "^default",
+                {
+                  "externalDependencies": ["webpack-cli"]
+                }
+              ],
+              "outputs": ["{workspaceRoot}/dist/apps/api"],
+              "metadata": {
+                "technologies": ["webpack"],
+                "description": "Runs Webpack build",
+                "help": {
+                  "command": "npx webpack-cli build --help",
+                  "example": {
+                    "options": {
+                      "json": "stats.json"
+                    },
+                    "args": ["--profile"]
+                  }
+                }
+              },
+              "executor": "nx:run-commands",
+              "configurations": {},
+              "parallelism": true
+            },
+            "webpack:serve": {
+              "continuous": true,
+              "options": {
+                "cwd": "apps/api",
+                "args": ["--node-env=development"],
+                "command": "webpack-cli serve"
+              },
+              "metadata": {
+                "technologies": ["webpack"],
+                "description": "Starts Webpack dev server",
+                "help": {
+                  "command": "npx webpack-cli serve --help",
+                  "example": {
+                    "options": {
+                      "args": ["--client-progress", "--history-api-fallback "]
+                    }
+                  }
+                }
+              },
+              "executor": "nx:run-commands",
+              "configurations": {},
+              "parallelism": true
+            },
+            "preview": {
+              "continuous": true,
+              "options": {
+                "cwd": "apps/api",
+                "args": ["--node-env=production"],
+                "command": "webpack-cli serve"
+              },
+              "metadata": {
+                "technologies": ["webpack"],
+                "description": "Starts Webpack dev server in production mode",
+                "help": {
+                  "command": "npx webpack-cli serve --help",
+                  "example": {
+                    "options": {
+                      "args": ["--client-progress", "--history-api-fallback "]
+                    }
+                  }
+                }
+              },
+              "executor": "nx:run-commands",
+              "configurations": {},
+              "parallelism": true
+            },
+            "serve-static": {
+              "continuous": true,
+              "dependsOn": ["webpack:build"],
+              "executor": "@nx/web:file-server",
+              "options": {
+                "buildTarget": "webpack:build",
+                "spa": true
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "build-deps": {
+              "dependsOn": ["^build"],
+              "configurations": {},
+              "options": {},
+              "parallelism": true,
+              "executor": "nx:noop"
+            },
+            "watch-deps": {
+              "continuous": true,
+              "dependsOn": ["build-deps"],
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "npx nx watch --projects api --includeDependentProjects -- npx nx build-deps api"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "build": {
+              "executor": "nx:run-commands",
+              "options": {
+                "command": "webpack-cli build",
+                "args": ["--node-env=production"],
+                "cwd": "apps/api"
+              },
+              "configurations": {
+                "development": {
+                  "args": ["--node-env=development"]
+                }
+              },
+              "parallelism": true
+            },
+            "prune-lockfile": {
+              "dependsOn": ["build"],
+              "cache": true,
+              "executor": "@nx/js:prune-lockfile",
+              "outputs": [
+                "{workspaceRoot}/dist/apps/api/package.json",
+                "{workspaceRoot}/dist/apps/api/package-lock.json"
+              ],
+              "options": {
+                "buildTarget": "build"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "copy-workspace-modules": {
+              "dependsOn": ["build"],
+              "cache": true,
+              "outputs": ["{workspaceRoot}/dist/apps/api/workspace_modules"],
+              "executor": "@nx/js:copy-workspace-modules",
+              "options": {
+                "buildTarget": "build"
+              },
+              "configurations": {},
+              "parallelism": true
+            },
+            "prune": {
+              "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
+              "executor": "nx:noop",
+              "configurations": {},
+              "options": {},
+              "parallelism": true
+            },
+            "serve": {
+              "continuous": true,
+              "executor": "@nx/js:node",
+              "defaultConfiguration": "development",
+              "dependsOn": ["build"],
+              "options": {
+                "buildTarget": "api:build",
+                "runBuildTargetDependencies": false
+              },
+              "configurations": {
+                "development": {
+                  "buildTarget": "api:build:development"
+                },
+                "production": {
+                  "buildTarget": "api:build:production"
+                }
+              },
+              "parallelism": true
+            }
+          },
+          "name": "api",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "apps/api/src",
+          "tags": [],
+          "implicitDependencies": []
+        }
+      },
+      "monolith-e2e": {
+        "name": "monolith-e2e",
+        "type": "e2e",
+        "data": {
+          "root": "apps-e2e",
+          "name": "monolith-e2e",
+          "$schema": "../node_modules/nx/schemas/project-schema.json",
+          "projectType": "application",
+          "implicitDependencies": ["monolith"],
+          "targets": {
+            "e2e": {
+              "executor": "@nx/jest:jest",
+              "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
+              "options": {
+                "jestConfig": "apps-e2e/jest.config.ts",
+                "passWithNoTests": true
+              },
+              "dependsOn": ["monolith:build", "monolith:serve"],
+              "configurations": {},
+              "parallelism": true
+            }
+          },
+          "tags": []
+        }
+      }
+    },
+    "dependencies": {
+      "salesforce-integration": [],
+      "github-integration": [],
+      "gitlab-integration": [],
+      "azure-integration": [],
+      "slack-integration": [],
+      "batch-processing": [],
+      "jira-integration": [],
+      "admin-dashboard": [],
+      "aws-integration": [],
+      "gcp-integration": [],
+      "client-app": [],
+      "workflows": [],
+      "api-keys": [],
+      "monolith": [],
+      "webhooks": [],
+      "ai-core": [],
+      "api-e2e": [
+        {
+          "source": "api-e2e",
+          "target": "api",
+          "type": "implicit"
+        }
+      ],
+      "api": [],
+      "monolith-e2e": [
+        {
+          "source": "monolith-e2e",
+          "target": "monolith",
+          "type": "implicit"
+        }
+      ]
+    }
+  }
+}

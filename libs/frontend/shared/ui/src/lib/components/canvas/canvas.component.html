@@ -1,0 +1,25 @@
+<div #container class="canvas-container">
+  <canvas #canvas class="pipeline-canvas"></canvas>
+  <div class="steps-overlay">
+    @for (step of steps(); track step.id) {
+    <div
+      class="step-node"
+      [style.left.px]="step.position.x"
+      [style.top.px]="step.position.y"
+      [class.selected]="isSelected(step)"
+      (click)="selectStep(step)"
+      (mousedown)="startDrag($event, step)"
+    >
+      <div class="step-icon">
+        <workix-icon [name]="getStepIcon(step.type)" [size]="'md'" />
+      </div>
+      <div class="step-label">{{ step.name }}</div>
+    </div>
+    } @empty {
+    <div class="empty-state">
+      <workix-icon [name]="'account_tree'" [size]="'lg'" />
+      <p>No steps yet. Add steps to see them here.</p>
+    </div>
+    }
+  </div>
+</div>
