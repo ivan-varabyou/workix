@@ -143,7 +143,12 @@ export class UsersController {
   @ApiOperation({ summary: 'Search users by name or email' })
   @ApiQuery({ name: 'q', required: true, type: String, description: 'Search query' })
   @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Maximum number of results' })
-  @ApiResponse({ status: 200, description: 'Search results', type: () => [UserSearchResultDto] })
+  @ApiResponse({
+    status: 200,
+    description: 'Search results',
+    type: UserSearchResultDto,
+    isArray: true
+  })
   @ApiResponse({ status: 400, description: 'Search query is required' })
   async searchUsers(
     @Query('q') query: string,

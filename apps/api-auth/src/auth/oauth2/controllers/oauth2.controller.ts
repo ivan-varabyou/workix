@@ -233,7 +233,12 @@ export class OAuth2Controller {
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get current user social accounts' })
-  @ApiResponse({ status: 200, description: 'List of social accounts', type: () => [SocialAccountDto] })
+  @ApiResponse({
+    status: 200,
+    description: 'List of social accounts',
+    type: SocialAccountDto,
+    isArray: true
+  })
   async getUserSocialAccounts(@CurrentUser() user: JwtPayload): Promise<unknown[]> {
     return this.oauth2Service.getUserSocialAccounts(user.userId);
   }
