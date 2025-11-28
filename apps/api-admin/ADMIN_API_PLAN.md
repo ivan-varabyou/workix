@@ -8,6 +8,16 @@
 
 Admin API - централизованный сервис для управления всей платформой Workix. Предоставляет полный контроль над серверами, пользователями, базами данных, платежами, безопасностью и аналитикой.
 
+## Clarifications
+
+### Session 2025-11-27
+
+- Q: Should performance requirements be quantified with specific metrics? → A: Define metrics for critical endpoints (dashboard, status, services)
+- Q: What are the default pagination parameters for list endpoints? → A: Standard defaults: page=1, limit=20, max=100
+- Q: Should error response formats be standardized? → A: Standardized format for all endpoints
+- Q: What rate limiting configuration should be used? → A: Differentiated limits: auth (5 req/min), read (100 req/min), write (20 req/min)
+- Q: What audit logs data retention policy should be used? → A: Comprehensive approach: retention policy (90 days normal, 1 year critical), log rotation, compression, centralized storage (ELK/Cloud), differentiated logging by severity
+
 ## Архитектура
 
 ```
@@ -78,10 +88,15 @@ Admin API (7100) → Управление всеми сервисами Workix
 ### 1.1 Мониторинг сервисов
 
 - **GET** `/api-admin/v1/services` - Список всех сервисов
+  - **Performance**: Response time < 1s (p95)
 - **GET** `/api-admin/v1/services/:serviceId/status` - Статус конкретного сервиса
+  - **Performance**: Response time < 1s (p95), timeout 3s
 - **GET** `/api-admin/v1/services/health` - Общий health check всех сервисов
+  - **Performance**: Response time < 5s (p95), timeout 10s (aggregates all services)
 - **GET** `/api-admin/v1/services/metrics` - Метрики всех сервисов
+  - **Performance**: Response time < 2s (p95), cache TTL 10s
 - **POST** `/api-admin/v1/services/:serviceId/restart` - Перезапуск сервиса (только super_admin)
+  - **Performance**: Async operation, returns immediately, status via polling
 
 ### 1.2 Управление конфигурацией
 
@@ -122,6 +137,7 @@ Admin API (7100) → Управление всеми сервисами Workix
   - Статус очередей
   - Активные пользователи
   - Текущая нагрузка
+  - **Performance**: Response time < 2s (p95), timeout 5s
 
 ### 2.2 Dashboard данные
 
@@ -132,6 +148,7 @@ Admin API (7100) → Управление всеми сервисами Workix
   - Использование AI токенов
   - Доходы
   - Ошибки и алерты
+  - **Performance**: Response time < 3s (p95), timeout 10s, cache TTL 30s
 
 ### 2.3 Real-time метрики
 
@@ -149,6 +166,7 @@ Admin API (7100) → Управление всеми сервисами Workix
   - Фильтры: `role`, `isActive`, `twoFactorEnabled`, `ipWhitelistEnabled`
   - Поиск: по email, name
   - Сортировка: по createdAt, lastLoginAt, email
+  - **Pagination**: `page` (default: 1), `limit` (default: 20, max: 100)
 - **GET** `/api-admin/v1/admins/:adminId` - Детали админа
   - Включает: сессии, IP whitelist, audit logs
 - **POST** `/api-admin/v1/admins` - Создание админа (только super_admin)
@@ -192,7 +210,7 @@ Admin API (7100) → Управление всеми сервисами Workix
 - **POST** `/api-admin/v1/admins/:adminId/sessions/revoke-all` - Отзыв всех сессий
 - **GET** `/api-admin/v1/admins/:adminId/login-history` - История входов
   - Фильтры: startDate, endDate, success, ipAddress
-  - Пагинация
+  - **Pagination**: `page` (default: 1), `limit` (default: 20, max: 100)
 
 ### 3.5 2FA управление (для админов)
 
@@ -270,6 +288,7 @@ Admin API (7100) → Управление всеми сервисами Workix
 ### 5.1 Подписки
 
 - **GET** `/api-admin/v1/billing/subscriptions` - Список подписок
+  - **Pagination**: `page` (default: 1), `limit` (default: 20, max: 100)
 - **GET** `/api-admin/v1/billing/subscriptions/:subscriptionId` - Детали подписки
 - **POST** `/api-admin/v1/billing/subscriptions/:subscriptionId/cancel` - Отмена подписки
 - **POST** `/api-admin/v1/billing/subscriptions/:subscriptionId/reactivate` - Реактивация
@@ -284,6 +303,7 @@ Admin API (7100) → Управление всеми сервисами Workix
 ### 5.3 История платежей
 
 - **GET** `/api-admin/v1/billing/payments` - История платежей
+  - **Pagination**: `page` (default: 1), `limit` (default: 20, max: 100)
 - **GET** `/api-admin/v1/billing/payments/:paymentId` - Детали платежа
 - **GET** `/api-admin/v1/billing/users/:userId/payments` - Платежи пользователя
 - **POST** `/api-admin/v1/billing/payments/:paymentId/refund` - Возврат платежа
@@ -404,9 +424,24 @@ Admin API (7100) → Управление всеми сервисами Workix
 ### 10.1 Audit logs
 
 - **GET** `/api-admin/v1/audit/logs` - Логи аудита
+  - **Pagination**: `page` (default: 1), `limit` (default: 20, max: 100)
 - **GET** `/api-admin/v1/audit/logs/:logId` - Детали лога
 - **GET** `/api-admin/v1/audit/users/:userId` - Логи пользователя
 - **GET** `/api-admin/v1/audit/export` - Экспорт логов
+
+**Политика хранения audit logs:**
+
+- **Retention Policy (срок хранения)**:
+  - Критичные события (auth, security, admin operations): 1 год
+  - Обычные события (read, info): 90 дней
+  - Debug события: 30 дней
+- **Log Rotation**: Автоматическая ротация по размеру (100MB) или времени (24 часа)
+- **Compression**: Старые логи (>7 дней) хранятся в сжатом виде (gzip)
+- **Centralized Storage**: Логи отправляются в централизованное хранилище:
+  - ELK Stack (Elasticsearch + Logstash + Kibana) для поиска и анализа
+  - Облачные сервисы (AWS CloudWatch, Azure Monitor) для долгосрочного хранения
+  - Объектное хранилище (S3, MinIO) для архивов
+- **Дифференцированное логирование**: Разные уровни детализации по типу события
 
 ### 10.2 Безопасность
 
@@ -523,13 +558,51 @@ Admin API (7100) → Управление всеми сервисами Workix
 - Все эндпоинты защищены `AdminJwtGuard`
 - Проверка прав через `AdminRoleGuard`
 - Audit logging всех операций
-- Rate limiting
+- **Rate Limiting**: Дифференцированные лимиты по типам эндпоинтов:
+  - Auth эндпоинты (`/auth/*`): 5 запросов в минуту
+  - Read эндпоинты (GET): 100 запросов в минуту
+  - Write эндпоинты (POST, PUT, DELETE): 20 запросов в минуту
+  - При превышении: HTTP 429 Too Many Requests
 - IP whitelist для super_admin
+
+### Формат ответов об ошибках
+
+Все эндпоинты возвращают стандартизированный формат ошибок:
+
+```json
+{
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable message",
+    "details": {},
+    "timestamp": "2025-11-27T12:00:00Z"
+  }
+}
+```
+
+**HTTP Status Codes:**
+- `400 Bad Request` - Некорректные входные данные
+- `401 Unauthorized` - Требуется аутентификация
+- `403 Forbidden` - Недостаточно прав доступа
+- `404 Not Found` - Ресурс не найден
+- `409 Conflict` - Конфликт (например, дубликат email)
+- `422 Unprocessable Entity` - Ошибка валидации
+- `429 Too Many Requests` - Превышен лимит запросов
+- `500 Internal Server Error` - Внутренняя ошибка сервера
+
+**Примеры кодов ошибок:**
+- `ADMIN_NOT_FOUND` - Админ не найден
+- `INSUFFICIENT_PERMISSIONS` - Недостаточно прав
+- `CANNOT_DELETE_SELF` - Нельзя удалить самого себя
+- `CANNOT_DELETE_LAST_SUPER_ADMIN` - Нельзя удалить последнего super_admin
+- `INVALID_CREDENTIALS` - Неверные учетные данные
+- `IP_NOT_WHITELISTED` - IP не в whitelist
+- `SERVICE_NOT_FOUND` - Сервис не найден
 
 ### Производительность
 
 - Кэширование метрик (Redis)
-- Пагинация для больших списков
+- Пагинация для больших списков (default: page=1, limit=20, max=100)
 - Индексы в БД для быстрых запросов
 - Асинхронная обработка тяжелых операций
 
