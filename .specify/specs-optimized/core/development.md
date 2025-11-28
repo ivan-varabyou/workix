@@ -8,6 +8,76 @@
 PLANNING → PREPARATION → WORKING → TESTING → DONE
 ```
 
+## Task Management
+
+### Task Registration
+
+Задачи регистрируются в файле `TASKS.md` в корне проекта. Каждая задача имеет:
+- Номер задачи (#1, #2, ...)
+- Название
+- Описание
+- Статус (pending, in_progress, done, cancelled, blocked)
+- Ветку (task-{номер} или t{номер})
+
+### Branch Creation
+
+- Ветки создаются от `develop`: `task-{номер}` или `t{номер}`
+- Если ветка занята, используем следующий номер (t1 → t2 → t3...)
+- Используйте скрипт: `./scripts/task-manager.sh start [номер]`
+
+### Development Process
+
+1. **Разработка фичи/логики**:
+   - Создаем библиотеку в `libs/backend/domain/` или расширяем существующую
+   - Вся логика в библиотеке
+   - В `apps/` только импорты и вызовы
+
+2. **Проверка качества**:
+   - TypeScript проверка: `nx run {project}:typecheck`
+   - Линтер: `nx run {project}:lint`
+   - Ревью на сквозную типизацию
+   - Проверка на хардкодные утверждения типов (`as`, `any`)
+   - Использование type guards (проверяем в libs, возможно уже есть)
+
+3. **Тестирование**:
+   - Запускаем сервер: `nx serve {project}`
+   - Проверяем что все работает
+   - Если эндпоинт - проверяем что отвечает как заложено
+   - Если все ок - делаем коммит
+
+4. **Коммит**:
+   - Формат: `T #{номер} - {type}({scope}): description`
+   - Английский, lowercase
+   - Используйте скрипт: `./scripts/task-manager.sh commit 'message'`
+   - Идем к следующему шагу
+
+### Task Commands
+
+Для быстрой работы используйте команды:
+
+```bash
+# Создать новую задачу (автоматически определит номер)
+./scripts/task-manager.sh start
+
+# Создать задачу с конкретным номером
+./scripts/task-manager.sh start 5
+
+# Создать коммит (автоматически определит номер задачи из ветки)
+./scripts/task-manager.sh commit 'feat(admin): add user management'
+
+# Показать статус задачи
+./scripts/task-manager.sh status [номер]
+
+# Показать список задач
+./scripts/task-manager.sh list
+```
+
+### Chat Commands (Future)
+
+В будущем планируется поддержка команд в чате:
+- `/task {номер}` - Начать работу над задачей (создать ветку, переключиться)
+- `/commit {message}` - Создать коммит с автоматическим номером задачи
+
 ## Key Rules
 
 ### Branch Workflow
