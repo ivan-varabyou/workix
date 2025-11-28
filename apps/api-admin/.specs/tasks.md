@@ -36,9 +36,10 @@
 
 - [ ] T005 Replace `WorkixAuthModule` with `WorkixAdminModule` in `apps/api-admin/src/app/app.module.ts`
 - [ ] T006 Remove `OAuth2Module` import from `apps/api-admin/src/app/app.module.ts` (не нужен для админов)
-- [ ] T007 Remove `PhoneOtpModule` import from `apps/api-admin/src/app/app.module.ts` (не нужен, админы используют только 2FA/TOTP)
+- [ ] T007 Remove `PhoneOtpModule` import from `apps/api-admin/src/app/app.module.ts` (не нужен, админы используют 2FA/TOTP или Telegram 2FA)
 - [ ] T008 Remove `EmailVerificationModule` import from `apps/api-admin/src/app/app.module.ts` (не нужен, админы создаются вручную)
 - [ ] T009 **ОСТАВИТЬ** `UsersModule` import in `apps/api-admin/src/app/app.module.ts` (нужен для управления пользователями в User Story 3)
+- [ ] T010 Import `TelegramModule` from `@workix/integrations/communication/telegram` in `apps/api-admin/src/app/app.module.ts` (для Telegram 2FA)
 
 ### Remove Unnecessary Controllers
 
@@ -84,17 +85,18 @@
 - [ ] T028 [US1] Implement `POST /api-admin/v1/auth/logout` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
 - [ ] T029 [US1] Implement `GET /api-admin/v1/auth/me` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
 - [ ] T030 [US1] Implement `POST /api-admin/v1/auth/refresh` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
-- [ ] T031 [US1] Implement `POST /api-admin/v1/auth/2fa/generate` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
-- [ ] T032 [US1] Implement `POST /api-admin/v1/auth/2fa/enable` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
-- [ ] T033 [US1] Implement `POST /api-admin/v1/auth/2fa/verify` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
-- [ ] T034 [US1] Implement `DELETE /api-admin/v1/auth/2fa/disable` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
-- [ ] T035 [US1] Implement `GET /api-admin/v1/auth/2fa/status` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
-- [ ] T036 [US1] Implement `POST /api-admin/v1/auth/2fa/regenerate-backup-codes` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
-- [ ] T037 [US1] Implement `POST /api-admin/v1/auth/password-reset/request` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
-- [ ] T038 [US1] Implement `POST /api-admin/v1/auth/password-reset/verify` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
-- [ ] T039 [US1] Implement `POST /api-admin/v1/auth/password-reset/confirm` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
-- [ ] T040 [US1] Implement `POST /api-admin/v1/auth/change-password` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
-- [ ] T041 [US1] Implement `GET /api-admin/v1/auth/sessions` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
+- [ ] T031 [US1] Implement `POST /api-admin/v1/auth/2fa/generate` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts` (TOTP secret generation)
+- [ ] T032 [US1] Implement `POST /api-admin/v1/auth/2fa/enable` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts` (supports `totp` and `telegram` methods)
+- [ ] T033 [US1] Implement `POST /api-admin/v1/auth/2fa/verify` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts` (verifies TOTP code or Telegram code)
+- [ ] T034 [US1] Implement `POST /api-admin/v1/auth/2fa/telegram/send-code` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts` (sends 6-digit code to Telegram during login)
+- [ ] T035 [US1] Implement `DELETE /api-admin/v1/auth/2fa/disable` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
+- [ ] T036 [US1] Implement `GET /api-admin/v1/auth/2fa/status` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts` (returns method: `totp` | `telegram` | `none`)
+- [ ] T037 [US1] Implement `POST /api-admin/v1/auth/2fa/regenerate-backup-codes` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts` (TOTP only)
+- [ ] T038 [US1] Implement `POST /api-admin/v1/auth/password-reset/request` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
+- [ ] T039 [US1] Implement `POST /api-admin/v1/auth/password-reset/verify` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
+- [ ] T040 [US1] Implement `POST /api-admin/v1/auth/password-reset/confirm` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
+- [ ] T041 [US1] Implement `POST /api-admin/v1/auth/change-password` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
+- [ ] T042 [US1] Implement `GET /api-admin/v1/auth/sessions` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
 - [ ] T042 [US1] Implement `DELETE /api-admin/v1/auth/sessions/:sessionId` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
 - [ ] T043 [US1] Implement `DELETE /api-admin/v1/auth/sessions` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
 - [ ] T044 [US1] Implement `GET /api-admin/v1/auth/ip-whitelist` endpoint in `apps/api-admin/src/auth/controllers/auth.controller.ts`
@@ -118,7 +120,7 @@
 
 ### Implementation for User Story 2
 
-- [ ] T052 [US2] Create `AdminsController` in `apps/api-admin/src/app/controllers/admins.controller.ts`
+- [ ] T053 [US2] Create `AdminsController` in `apps/api-admin/src/app/controllers/admins.controller.ts`
 - [ ] T088 [US2] [P] Create or extend `AdminManagementService` in `libs/backend/domain/admin/src/services/admin-management.service.ts`
 - [ ] T088 [US2] Implement `GET /api-admin/v1/admins` with pagination, filters, search in `apps/api-admin/src/app/controllers/admins.controller.ts`
 - [ ] T088 [US2] Implement `GET /api-admin/v1/admins/:id` endpoint in `apps/api-admin/src/app/controllers/admins.controller.ts`
@@ -589,7 +591,7 @@
 
 ```bash
 # Can run in parallel:
-- T052 [US2] Create AdminManagementService
+- T053 [US2] Create AdminManagementService
 - T088 [US2] Implement GET /admins endpoint
 - T088 [US2] Implement GET /admins/:id endpoint
 ```
@@ -631,6 +633,7 @@ With multiple developers:
 
 - **Total Tasks**: 292
 - **Tasks per User Story**:
+
   - US1 (Admin Authentication): 28 tasks
   - US2 (Admin Management): 37 tasks
   - US3 (Services Management): 19 tasks
