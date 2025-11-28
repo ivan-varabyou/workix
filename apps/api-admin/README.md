@@ -86,6 +86,17 @@ npm run start  # production mode (from dist)
 
 ## Documentation
 
+### Спецификации и планы (в `.specs/`):
+
+- **[ADMIN_API_PLAN.md](.specs/ADMIN_API_PLAN.md)** - План функциональности (спецификация)
+- **[ADMIN_API_SECURITY.md](.specs/ADMIN_API_SECURITY.md)** - Кейсы безопасности
+- **[IMPLEMENTATION_PLAN.md](.specs/IMPLEMENTATION_PLAN.md)** - План внедрения
+- **[SPECKIT_WORKFLOW.md](.specs/SPECKIT_WORKFLOW.md)** - Инструкция по командам speckit
+- **[COMMANDS_ORDER.md](.specs/COMMANDS_ORDER.md)** - Краткая справка по порядку команд
+- **[ANALYSIS_REPORT.md](.specs/ANALYSIS_REPORT.md)** - Анализ согласованности
+
+### Общая документация проекта:
+
 - **Project Specifications**: [.specify/specs-optimized/index.md](../../.specify/specs-optimized/index.md)
 - **Architecture**: [.specify/specs-optimized/core/architecture.md](../../.specify/specs-optimized/core/architecture.md)
 - **Development**: [.specify/specs-optimized/core/development.md](../../.specify/specs-optimized/core/development.md)
