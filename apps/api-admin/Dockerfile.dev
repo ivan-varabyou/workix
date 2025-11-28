@@ -1,0 +1,30 @@
+# Development Dockerfile for Auth Service
+FROM node:20-slim
+
+# Install bash, openssl and other necessary tools
+RUN apt-get update && apt-get install -y bash openssl && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install dependencies (skip postinstall scripts during build)
+COPY package*.json ./
+RUN npm ci --ignore-scripts
+
+# Install Prisma CLI
+RUN npm install -g prisma
+
+# Copy source code
+COPY . .
+
+# Generate Prisma Client
+WORKDIR /app/apps/api-auth
+RUN npx prisma generate
+
+WORKDIR /app
+
+EXPOSE 7200
+
+ENV NODE_ENV=test
+
+# Use npm run start which will use nx serve
+CMD ["npm", "run", "api:auth"]

@@ -1,6 +1,6 @@
 # Task Management Commands
 
-**Версия**: 1.0  
+**Версия**: 1.0
 **Дата**: 2025-11-27
 
 ## Обзор
@@ -173,4 +173,3 @@ AI: Выполняю: ./scripts/task-manager.sh status
 - [ ] Поддержка подзадач
 - [ ] Интеграция с issue tracker (GitHub Issues, Jira)
 - [ ] Автоматическое создание PR при завершении задачи
-

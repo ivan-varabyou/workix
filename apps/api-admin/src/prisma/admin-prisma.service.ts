@@ -26,14 +26,12 @@ export class AdminPrismaService extends PrismaClient implements OnModuleInit, On
 
   async onModuleInit(): Promise<void> {
     // Connect lazily - don't block bootstrap
-    // Временно отключено для диагностики проблемы запуска
-    // this.$connect().then(() => {
-    //   console.log('✅ Admin Prisma connected to database');
-    // }).catch((error: unknown) => {
-    //   const errorMessage: string = error instanceof Error ? error.message : String(error);
-    //   console.error('❌ Admin Prisma connection failed:', errorMessage);
-    // });
-    console.log('⚠️ Admin Prisma onModuleInit: connection temporarily disabled for debugging');
+    this.$connect().then(() => {
+      console.log('✅ Admin Prisma connected to database');
+    }).catch((error: unknown) => {
+      const errorMessage: string = error instanceof Error ? error.message : String(error);
+      console.error('❌ Admin Prisma connection failed:', errorMessage);
+    });
   }
 
   async onModuleDestroy(): Promise<void> {

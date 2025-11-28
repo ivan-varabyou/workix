@@ -1,4 +1,4 @@
-.PHONY: help check-types continue-types find-any fix-types-progress monitor-start monitor-stop monitor-status auto-continue auto-continue-exec mcp-start mcp-stop mcp-status mcp-build mcp-pull mcp-config
+.PHONY: help check-types continue-types find-any fix-types-progress monitor-start monitor-stop monitor-status auto-continue auto-continue-exec mcp-start mcp-stop mcp-status mcp-build mcp-pull mcp-config docs-organize docs-archive docs-cleanup
 
 help: ## Показать справку по командам
 	@echo "Доступные команды:"
@@ -25,6 +25,11 @@ help: ## Показать справку по командам
 	@echo "  make mcp-build            - Собрать Workix MCP сервер"
 	@echo "  make mcp-pull             - Скачать Ollama модели"
 	@echo "  make mcp-config           - Показать конфигурацию MCP"
+	@echo ""
+	@echo "📁 Организация документации:"
+	@echo "  make docs-organize        - Организовать все MD файлы"
+	@echo "  make docs-archive         - Архивировать старые файлы (>30 дней)"
+	@echo "  make docs-cleanup         - Очистить временные файлы (>7 дней)"
 	@echo ""
 
 check-types: ## Проверить использование 'any' и 'unknown' типов во всем проекте
@@ -163,3 +168,16 @@ mcp-pull: ## Скачать все Ollama модели
 
 mcp-config: ## Показать текущую конфигурацию MCP серверов
 	@./scripts/mcp-servers.sh config
+
+## Documentation Organization
+docs-organize: ## Организовать все MD файлы по правильной структуре
+	@chmod +x scripts/organize-docs.sh
+	@./scripts/organize-docs.sh
+
+docs-archive: ## Архивировать старые MD файлы (>30 дней)
+	@chmod +x scripts/archive-docs.sh
+	@./scripts/archive-docs.sh
+
+docs-cleanup: ## Очистить временные MD файлы (>7 дней)
+	@chmod +x scripts/cleanup-docs.sh
+	@./scripts/cleanup-docs.sh

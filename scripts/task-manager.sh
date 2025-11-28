@@ -38,17 +38,17 @@ error() {
 get_next_task_number() {
     local max_num=0
     local task_num
-    
+
     # Проверяем существующие ветки
     while IFS= read -r branch; do
-        if [[ $branch =~ ^${TASK_PREFIX}([0-9]+)$ ]] || [[ $branch =^t([0-9]+)$ ]]; then
+        if [[ $branch =~ ^${TASK_PREFIX}([0-9]+)$ ]] || [[ $branch =~ ^t([0-9]+)$ ]]; then
             task_num="${BASH_REMATCH[1]}"
             if [ "$task_num" -gt "$max_num" ]; then
                 max_num=$task_num
             fi
         fi
     done < <(git branch -a 2>/dev/null | sed 's/^[* ] //' | sed 's/remotes\/origin\///' | grep -E "^${TASK_PREFIX}[0-9]+$|^t[0-9]+$" || true)
-    
+
     # Проверяем TASKS.md
     if [ -f "$TASKS_FILE" ]; then
         while IFS= read -r line; do
@@ -60,7 +60,7 @@ get_next_task_number() {
             fi
         done < "$TASKS_FILE"
     fi
-    
+
     echo $((max_num + 1))
 }
 
@@ -73,21 +73,21 @@ branch_exists() {
 # Функция для создания новой задачи
 create_task() {
     local task_num=$1
-    
+
     if [ -z "$task_num" ]; then
         task_num=$(get_next_task_number)
     fi
-    
+
     # Проверяем что ветка не занята
     local branch_name="${TASK_PREFIX}${task_num}"
     local short_branch="t${task_num}"
-    
+
     if branch_exists "$branch_name" || branch_exists "$short_branch"; then
         error "Ветка $branch_name или $short_branch уже существует!"
         info "Попробуйте другой номер задачи или используйте: ./scripts/task-manager.sh start $(get_next_task_number)"
         exit 1
     fi
-    
+
     # Проверяем что мы на develop
     if [ "$CURRENT_BRANCH" != "develop" ]; then
         warning "Текущая ветка: $CURRENT_BRANCH"
@@ -102,21 +102,21 @@ create_task() {
             exit 1
         fi
     fi
-    
+
     # Создаем ветку
     info "Создание ветки $branch_name от develop..."
     git checkout -b "$branch_name" develop
-    
+
     success "Ветка $branch_name создана!"
     info "Номер задачи: $task_num"
     info "Ветка: $branch_name"
-    
+
     # Обновляем TASKS.md (если файл существует)
     if [ -f "$TASKS_FILE" ]; then
         info "Обновление $TASKS_FILE..."
         # Здесь можно добавить автоматическое обновление статуса задачи
     fi
-    
+
     echo ""
     info "Следующие шаги:"
     echo "  1. Начните разработку"
@@ -128,7 +128,7 @@ create_task() {
 create_commit() {
     local message=$1
     local task_num
-    
+
     # Определяем номер задачи из текущей ветки
     if [[ $CURRENT_BRANCH =~ ^${TASK_PREFIX}([0-9]+)$ ]]; then
         task_num="${BASH_REMATCH[1]}"
@@ -139,19 +139,19 @@ create_commit() {
         info "Текущая ветка: $CURRENT_BRANCH"
         read -p "Введите номер задачи вручную: " task_num
     fi
-    
+
     if [ -z "$message" ]; then
         error "Не указано сообщение коммита!"
         info "Использование: ./scripts/task-manager.sh commit 'описание'"
         exit 1
     fi
-    
+
     # Форматируем сообщение коммита
     local commit_message="T #${task_num} - ${message}"
-    
+
     info "Создание коммита..."
     info "Сообщение: $commit_message"
-    
+
     # Проверяем изменения
     if ! git diff --quiet || ! git diff --cached --quiet; then
         git add -A
@@ -165,7 +165,7 @@ create_commit() {
 # Функция для показа статуса задачи
 show_status() {
     local task_num=$1
-    
+
     if [ -z "$task_num" ]; then
         # Показываем статус текущей задачи
         if [[ $CURRENT_BRANCH =~ ^${TASK_PREFIX}([0-9]+)$ ]] || [[ $CURRENT_BRANCH =~ ^t([0-9]+)$ ]]; then
@@ -176,12 +176,12 @@ show_status() {
             exit 1
         fi
     fi
-    
+
     info "Статус задачи #$task_num:"
     echo ""
     echo "Ветка: $CURRENT_BRANCH"
     echo "Номер задачи: $task_num"
-    
+
     # Показываем последние коммиты
     echo ""
     info "Последние коммиты:"
@@ -192,14 +192,14 @@ show_status() {
 list_tasks() {
     info "Список задач:"
     echo ""
-    
+
     if [ -f "$TASKS_FILE" ]; then
         # Парсим TASKS.md и показываем активные задачи
         grep -E "^\|\ *[0-9]+\ *\|" "$TASKS_FILE" | head -20 || echo "  (нет задач в TASKS.md)"
     else
         warning "Файл $TASKS_FILE не найден"
     fi
-    
+
     echo ""
     info "Активные ветки задач:"
     git branch -a 2>/dev/null | grep -E "${TASK_PREFIX}[0-9]+|^t[0-9]+" | sed 's/^/  /' || echo "  (нет активных веток задач)"
@@ -209,7 +209,7 @@ list_tasks() {
 main() {
     local command=$1
     shift
-    
+
     case "$command" in
         start)
             create_task "$1"
@@ -243,4 +243,3 @@ main() {
 }
 
 main "$@"
-

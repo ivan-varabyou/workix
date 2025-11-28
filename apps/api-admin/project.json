@@ -51,16 +51,38 @@
         "configFile": "apps/api-admin/vitest.config.ts"
       }
     },
+    "test:integration": {
+      "executor": "@nx/vite:test",
+      "outputs": [
+        "{workspaceRoot}/coverage/apps/api-admin"
+      ],
+      "options": {
+        "passWithNoTests": true,
+        "configFile": "apps/api-admin/vitest.config.ts",
+        "testPathPattern": "integration"
+      }
+    },
+    "test:with-db": {
+      "executor": "@nx/vite:test",
+      "outputs": [
+        "{workspaceRoot}/coverage/apps/api-admin"
+      ],
+      "options": {
+        "passWithNoTests": true,
+        "configFile": "apps/api-admin/vitest.config.ts"
+      },
+      "configurations": {
+        "security": {
+          "testPathPattern": "security"
+        },
+        "integration": {
+          "testPathPattern": "integration"
+        },
+        "all": {}
+      }
+    },
     "lint": {
       "executor": "@nx/eslint:lint"
-    },
-    "typecheck": {
-      "executor": "@nx/js:tsc",
-      "options": {
-        "tsConfig": "apps/api-admin/tsconfig.json",
-        "main": "apps/api-admin/src/main.ts",
-        "outputPath": "dist/apps/api-admin"
-      }
     }
   }
 }

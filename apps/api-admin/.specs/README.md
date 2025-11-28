@@ -1,34 +1,33 @@
-# Admin API - Спецификации и документация
+# Admin API - Specifications and Documentation
 
-**Версия**: 1.0  
-**Дата**: 2025-11-27
+**Version**: 1.0
+**Date**: 2025-11-27
 
-## Структура документации
+## Documentation Structure
 
-Все спецификации, планы и аналитика для Admin API хранятся в этой папке для удобной навигации.
+All specifications, plans, and analysis for Admin API are stored in this folder.
 
-### Основные документы
+### Main Documents
 
-- **[ADMIN_API_PLAN.md](./ADMIN_API_PLAN.md)** - План функциональности (спецификация)
-- **[ADMIN_API_SECURITY.md](./ADMIN_API_SECURITY.md)** - Кейсы безопасности
-- **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)** - План внедрения (технический план)
-- **[SPECKIT_WORKFLOW.md](./SPECKIT_WORKFLOW.md)** - Инструкция по командам speckit
-- **[ANALYSIS_REPORT.md](./ANALYSIS_REPORT.md)** - Анализ согласованности спецификаций
+- **[ADMIN_API_PLAN.md](./ADMIN_API_PLAN.md)** - Feature plan (specification)
+- **[ADMIN_API_SECURITY.md](./ADMIN_API_SECURITY.md)** - Security cases
+- **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)** - Implementation plan (technical plan)
+- **[SPECKIT_WORKFLOW.md](./SPECKIT_WORKFLOW.md)** - Speckit commands guide
+- **[ANALYSIS_REPORT.md](./ANALYSIS_REPORT.md)** - Specification consistency analysis
 
-### Чек-листы
+### Checklists
 
-- **[checklists/requirements-quality.md](./checklists/requirements-quality.md)** - Чек-лист качества требований
+- **[checklists/requirements-quality.md](./checklists/requirements-quality.md)** - Requirements quality checklist
 
-## Порядок работы со спецификациями
+## Specification Workflow
 
-1. **spec.md** (ADMIN_API_PLAN.md) - Функциональные требования
-2. **plan.md** (IMPLEMENTATION_PLAN.md) - Технический план
-3. **tasks.md** (TASKS.md в корне проекта) - Детальные задачи
-4. **checklist.md** - Чек-лист качества
-5. **analysis.md** - Анализ согласованности
+1. **spec.md** (ADMIN_API_PLAN.md) - Functional requirements
+2. **plan.md** (IMPLEMENTATION_PLAN.md) - Technical plan
+3. **tasks.md** (tasks.md) - Detailed tasks
+4. **checklist.md** - Quality checklist
+5. **analysis.md** - Consistency analysis
 
-## Связанные документы
+## Related Documents
 
-- [../../TASKS.md](../../TASKS.md) - Список задач проекта
-- [../README.md](../README.md) - README Admin API
-
+- [../../TASKS.md](../../TASKS.md) - Project task list
+- [../README.md](../README.md) - Admin API README

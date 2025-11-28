@@ -40,6 +40,10 @@ logs/
 tmp/
 temp/
 
+# Temporary documentation (auto-archived)
+.docs/reports/*.md
+!.docs/reports/.gitkeep
+
 
 
 storybook-static

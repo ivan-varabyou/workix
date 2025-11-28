@@ -1,5 +1,5 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, Logger } from '@nestjs/common';
-import type { HttpRequest, HttpResponse } from '@workix/shared/backend/core';
+import type { HttpRequest, HttpResponse } from '@workix/backend/shared/core';
 
 /**
  * Global HTTP Exception Filter

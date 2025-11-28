@@ -1,40 +1,35 @@
 import { Global, Module } from '@nestjs/common';
-
-import { AdminPrismaService } from './admin-prisma.service';
+import { PrismaService } from '@workix/infrastructure/prisma';
 
 @Global()
 @Module({
   providers: [
     {
       provide: 'DATABASE_URL_OVERRIDE',
-      useFactory: (): string => {
-        const dbUrl: string = process.env.DATABASE_URL_ADMIN ||
-                     process.env.DATABASE_URL ||
-                     'postgresql://postgres:postgres@localhost:5100/workix_admin';
-        console.log('🔌 Admin Prisma DB URL:', dbUrl.replace(/:[^:@]+@/, ':****@'));
-        return dbUrl;
-      },
+      useValue: globalThis.process?.env?.DATABASE_URL_ADMIN ||
+                globalThis.process?.env?.DATABASE_URL ||
+                'postgresql://postgres:postgres@localhost:5200/workix_admin', // API 7200 → DB 5200 (change first digit: 7 → 5)
     },
     {
-      provide: AdminPrismaService,
-      useFactory: (databaseUrlOverride: string): AdminPrismaService => {
-        return new AdminPrismaService(databaseUrlOverride);
+      provide: PrismaService,
+      useFactory: (databaseUrlOverride: string): PrismaService => {
+        return new PrismaService(databaseUrlOverride);
       },
       inject: ['DATABASE_URL_OVERRIDE'],
     },
     {
       provide: 'PrismaService',
-      useExisting: AdminPrismaService,
+      useExisting: PrismaService,
     },
     {
       provide: 'IDatabaseService',
-      useExisting: AdminPrismaService,
+      useExisting: PrismaService,
     },
     {
       provide: 'IDatabaseAdapter',
-      useExisting: AdminPrismaService,
+      useExisting: PrismaService,
     },
-  ],
-  exports: [AdminPrismaService, 'PrismaService', 'IDatabaseService', 'IDatabaseAdapter'],
+  ] as const,
+  exports: [PrismaService, 'PrismaService', 'IDatabaseService', 'IDatabaseAdapter'] as const,
 })
 export class PrismaModule {}

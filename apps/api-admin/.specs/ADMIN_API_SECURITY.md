@@ -1,117 +1,116 @@
-# Admin API - Кейсы безопасности
+# Admin API - Security Cases
 
-**Версия**: 1.0
-**Дата**: 2025-11-27
-**Статус**: Планирование
+**Version**: 1.0
+**Date**: 2025-11-27
+**Status**: Planning
 
-## Обзор
+## Overview
 
-Документ описывает все кейсы безопасности для Admin API, включая защиту эндпоинтов, проверки прав доступа и бизнес-правила.
+Document describes all security cases for Admin API, including endpoint protection, access control checks, and business rules.
 
-## Принципы безопасности
+## Security Principles
 
-1. **Принцип наименьших привилегий** - каждый админ имеет только необходимые права
-2. **Защита от самоуничтожения** - нельзя удалить/заблокировать самого себя
-3. **Защита критичных операций** - super_admin операции требуют дополнительных проверок
-4. **Audit logging** - все действия логируются
-5. **IP Whitelist** - для super_admin обязателен IP whitelist
-6. **2FA обязательна** - для super_admin обязательно включение 2FA
+1. **Least privilege** - each admin has only necessary permissions
+2. **Self-destruction protection** - cannot delete/block yourself
+3. **Critical operations protection** - super_admin operations require additional checks
+4. **Audit logging** - all actions are logged
+5. **IP Whitelist** - required for super_admin
+6. **2FA mandatory** - 2FA required for super_admin
 
-## Кейсы безопасности по категориям
+## Security Cases by Category
 
-### 1. Регистрация админа
+### 1. Admin Registration
 
-#### Кейс 1.1: Регистрация нового админа
-- **Эндпоинт**: `POST /api-admin/v1/auth/register`
-- **Требования**:
-  - ✅ Только `super_admin` может создавать админов
-  - ✅ Требуется авторизация через `AdminJwtGuard`
-  - ✅ Проверка роли через `AdminRoleGuard` с `ADMIN_ROLES_KEY: ['super_admin']`
-  - ✅ Проверка что создающий админ активен (`isActive = true`)
-  - ✅ Проверка что создающий админ не заблокирован (`lockedUntil = null`)
-- **Защита**:
+#### Case 1.1: Register New Admin
+- **Endpoint**: `POST /api-admin/v1/auth/register`
+- **Requirements**:
+  - ✅ Only `super_admin` can create admins
+  - ✅ Requires `AdminJwtGuard` authorization
+  - ✅ Role check via `AdminRoleGuard` with `ADMIN_ROLES_KEY: ['super_admin']`
+  - ✅ Creator must be active (`isActive = true`)
+  - ✅ Creator must not be locked (`lockedUntil = null`)
+- **Protection**:
   ```typescript
   @Post('register')
   @UseGuards(AdminJwtGuard, AdminRoleGuard)
   @SetMetadata(ADMIN_ROLES_KEY, ['super_admin'])
   async register(@Body() dto: AdminRegisterDto, @Request() req: AdminRequest)
   ```
-- **Бизнес-правила**:
-  - Email должен быть уникальным
-  - Пароль должен соответствовать требованиям (минимум 12 символов)
-  - Роль по умолчанию: `admin` (нельзя создать `super_admin` через API)
-  - Audit log: записывается кто создал админа
+- **Business Rules**:
+  - Email must be unique
+  - Password must meet requirements (min 12 characters)
+  - Default role: `admin` (cannot create `super_admin` via API)
+  - Audit log: records who created admin
 
-#### Кейс 1.2: Попытка регистрации без авторизации
-- **Защита**: Эндпоинт защищен `AdminJwtGuard` - без токена доступ запрещен
-- **Результат**: `401 Unauthorized`
+#### Case 1.2: Registration Attempt Without Authorization
+- **Protection**: Endpoint protected by `AdminJwtGuard` - access denied without token
+- **Result**: `401 Unauthorized`
 
-#### Кейс 1.3: Попытка регистрации обычным админом
-- **Защита**: `AdminRoleGuard` проверяет роль - только `super_admin`
-- **Результат**: `403 Forbidden`
+#### Case 1.3: Registration Attempt by Regular Admin
+- **Protection**: `AdminRoleGuard` checks role - only `super_admin`
+- **Result**: `403 Forbidden`
 
-#### Кейс 1.4: Попытка создать super_admin через API
-- **Защита**: Валидация DTO - роль `super_admin` не может быть установлена через API
-- **Результат**: `400 Bad Request` - "Cannot create super_admin through API"
+#### Case 1.4: Attempt to Create super_admin via API
+- **Protection**: DTO validation - `super_admin` role cannot be set via API
+- **Result**: `400 Bad Request` - "Cannot create super_admin through API"
 
-### 2. Управление админами
+### 2. Admin Management
 
-#### Кейс 2.1: Просмотр списка админов
-- **Эндпоинт**: `GET /api-admin/v1/admins`
-- **Требования**:
-  - ✅ Требуется авторизация
-  - ✅ `admin` и выше могут просматривать
-- **Ограничения**:
-  - Обычный `admin` видит только `admin` (не видит `super_admin`)
-  - `super_admin` видит всех
-  - Не показываются заблокированные админы (опционально, через фильтр)
+#### Case 2.1: View Admin List
+- **Endpoint**: `GET /api-admin/v1/admins`
+- **Requirements**:
+  - ✅ Requires authorization
+  - ✅ `admin` and above can view
+- **Limitations**:
+  - Regular `admin` sees only `admin` (not `super_admin`)
+  - `super_admin` sees all
+  - Blocked admins not shown (optional, via filter)
 
-#### Кейс 2.2: Просмотр деталей админа
-- **Эндпоинт**: `GET /api-admin/v1/admins/:adminId`
-- **Требования**:
-  - ✅ Требуется авторизация
-  - ✅ `admin` может просматривать только других `admin`
-  - ✅ `super_admin` может просматривать всех
-- **Защита**:
-  - Проверка что запрашивающий имеет право видеть этого админа
-  - Не показывается `passwordHash` в ответе
+#### Case 2.2: View Admin Details
+- **Endpoint**: `GET /api-admin/v1/admins/:adminId`
+- **Requirements**:
+  - ✅ Requires authorization
+  - ✅ `admin` can view only other `admin`
+  - ✅ `super_admin` can view all
+- **Protection**:
+  - Check requester has permission to see this admin
+  - `passwordHash` not shown in response
 
-#### Кейс 2.3: Обновление админа
-- **Эндпоинт**: `PUT /api-admin/v1/admins/:adminId`
-- **Требования**:
-  - ✅ Требуется авторизация
-  - ✅ `admin` может обновлять только других `admin` (не `super_admin`)
-  - ✅ `super_admin` может обновлять всех
-  - ❌ Нельзя обновить самого себя (для изменения профиля есть отдельный эндпоинт)
-- **Защита**:
-  - Проверка что `adminId !== currentAdminId`
-  - Проверка роли целевого админа
-  - Audit log: записывается кто и что изменил
+#### Case 2.3: Update Admin
+- **Endpoint**: `PUT /api-admin/v1/admins/:adminId`
+- **Requirements**:
+  - ✅ Requires authorization
+  - ✅ `admin` can update only other `admin` (not `super_admin`)
+  - ✅ `super_admin` can update all
+  - ❌ Cannot update yourself (use separate profile endpoint)
+- **Protection**:
+  - Check `adminId !== currentAdminId`
+  - Check target admin role
+  - Audit log: records who changed what
 
-#### Кейс 2.4: Изменение роли админа
-- **Эндпоинт**: `PUT /api-admin/v1/admins/:adminId/role`
-- **Требования**:
-  - ✅ Только `super_admin` может изменять роли
-  - ❌ Нельзя изменить роль последнего `super_admin`
-  - ❌ Нельзя изменить роль самого себя
-  - ❌ Нельзя создать `super_admin` через API (только вручную в БД)
-- **Защита**:
+#### Case 2.4: Change Admin Role
+- **Endpoint**: `PUT /api-admin/v1/admins/:adminId/role`
+- **Requirements**:
+  - ✅ Only `super_admin` can change roles
+  - ❌ Cannot change last `super_admin` role
+  - ❌ Cannot change own role
+  - ❌ Cannot create `super_admin` via API (only manually in DB)
+- **Protection**:
   ```typescript
-  // Проверка что не последний super_admin
   const superAdminCount = await prisma.admin.count({ where: { role: 'super_admin', isActive: true } });
   if (superAdminCount <= 1 && targetAdmin.role === 'super_admin') {
     throw new ForbiddenException('Cannot change role of last super_admin');
   }
   ```
 
-#### Кейс 2.5: Удаление админа
-- **Эндпоинт**: `DELETE /api-admin/v1/admins/:adminId`
-- **Требования**:
-  - ✅ Только `super_admin` может удалять
-  - ❌ Нельзя удалить самого себя
-  - ❌ Нельзя удалить последнего `super_admin`
-  - ❌ Нельзя удалить активного админа (сначала заблокировать)
-- **Защита**:
+#### Case 2.5: Delete Admin
+- **Endpoint**: `DELETE /api-admin/v1/admins/:adminId`
+- **Requirements**:
+  - ✅ Only `super_admin` can delete
+  - ❌ Cannot delete yourself
+  - ❌ Cannot delete last `super_admin`
+  - ❌ Cannot delete active admin (block first)
+- **Protection**:
   ```typescript
   if (adminId === currentAdminId) {
     throw new ForbiddenException('Cannot delete yourself');
@@ -124,405 +123,398 @@
   }
   ```
 
-### 3. Блокировка админов
+### 3. Admin Blocking
 
-#### Кейс 3.1: Блокировка админа
-- **Эндпоинт**: `POST /api-admin/v1/admins/:adminId/block`
-- **Требования**:
-  - ✅ `admin` может блокировать только других `admin`
-  - ✅ `super_admin` может блокировать всех
-  - ❌ Нельзя заблокировать самого себя
-  - ❌ Нельзя заблокировать последнего `super_admin`
-- **Защита**:
-  - Проверка что `adminId !== currentAdminId`
-  - Проверка что не последний `super_admin`
-  - Отзыв всех активных сессий заблокированного админа
+#### Case 3.1: Block Admin
+- **Endpoint**: `POST /api-admin/v1/admins/:adminId/block`
+- **Requirements**:
+  - ✅ `admin` can block only other `admin`
+  - ✅ `super_admin` can block all
+  - ❌ Cannot block yourself
+  - ❌ Cannot block last `super_admin`
+- **Protection**:
+  - Check `adminId !== currentAdminId`
+  - Check not last `super_admin`
+  - Revoke all active sessions of blocked admin
   - Audit log
 
-#### Кейс 3.2: Разблокировка админа
-- **Эндпоинт**: `POST /api-admin/v1/admins/:adminId/unblock`
-- **Требования**:
-  - ✅ Только `super_admin` может разблокировать
-  - ✅ Можно разблокировать любого админа
+#### Case 3.2: Unblock Admin
+- **Endpoint**: `POST /api-admin/v1/admins/:adminId/unblock`
+- **Requirements**:
+  - ✅ Only `super_admin` can unblock
+  - ✅ Can unblock any admin
 
-### 4. Управление сессиями
+### 4. Session Management
 
-#### Кейс 4.1: Просмотр сессий админа
-- **Эндпоинт**: `GET /api-admin/v1/admins/:adminId/sessions`
-- **Требования**:
-  - ✅ Админ может просматривать только свои сессии
-  - ✅ `super_admin` может просматривать сессии всех
-- **Защита**:
+#### Case 4.1: View Admin Sessions
+- **Endpoint**: `GET /api-admin/v1/admins/:adminId/sessions`
+- **Requirements**:
+  - ✅ Admin can view only own sessions
+  - ✅ `super_admin` can view all sessions
+- **Protection**:
   ```typescript
   if (currentAdmin.role !== 'super_admin' && adminId !== currentAdminId) {
     throw new ForbiddenException('Can only view own sessions');
   }
   ```
 
-#### Кейс 4.2: Отзыв сессии
-- **Эндпоинт**: `DELETE /api-admin/v1/admins/:adminId/sessions/:sessionId`
-- **Требования**:
-  - ✅ Админ может отзывать только свои сессии
-  - ✅ `super_admin` может отзывать сессии всех
-  - ❌ Нельзя отозвать текущую сессию (использовать `/auth/sessions/:sessionId`)
-- **Защита**:
-  - Проверка что сессия принадлежит админу
-  - Проверка что это не текущая сессия (если админ отзывает свою)
+#### Case 4.2: Revoke Session
+- **Endpoint**: `DELETE /api-admin/v1/admins/:adminId/sessions/:sessionId`
+- **Requirements**:
+  - ✅ Admin can revoke only own sessions
+  - ✅ `super_admin` can revoke all sessions
+  - ❌ Cannot revoke current session (use `/auth/sessions/:sessionId`)
+- **Protection**:
+  - Check session belongs to admin
+  - Check not current session (if admin revokes own)
 
 ### 5. IP Whitelist
 
-#### Кейс 5.1: Просмотр IP Whitelist
-- **Эндпоинт**: `GET /api-admin/v1/admins/:adminId/ip-whitelist`
-- **Требования**:
-  - ✅ Админ может просматривать только свой IP whitelist
-  - ✅ `super_admin` может просматривать IP whitelist всех
-- **Защита**:
-  - Проверка прав доступа
+#### Case 5.1: View IP Whitelist
+- **Endpoint**: `GET /api-admin/v1/admins/:adminId/ip-whitelist`
+- **Requirements**:
+  - ✅ Admin can view only own IP whitelist
+  - ✅ `super_admin` can view all IP whitelists
+- **Protection**: Access permission check
 
-#### Кейс 5.2: Добавление IP в Whitelist
-- **Эндпоинт**: `POST /api-admin/v1/admins/:adminId/ip-whitelist`
-- **Требования**:
-  - ✅ Только `super_admin` может управлять IP whitelist
-  - ✅ IP должен быть валидным (IPv4 или IPv6)
-  - ✅ Нельзя добавить IP если whitelist не включен
-- **Защита**:
+#### Case 5.2: Add IP to Whitelist
+- **Endpoint**: `POST /api-admin/v1/admins/:adminId/ip-whitelist`
+- **Requirements**:
+  - ✅ Only `super_admin` can manage IP whitelist
+  - ✅ IP must be valid (IPv4 or IPv6)
+  - ✅ Cannot add IP if whitelist not enabled
+- **Protection**:
   ```typescript
   @UseGuards(AdminJwtGuard, AdminRoleGuard)
   @SetMetadata(ADMIN_ROLES_KEY, ['super_admin'])
   ```
 
-#### Кейс 5.3: Включение IP Whitelist
-- **Эндпоинт**: `POST /api-admin/v1/admins/:adminId/ip-whitelist/toggle`
-- **Требования**:
-  - ✅ Только `super_admin` может включать/отключать IP whitelist
-  - ✅ При включении должен быть хотя бы один IP в whitelist
-- **Защита**:
-  - Проверка что есть IP в whitelist перед включением
+#### Case 5.3: Enable IP Whitelist
+- **Endpoint**: `POST /api-admin/v1/admins/:adminId/ip-whitelist/toggle`
+- **Requirements**:
+  - ✅ Only `super_admin` can enable/disable IP whitelist
+  - ✅ At least one IP must exist before enabling
+- **Protection**: Check IP exists before enabling
 
-### 6. Управление серверами
+### 6. Services Management
 
-#### Кейс 6.1: Просмотр статуса сервисов
-- **Эндпоинт**: `GET /api-admin/v1/services`
-- **Требования**:
-  - ✅ Требуется авторизация
-  - ✅ `admin` и выше могут просматривать
-- **Ограничения**:
-  - Не показываются секретные конфигурации
+#### Case 6.1: View Services Status
+- **Endpoint**: `GET /api-admin/v1/services`
+- **Requirements**:
+  - ✅ Requires authorization
+  - ✅ `admin` and above can view
+- **Limitations**: Secret configurations not shown
 
-#### Кейс 6.2: Перезапуск сервиса
-- **Эндпоинт**: `POST /api-admin/v1/services/:serviceId/restart`
-- **Требования**:
-  - ✅ Только `super_admin` может перезапускать сервисы
-  - ❌ Нельзя перезапустить api-admin (сам себя)
-- **Защита**:
+#### Case 6.2: Restart Service
+- **Endpoint**: `POST /api-admin/v1/services/:serviceId/restart`
+- **Requirements**:
+  - ✅ Only `super_admin` can restart services
+  - ❌ Cannot restart api-admin (self)
+- **Protection**:
   ```typescript
   if (serviceId === 'api-admin') {
     throw new ForbiddenException('Cannot restart api-admin service');
   }
   ```
 
-#### Кейс 6.3: Просмотр конфигурации сервиса
-- **Эндпоинт**: `GET /api-admin/v1/services/:serviceId/config`
-- **Требования**:
-  - ✅ Только `super_admin` может просматривать конфигурацию
-  - ❌ Не показываются секреты (JWT_SECRET, DATABASE_URL, etc.)
-- **Защита**:
-  - Маскирование секретов: `JWT_SECRET=***`, `DATABASE_URL=postgresql://***`
+#### Case 6.3: View Service Configuration
+- **Endpoint**: `GET /api-admin/v1/services/:serviceId/config`
+- **Requirements**:
+  - ✅ Only `super_admin` can view configuration
+  - ❌ Secrets not shown (JWT_SECRET, DATABASE_URL, etc.)
+- **Protection**: Mask secrets: `JWT_SECRET=***`, `DATABASE_URL=postgresql://***`
 
-#### Кейс 6.4: Обновление конфигурации
-- **Эндпоинт**: `PUT /api-admin/v1/services/:serviceId/config`
-- **Требования**:
-  - ✅ Только `super_admin` может обновлять конфигурацию
-  - ❌ Нельзя обновить секреты через API (только через env файлы)
-  - ✅ Валидация конфигурации перед применением
-- **Защита**:
-  - Проверка что не пытаются изменить секреты
-  - Audit log: записывается изменение конфигурации
+#### Case 6.4: Update Configuration
+- **Endpoint**: `PUT /api-admin/v1/services/:serviceId/config`
+- **Requirements**:
+  - ✅ Only `super_admin` can update configuration
+  - ❌ Cannot update secrets via API (only via env files)
+  - ✅ Configuration validation before applying
+- **Protection**:
+  - Check not attempting to change secrets
+  - Audit log: records configuration change
 
-### 7. Доступ к базам данных
+### 7. Database Access
 
-#### Кейс 7.1: Просмотр статуса БД
-- **Эндпоинт**: `GET /api-admin/v1/databases/:dbName/status`
-- **Требования**:
-  - ✅ Только `super_admin` может просматривать статус БД
-  - ❌ Не показывается connection string
-- **Защита**:
-  - Маскирование connection string
+#### Case 7.1: View Database Status
+- **Endpoint**: `GET /api-admin/v1/databases/:dbName/status`
+- **Requirements**:
+  - ✅ Only `super_admin` can view DB status
+  - ❌ Connection string not shown
+- **Protection**: Mask connection string
 
-#### Кейс 7.2: Просмотр данных БД
-- **Эндпоинт**: `GET /api-admin/v1/databases/:dbName/tables`
-- **Требования**:
-  - ✅ Только `super_admin` может просматривать таблицы
-  - ❌ Нельзя выполнять произвольные SQL запросы
-- **Защита**:
-  - Только read-only операции
-  - Нет возможности выполнить DELETE, UPDATE, DROP
+#### Case 7.2: View Database Data
+- **Endpoint**: `GET /api-admin/v1/databases/:dbName/tables`
+- **Requirements**:
+  - ✅ Only `super_admin` can view tables
+  - ❌ Cannot execute arbitrary SQL queries
+- **Protection**:
+  - Read-only operations only
+  - No DELETE, UPDATE, DROP capability
 
-#### Кейс 7.3: Создание бэкапа
-- **Эндпоинт**: `POST /api-admin/v1/databases/:dbName/backup`
-- **Требования**:
-  - ✅ Только `super_admin` может создавать бэкапы
-  - ✅ Бэкап создается асинхронно
-  - ✅ Audit log: записывается создание бэкапа
+#### Case 7.3: Create Backup
+- **Endpoint**: `POST /api-admin/v1/databases/:dbName/backup`
+- **Requirements**:
+  - ✅ Only `super_admin` can create backups
+  - ✅ Backup created asynchronously
+  - ✅ Audit log: records backup creation
 
-### 8. Управление платежами
+### 8. Billing Management
 
-#### Кейс 8.1: Просмотр подписок
-- **Эндпоинт**: `GET /api-admin/v1/billing/subscriptions`
-- **Требования**:
-  - ✅ `admin` и выше могут просматривать
-  - ❌ Не показываются данные карт, CVV
-- **Защита**:
-  - Маскирование данных карт: `**** **** **** 1234`
+#### Case 8.1: View Subscriptions
+- **Endpoint**: `GET /api-admin/v1/billing/subscriptions`
+- **Requirements**:
+  - ✅ `admin` and above can view
+  - ❌ Card data, CVV not shown
+- **Protection**: Mask card data: `**** **** **** 1234`
 
-#### Кейс 8.2: Блокировка платежей пользователя
-- **Эндпоинт**: `POST /api-admin/v1/billing/users/:userId/payments/block`
-- **Требования**:
-  - ✅ Только `super_admin` может блокировать платежи
-  - ✅ Audit log: записывается блокировка
-- **Защита**:
-  - Проверка что пользователь существует
-  - Уведомление пользователя о блокировке
+#### Case 8.2: Block User Payments
+- **Endpoint**: `POST /api-admin/v1/billing/users/:userId/payments/block`
+- **Requirements**:
+  - ✅ Only `super_admin` can block payments
+  - ✅ Audit log: records blocking
+- **Protection**:
+  - Check user exists
+  - Notify user of blocking
 
-#### Кейс 8.3: Изменение плана подписки
-- **Эндпоинт**: `PUT /api-admin/v1/billing/subscriptions/:subscriptionId/plan`
-- **Требования**:
-  - ✅ Только `super_admin` может изменять планы
-  - ✅ Валидация нового плана
-  - ✅ Audit log: записывается изменение плана
+#### Case 8.3: Change Subscription Plan
+- **Endpoint**: `PUT /api-admin/v1/billing/subscriptions/:subscriptionId/plan`
+- **Requirements**:
+  - ✅ Only `super_admin` can change plans
+  - ✅ New plan validation
+  - ✅ Audit log: records plan change
 
-### 9. RBAC управление
+### 9. RBAC Management
 
-#### Кейс 9.1: Создание роли
-- **Эндпоинт**: `POST /api-admin/v1/rbac/roles`
-- **Требования**:
-  - ✅ Только `super_admin` может создавать роли
-  - ❌ Нельзя создать роль с именем `super_admin` или `admin`
-- **Защита**:
-  - Валидация имени роли
-  - Проверка что роль не существует
+#### Case 9.1: Create Role
+- **Endpoint**: `POST /api-admin/v1/rbac/roles`
+- **Requirements**:
+  - ✅ Only `super_admin` can create roles
+  - ❌ Cannot create role named `super_admin` or `admin`
+- **Protection**:
+  - Role name validation
+  - Check role doesn't exist
 
-#### Кейс 9.2: Изменение прав роли
-- **Эндпоинт**: `PUT /api-admin/v1/rbac/roles/:roleId/permissions`
-- **Требования**:
-  - ✅ Только `super_admin` может изменять права
-  - ❌ Нельзя изменить права роли `super_admin`
-  - ❌ Нельзя удалить все права у роли `admin`
-- **Защита**:
-  - Проверка что роль не системная
-  - Валидация прав
+#### Case 9.2: Change Role Permissions
+- **Endpoint**: `PUT /api-admin/v1/rbac/roles/:roleId/permissions`
+- **Requirements**:
+  - ✅ Only `super_admin` can change permissions
+  - ❌ Cannot change `super_admin` role permissions
+  - ❌ Cannot remove all permissions from `admin` role
+- **Protection**:
+  - Check role not system role
+  - Permission validation
 
 ### 10. Audit Logs
 
-#### Кейс 10.1: Просмотр audit logs
-- **Эндпоинт**: `GET /api-admin/v1/audit/logs`
-- **Требования**:
-  - ✅ `admin` и выше могут просматривать
-  - ✅ `support` может просматривать только свои действия
-  - ❌ Не показываются секретные данные в details
-- **Защита**:
-  - Фильтрация по роли
-  - Маскирование секретов в details
+#### Case 10.1: View Audit Logs
+- **Endpoint**: `GET /api-admin/v1/audit/logs`
+- **Requirements**:
+  - ✅ `admin` and above can view
+  - ✅ `support` can view only own actions
+  - ❌ Secret data not shown in details
+- **Protection**:
+  - Filter by role
+  - Mask secrets in details
 
-#### Кейс 10.2: Экспорт audit logs
-- **Эндпоинт**: `GET /api-admin/v1/audit/export`
-- **Требования**:
-  - ✅ Только `super_admin` может экспортировать логи
-  - ✅ Экспорт только за последние 90 дней
-- **Защита**:
-  - Ограничение периода экспорта
-  - Rate limiting на экспорт
+#### Case 10.2: Export Audit Logs
+- **Endpoint**: `GET /api-admin/v1/audit/export`
+- **Requirements**:
+  - ✅ Only `super_admin` can export logs
+  - ✅ Export only last 90 days
+- **Protection**:
+  - Export period limit
+  - Rate limiting on export
 
-### 11. Безопасность
+### 11. Security
 
-#### Кейс 11.1: Блокировка IP
-- **Эндпоинт**: `POST /api-admin/v1/security/ip-blocks`
-- **Требования**:
-  - ✅ Только `super_admin` может блокировать IP
-  - ❌ Нельзя заблокировать IP текущего админа
-  - ✅ Валидация IP адреса
-- **Защита**:
-  - Проверка что IP валидный
-  - Проверка что не блокируем свой IP
+#### Case 11.1: Block IP
+- **Endpoint**: `POST /api-admin/v1/security/ip-blocks`
+- **Requirements**:
+  - ✅ Only `super_admin` can block IP
+  - ❌ Cannot block current admin IP
+  - ✅ IP address validation
+- **Protection**:
+  - Check IP is valid
+  - Check not blocking own IP
 
-#### Кейс 11.2: Просмотр событий безопасности
-- **Эндпоинт**: `GET /api-admin/v1/security/events`
-- **Требования**:
-  - ✅ `admin` и выше могут просматривать
-  - ✅ Фильтрация по severity (critical, high, medium, low)
-- **Защита**:
-  - Пагинация для больших объемов данных
+#### Case 11.2: View Security Events
+- **Endpoint**: `GET /api-admin/v1/security/events`
+- **Requirements**:
+  - ✅ `admin` and above can view
+  - ✅ Filter by severity (critical, high, medium, low)
+- **Protection**: Pagination for large data volumes
 
-### 12. Изменение пароля
+### 12. Password Change
 
-#### Кейс 12.1: Изменение своего пароля
-- **Эндпоинт**: `POST /api-admin/v1/auth/change-password`
-- **Требования**:
-  - ✅ Требуется текущий пароль
-  - ✅ Новый пароль должен быть сильным
-  - ✅ Отзыв всех других сессий кроме текущей
-- **Защита**:
-  - Проверка текущего пароля
-  - Валидация нового пароля
+#### Case 12.1: Change Own Password
+- **Endpoint**: `POST /api-admin/v1/auth/change-password`
+- **Requirements**:
+  - ✅ Requires current password
+  - ✅ New password must be strong
+  - ✅ Revoke all other sessions except current
+- **Protection**:
+  - Check current password
+  - Validate new password
 
-#### Кейс 12.2: Сброс пароля другого админа
-- **Эндпоинт**: `POST /api-admin/v1/admins/:adminId/password-reset`
-- **Требования**:
-  - ✅ Только `super_admin` может сбрасывать пароли других
-  - ❌ Нельзя сбросить пароль самого себя (использовать change-password)
-  - ✅ Генерация временного пароля
-  - ✅ Отправка пароля на email админа
-- **Защита**:
-  - Проверка что `adminId !== currentAdminId`
-  - Audit log: записывается сброс пароля
+#### Case 12.2: Reset Another Admin's Password
+- **Endpoint**: `POST /api-admin/v1/admins/:adminId/password-reset`
+- **Requirements**:
+  - ✅ Only `super_admin` can reset other passwords
+  - ❌ Cannot reset own password (use change-password)
+  - ✅ Generate temporary password
+  - ✅ Send password to admin email
+- **Protection**:
+  - Check `adminId !== currentAdminId`
+  - Audit log: records password reset
 
-### 13. 2FA управление
+### 13. 2FA Management
 
-#### Кейс 13.1: Включение 2FA
-- **Эндпоинт**: `POST /api-admin/v1/auth/2fa/enable`
-- **Требования**:
-  - ✅ Админ может включить 2FA только для себя
-  - ✅ Для `super_admin` 2FA обязательна (нельзя отключить)
-- **Защита**:
+#### Case 13.1: Enable 2FA
+- **Endpoint**: `POST /api-admin/v1/auth/2fa/enable`
+- **Requirements**:
+  - ✅ Admin can enable 2FA only for self
+  - ✅ 2FA mandatory for `super_admin` (cannot disable)
+- **Protection**:
   ```typescript
   if (currentAdmin.role === 'super_admin' && !twoFactorEnabled) {
     throw new ForbiddenException('2FA is required for super_admin');
   }
   ```
 
-#### Кейс 13.2: Отключение 2FA
-- **Эндпоинт**: `DELETE /api-admin/v1/auth/2fa/disable`
-- **Требования**:
-  - ✅ Админ может отключить 2FA только для себя
-  - ❌ `super_admin` не может отключить 2FA
-  - ✅ Только `super_admin` может отключить 2FA другого админа
-- **Защита**:
-  - Проверка роли
-  - Проверка что не пытается отключить 2FA у super_admin
+#### Case 13.2: Disable 2FA
+- **Endpoint**: `DELETE /api-admin/v1/auth/2fa/disable`
+- **Requirements**:
+  - ✅ Admin can disable 2FA only for self
+  - ❌ `super_admin` cannot disable 2FA
+  - ✅ Only `super_admin` can disable another admin's 2FA
+- **Protection**:
+  - Check role
+  - Check not attempting to disable super_admin 2FA
 
-### 14. Защита от атак
+### 14. Attack Protection
 
-#### Кейс 14.1: Brute Force защита
-- **Эндпоинт**: `POST /api-admin/v1/auth/login`
-- **Защита**:
-  - Rate limiting: 5 попыток в минуту
-  - Блокировка после 5 неудачных попыток на 15 минут
-  - Увеличение времени блокировки при повторных попытках
-- **Реализация**:
+#### Case 14.1: Brute Force Protection
+- **Endpoint**: `POST /api-admin/v1/auth/login`
+- **Protection**:
+  - Rate limiting: 5 attempts per minute
+  - Block after 5 failed attempts for 15 minutes
+  - Increase block time on repeated attempts
+- **Implementation**:
   ```typescript
   @Throttle({ short: { limit: 5, ttl: 60000 } })
   @UseGuards(ThrottlerGuard)
   ```
 
-#### Кейс 14.2: SQL Injection защита
-- **Защита**:
-  - Использование Prisma (параметризованные запросы)
-  - Валидация всех входных данных
-  - Type guards для всех параметров
+#### Case 14.2: SQL Injection Protection
+- **Protection**:
+  - Use Prisma (parameterized queries)
+  - Validate all input data
+  - Type guards for all parameters
 
-#### Кейс 14.3: XSS защита
-- **Защита**:
-  - Валидация всех строковых входных данных
-  - Санитизация HTML в ответах
+#### Case 14.3: XSS Protection
+- **Protection**:
+  - Validate all string inputs
+  - Sanitize HTML in responses
   - Content Security Policy headers
 
-#### Кейс 14.4: CSRF защита
-- **Защита**:
-  - Использование JWT токенов (не cookies)
-  - Проверка Origin header
-  - SameSite cookies (если используются)
+#### Case 14.4: CSRF Protection
+- **Protection**:
+  - Use JWT tokens (not cookies)
+  - Check Origin header
+  - SameSite cookies (if used)
 
-### 15. Специальные кейсы
+### 15. Special Cases
 
-#### Кейс 15.1: Первый super_admin
-- **Проблема**: Как создать первого super_admin если регистрация требует super_admin?
-- **Решение**:
-  - Первый super_admin создается вручную в БД или через seed скрипт
-  - Seed скрипт выполняется только при инициализации БД
-  - После создания первого super_admin, регистрация через API доступна только ему
+#### Case 15.1: First super_admin
+- **Problem**: How to create first super_admin if registration requires super_admin?
+- **Solution**:
+  - First super_admin created manually in DB or via seed script
+  - Seed script runs only on DB initialization
+  - After first super_admin created, API registration available only to them
 
-#### Кейс 15.2: Заблокирован последний super_admin
-- **Проблема**: Что если заблокирован последний super_admin?
-- **Решение**:
-  - Проверка перед блокировкой: нельзя заблокировать последнего super_admin
-  - Если все super_admin заблокированы, разблокировка через прямой доступ к БД
-  - Документация по восстановлению доступа
+#### Case 15.2: Last super_admin Blocked
+- **Problem**: What if last super_admin is blocked?
+- **Solution**:
+  - Check before blocking: cannot block last super_admin
+  - If all super_admin blocked, unblock via direct DB access
+  - Access recovery documentation
 
-#### Кейс 15.3: Потеря доступа к 2FA
-- **Проблема**: Что если super_admin потерял доступ к 2FA устройству?
-- **Решение**:
-  - Backup codes для восстановления
-  - Если backup codes потеряны, другой super_admin может отключить 2FA
-  - Если нет других super_admin, восстановление через прямой доступ к БД
+#### Case 15.3: Lost 2FA Access
+- **Problem**: What if super_admin lost access to 2FA device?
+- **Solution**:
+  - Backup codes for recovery
+  - If backup codes lost, another super_admin can disable 2FA
+  - If no other super_admin, recovery via direct DB access
 
-#### Кейс 15.4: IP Whitelist блокирует доступ
-- **Проблема**: Что если IP whitelist блокирует доступ super_admin?
-- **Решение**:
-  - Проверка IP whitelist только при включенном флаге
-  - Если whitelist блокирует, можно отключить через прямой доступ к БД
-  - Документация по восстановлению доступа
+#### Case 15.4: IP Whitelist Blocks Access
+- **Problem**: What if IP whitelist blocks super_admin access?
+- **Solution**:
+  - IP whitelist check only when flag enabled
+  - If whitelist blocks, can disable via direct DB access
+  - Access recovery documentation
 
-## Матрица защиты эндпоинтов
+## Endpoint Protection Matrix
 
-| Эндпоинт | Guard | Role Check | Дополнительные проверки |
-|----------|-------|------------|------------------------|
-| `POST /auth/register` | AdminJwtGuard | super_admin | Активен, не заблокирован |
+| Endpoint | Guard | Role Check | Additional Checks |
+|----------|-------|------------|-------------------|
+| `POST /auth/register` | AdminJwtGuard | super_admin | Active, not locked |
 | `POST /auth/login` | ThrottlerGuard | - | IP whitelist, 2FA |
 | `GET /auth/me` | AdminJwtGuard | - | - |
-| `GET /admins` | AdminJwtGuard | admin+ | Фильтрация по роли |
-| `GET /admins/:id` | AdminJwtGuard | admin+ | Право видеть админа |
-| `PUT /admins/:id` | AdminJwtGuard | admin+ | Не самого себя, роль целевого |
-| `PUT /admins/:id/role` | AdminJwtGuard | super_admin | Не последний super_admin |
-| `DELETE /admins/:id` | AdminJwtGuard | super_admin | Не самого себя, не последний super_admin |
-| `POST /admins/:id/block` | AdminJwtGuard | admin+ | Не самого себя, не последний super_admin |
+| `GET /admins` | AdminJwtGuard | admin+ | Filter by role |
+| `GET /admins/:id` | AdminJwtGuard | admin+ | Permission to see admin |
+| `PUT /admins/:id` | AdminJwtGuard | admin+ | Not self, target role |
+| `PUT /admins/:id/role` | AdminJwtGuard | super_admin | Not last super_admin |
+| `DELETE /admins/:id` | AdminJwtGuard | super_admin | Not self, not last super_admin |
+| `POST /admins/:id/block` | AdminJwtGuard | admin+ | Not self, not last super_admin |
 | `GET /services` | AdminJwtGuard | admin+ | - |
-| `POST /services/:id/restart` | AdminJwtGuard | super_admin | Не api-admin |
+| `POST /services/:id/restart` | AdminJwtGuard | super_admin | Not api-admin |
 | `GET /databases/:name/status` | AdminJwtGuard | super_admin | - |
 | `POST /billing/users/:id/payments/block` | AdminJwtGuard | super_admin | - |
-| `POST /rbac/roles` | AdminJwtGuard | super_admin | Валидация имени |
-| `GET /audit/logs` | AdminJwtGuard | admin+ | Фильтрация по роли |
+| `POST /rbac/roles` | AdminJwtGuard | super_admin | Name validation |
+| `GET /audit/logs` | AdminJwtGuard | admin+ | Filter by role |
 
-## Рекомендации по реализации
+## Implementation Recommendations
 
-1. **Использовать Guards**:
-   - `AdminJwtGuard` - для всех защищенных эндпоинтов
-   - `AdminRoleGuard` - для проверки ролей
-   - `ThrottlerGuard` - для rate limiting
+1. **Use Guards**:
+   - `AdminJwtGuard` - for all protected endpoints
+   - `AdminRoleGuard` - for role checks
+   - `ThrottlerGuard` - for rate limiting
 
-2. **Использовать Decorators**:
-   - `@SetMetadata(ADMIN_ROLES_KEY, ['super_admin'])` - для указания требуемых ролей
-   - `@Throttle()` - для настройки rate limiting
+2. **Use Decorators**:
+   - `@SetMetadata(ADMIN_ROLES_KEY, ['super_admin'])` - specify required roles
+   - `@Throttle()` - configure rate limiting
 
-3. **Валидация данных**:
-   - Использовать DTO с class-validator
-   - Type guards для всех параметров
-   - Проверка формата UUID для ID
+3. **Data Validation**:
+   - Use DTOs with class-validator
+   - Type guards for all parameters
+   - UUID format check for IDs
 
 4. **Audit Logging**:
-   - Логировать все изменения
-   - Включать: кто, что, когда, откуда (IP)
-   - Не логировать секреты
+   - Log all changes
+   - Include: who, what, when, where (IP)
+   - Don't log secrets
 
-5. **Обработка ошибок**:
-   - Не раскрывать детали ошибок в production
-   - Единый формат ошибок
-   - Логирование всех ошибок
+5. **Error Handling**:
+   - Don't expose error details in production
+   - Unified error format
+   - Log all errors
 
-## Тестирование безопасности
+## Security Testing
 
-1. **Unit тесты**:
-   - Проверка guards
-   - Проверка бизнес-правил
-   - Проверка валидации
+1. **Unit Tests**:
+   - Guard checks
+   - Business rule checks
+   - Validation checks
 
-2. **Integration тесты**:
-   - Проверка доступа без токена
-   - Проверка доступа с неправильной ролью
-   - Проверка защиты от самоуничтожения
-   - Проверка защиты последнего super_admin
+2. **Integration Tests**:
+   - Access without token
+   - Access with wrong role
+   - Self-destruction protection
+   - Last super_admin protection
 
-3. **Security тесты**:
-   - SQL Injection тесты
-   - XSS тесты
-   - CSRF тесты
-   - Brute Force тесты
+3. **Security Tests**:
+   - SQL Injection tests
+   - XSS tests
+   - CSRF tests
+   - Brute Force tests

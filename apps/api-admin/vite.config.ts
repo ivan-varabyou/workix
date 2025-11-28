@@ -13,7 +13,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/main.ts'),
-      name: 'admin-service',
+      name: 'auth-service',
       fileName: 'main',
       formats: ['cjs'],
     },
@@ -46,11 +46,17 @@ export default defineConfig({
   resolve: {
     alias: {
       // More specific aliases must come first
-      '@workix/shared/backend/core': resolve(__dirname, '../../libs/shared/backend/core/src/index.ts'),
-      '@workix/domain/admin': resolve(__dirname, '../../libs/domain/admin/src/index.ts'),
-      '@workix/infrastructure/prisma': resolve(__dirname, '../../libs/infrastructure/prisma/src/index.ts'),
+      '@workix/shared/backend/core': resolve(__dirname, '../../libs/backend/shared/core/src/index.ts'),
+      '@workix/domain/auth': resolve(__dirname, '../../libs/backend/domain/auth/src/index.ts'),
+      '@workix/domain/users': resolve(__dirname, '../../libs/backend/domain/users/src/index.ts'),
+      '@workix/domain/pipelines': resolve(__dirname, '../../libs/backend/domain/pipelines/src/index.ts'),
+      '@workix/domain/rbac': resolve(__dirname, '../../libs/backend/domain/rbac/src/index.ts'),
+      '@workix/backend/shared/core': resolve(__dirname, '../../libs/backend/shared/core/src/index.ts'),
+      '@workix/infrastructure/message-broker': resolve(__dirname, '../../libs/backend/infrastructure/message-broker/src/index.ts'),
+      '@workix/infrastructure/prisma': resolve(__dirname, '../../libs/backend/infrastructure/prisma/src/index.ts'),
+      '@workix/infrastructure/i18n': resolve(__dirname, '../../libs/backend/infrastructure/i18n/src/index.ts'),
       // Less specific aliases come last
-      '@workix/shared': resolve(__dirname, '../../libs/shared/src/index.ts'),
+      '@workix/shared': resolve(__dirname, '../../libs/shared/utils/src/index.ts'),
     },
   },
 });

@@ -1,474 +1,513 @@
-# Admin API - План внедрения
-
-**Версия**: 1.0
-**Дата**: 2025-11-27
-**Статус**: Планирование (ожидает утверждения)
-
-## Обзор
-
-Этот документ описывает план поэтапного внедрения функциональности Admin API. Admin API имеет доступ ко всем базам данных и сервисам платформы Workix и настраивает их.
-
-## Принципы разработки
-
-### 1. Архитектура
-
-- **Логика в библиотеках**: Вся бизнес-логика должна быть в `libs/backend/domain/`
-- **API только связывает**: `apps/api-admin` только импортирует из библиотек и вызывает код
-- **Переиспользование**: Используем существующие библиотеки, расширяем при необходимости
-- **Типизация**: Полная типизация без `as`, `any`, использование type guards
-
-### 2. Процесс разработки
-
-1. **Разработка фичи/логики**:
-   - Создаем библиотеку в `libs/backend/domain/` или расширяем существующую
-   - Вся логика в библиотеке
-   - В `api-admin` только импорты и вызовы
-
-2. **Проверка качества**:
-   - TypeScript проверка (`nx run api-admin:typecheck`)
-   - Линтер (`nx run api-admin:lint`)
-   - Ревью на сквозную типизацию
-   - Проверка на хардкодные утверждения типов
-   - Использование type guards (проверяем в libs, возможно уже есть)
-
-3. **Тестирование**:
-   - Запускаем сервер (`nx serve api-admin`)
-   - Проверяем что все работает
-   - Если эндпоинт - проверяем что отвечает как заложено
-   - Если все ок - делаем коммит
-
-4. **Коммит**:
-   - Формат: `T #{номер} - {type}({scope}): description`
-   - Английский, lowercase
-   - Идем к следующему шагу
-
-### 3. Управление задачами
-
-- Задачи регистрируются в `TASKS.md`
-- Ветки создаются от `develop`: `task-{номер}` или `t{номер}`
-- Если ветка занята, делаем `+1` (t1 → t2 → t3...)
-- Команды: `/task {номер}` для начала работы, `/commit {message}` для коммита
-
-## Фазы внедрения
-
-### Фаза 0: Подготовка (✅ Завершено)
-
-- ✅ Создан `api-admin` как копия `api-auth`
-- ✅ Настроена база данных `workix_admin` (порт 5100)
-- ✅ Настроен порт сервиса (7100)
-- ✅ Интегрирован `WorkixAuthModule` из `libs/backend/domain/auth`
-- ✅ Создан план функциональности (`ADMIN_API_PLAN.md`)
-- ✅ Создан план безопасности (`ADMIN_API_SECURITY.md`)
-
-### Фаза 1: Управление серверами (P1)
-
-**Цель**: Реализовать мониторинг и управление всеми сервисами Workix.
-
-**Задачи**:
-1. Создать библиотеку `libs/backend/domain/admin-services/`
-2. Реализовать сервис мониторинга сервисов
-3. Создать контроллер `services.controller.ts`
-4. Реализовать эндпоинты:
-   - `GET /api-admin/v1/services` - Список всех сервисов
-   - `GET /api-admin/v1/services/:serviceId/status` - Статус сервиса
-   - `GET /api-admin/v1/services/health` - Health check
-   - `GET /api-admin/v1/services/metrics` - Метрики
-   - `POST /api-admin/v1/services/:serviceId/restart` - Перезапуск (super_admin)
-   - `GET /api-admin/v1/services/:serviceId/config` - Конфигурация
-   - `GET /api-admin/v1/services/:serviceId/logs` - Логи
-
-**Библиотеки**:
-- `libs/backend/domain/admin-services/` - логика управления сервисами
-- Использовать существующие библиотеки для мониторинга
-
-**Безопасность**:
-- Все эндпоинты требуют `AdminJwtGuard`
-- Перезапуск только для `super_admin`
-- Нельзя перезапустить `api-admin` (сам себя)
-- Секреты маскируются в конфигурации
-
-**Тесты**:
-- Unit тесты для сервисов
-- Integration тесты для эндпоинтов
-- Security тесты (проверка прав доступа)
-
-**Оценка**: 2-3 дня
-
----
-
-### Фаза 2: Управление админами (P1)
-
-**Цель**: Реализовать CRUD операции для управления админами с полной проверкой безопасности.
-
-**Задачи**:
-1. Расширить `libs/backend/domain/admin/` или создать `libs/backend/domain/admin-management/`
-2. Реализовать сервис управления админами
-3. Создать контроллер `admins.controller.ts`
-4. Реализовать эндпоинты:
-   - `GET /api-admin/v1/admins` - Список админов
-   - `GET /api-admin/v1/admins/:id` - Детали админа
-   - `PUT /api-admin/v1/admins/:id` - Обновление
-   - `PUT /api-admin/v1/admins/:id/role` - Изменение роли (super_admin)
-   - `DELETE /api-admin/v1/admins/:id` - Удаление (super_admin)
-   - `POST /api-admin/v1/admins/:id/block` - Блокировка
-   - `POST /api-admin/v1/admins/:id/unblock` - Разблокировка
-   - `GET /api-admin/v1/admins/:id/sessions` - Сессии
-   - `DELETE /api-admin/v1/admins/:id/sessions/:sessionId` - Отзыв сессии
-
-**Библиотеки**:
-- Использовать `libs/backend/domain/admin` для базовой логики
-- Расширить функциональность
-
-**Безопасность**:
-- Нельзя удалить/заблокировать самого себя
-- Нельзя удалить/заблокировать последнего super_admin
-- Нельзя изменить роль последнего super_admin
-- Обычный admin не видит super_admin в списке
-- Audit log всех действий
-
-**Тесты**:
-- Unit тесты для всех проверок безопасности
-- Integration тесты для CRUD операций
-- Security тесты (защита от самоуничтожения)
-
-**Оценка**: 3-4 дня
-
----
-
-### Фаза 3: Управление пользователями (P2)
-
-**Цель**: Реализовать просмотр и управление пользователями платформы.
-
-**Задачи**:
-1. Создать `libs/backend/domain/admin-users/`
-2. Реализовать сервис управления пользователями
-3. Создать контроллер `users.controller.ts`
-4. Реализовать эндпоинты:
-   - `GET /api-admin/v1/users` - Список пользователей
-   - `GET /api-admin/v1/users/:id` - Детали пользователя
-   - `POST /api-admin/v1/users/:id/block` - Блокировка
-   - `POST /api-admin/v1/users/:id/unblock` - Разблокировка
-   - `GET /api-admin/v1/users/:id/activity` - Активность
-   - `GET /api-admin/v1/users/:id/subscriptions` - Подписки
-
-**Библиотеки**:
-- Использовать `libs/backend/domain/auth` для доступа к пользователям
-- Создать `libs/backend/domain/admin-users/` для админской логики
-
-**Безопасность**:
-- Требуется авторизация
-- `admin` и выше могут просматривать
-- `super_admin` может блокировать
-- Audit log всех действий
-
-**Тесты**:
-- Unit тесты
-- Integration тесты
-- Security тесты
-
-**Оценка**: 2-3 дня
-
----
-
-### Фаза 4: Управление базами данных (P2)
-
-**Цель**: Реализовать мониторинг и управление базами данных (read-only).
-
-**Задачи**:
-1. Создать `libs/backend/infrastructure/database-admin/`
-2. Реализовать сервис работы с БД
-3. Создать контроллер `databases.controller.ts`
-4. Реализовать эндпоинты:
-   - `GET /api-admin/v1/databases` - Список БД
-   - `GET /api-admin/v1/databases/:dbName/status` - Статус БД
-   - `GET /api-admin/v1/databases/:dbName/tables` - Список таблиц
-   - `GET /api-admin/v1/databases/:dbName/tables/:tableName` - Структура таблицы
-   - `POST /api-admin/v1/databases/:dbName/backup` - Создание бэкапа (super_admin)
-
-**Библиотеки**:
-- Создать `libs/backend/infrastructure/database-admin/` для работы с БД
-- Использовать Prisma для подключения к разным БД
-
-**Безопасность**:
-- Только `super_admin` может просматривать БД
-- Только read-only операции через API
-- Connection strings маскируются
-- Нельзя выполнять произвольные SQL запросы
-
-**Тесты**:
-- Unit тесты
-- Integration тесты (с тестовой БД)
-- Security тесты
-
-**Оценка**: 3-4 дня
-
----
-
-### Фаза 5: Управление платежами (P2)
-
-**Цель**: Реализовать просмотр подписок, блокировку платежей, управление планами.
-
-**Задачи**:
-1. Создать `libs/backend/domain/admin-billing/`
-2. Реализовать сервис управления платежами
-3. Создать контроллер `billing.controller.ts`
-4. Реализовать эндпоинты:
-   - `GET /api-admin/v1/billing/subscriptions` - Список подписок
-   - `GET /api-admin/v1/billing/subscriptions/:id` - Детали подписки
-   - `GET /api-admin/v1/billing/users/:userId/subscriptions` - Подписки пользователя
-   - `POST /api-admin/v1/billing/users/:userId/payments/block` - Блокировка (super_admin)
-   - `PUT /api-admin/v1/billing/subscriptions/:id/plan` - Изменение плана (super_admin)
-   - `GET /api-admin/v1/billing/payments` - История платежей
-
-**Библиотеки**:
-- Использовать существующие библиотеки для billing
-- Создать `libs/backend/domain/admin-billing/` для админской логики
-
-**Безопасность**:
-- `admin` и выше могут просматривать
-- Только `super_admin` может блокировать/изменять
-- Данные карт маскируются
-- Audit log всех действий
-
-**Тесты**:
-- Unit тесты
-- Integration тесты
-- Security тесты
-
-**Оценка**: 2-3 дня
-
----
-
-### Фаза 6: RBAC управление (P2)
-
-**Цель**: Реализовать создание и управление ролями и правами доступа.
-
-**Задачи**:
-1. Расширить существующие библиотеки для RBAC
-2. Создать `libs/backend/domain/admin-rbac/`
-3. Реализовать сервис управления RBAC
-4. Создать контроллер `rbac.controller.ts`
-5. Реализовать эндпоинты:
-   - `GET /api-admin/v1/rbac/roles` - Список ролей
-   - `POST /api-admin/v1/rbac/roles` - Создание роли (super_admin)
-   - `GET /api-admin/v1/rbac/roles/:id` - Детали роли
-   - `PUT /api-admin/v1/rbac/roles/:id/permissions` - Изменение прав (super_admin)
-   - `DELETE /api-admin/v1/rbac/roles/:id` - Удаление роли (super_admin)
-
-**Библиотеки**:
-- Использовать существующие библиотеки для RBAC
-- Расширить в `libs/backend/domain/admin-rbac/`
-
-**Безопасность**:
-- Только `super_admin` может создавать/изменять роли
-- Нельзя изменить права роли `super_admin`
-- Нельзя удалить все права у роли `admin`
-- Валидация прав
-
-**Тесты**:
-- Unit тесты
-- Integration тесты
-- Security тесты
-
-**Оценка**: 2-3 дня
-
----
-
-### Фаза 7: Мониторинг и аналитика (P3)
-
-**Цель**: Интегрировать с Grafana, Prometheus для мониторинга и аналитики.
-
-**Задачи**:
-1. Создать `libs/backend/infrastructure/monitoring/`
-2. Реализовать экспорт метрик
-3. Создать контроллер `metrics.controller.ts`
-4. Реализовать эндпоинты:
-   - `GET /api-admin/v1/metrics/prometheus` - Prometheus метрики
-   - `GET /api-admin/v1/metrics/grafana` - Данные для Grafana
-   - `GET /api-admin/v1/metrics/realtime` - Real-time метрики
-   - `GET /api-admin/v1/dashboard` - Dashboard данные
-
-**Библиотеки**:
-- Создать `libs/backend/infrastructure/monitoring/` для мониторинга
-- Интеграция с Prometheus и Grafana
-
-**Безопасность**:
-- Требуется авторизация
-- Метрики могут быть публичными (опционально)
-
-**Тесты**:
-- Unit тесты
-- Integration тесты
-
-**Оценка**: 3-4 дня
-
----
-
-### Фаза 8: Управление интеграциями (P3)
-
-**Цель**: Реализовать просмотр и управление интеграциями платформы.
-
-**Задачи**:
-1. Создать `libs/backend/domain/admin-integrations/`
-2. Реализовать сервис управления интеграциями
-3. Создать контроллер `integrations.controller.ts`
-4. Реализовать эндпоинты:
-   - `GET /api-admin/v1/integrations` - Список интеграций
-   - `GET /api-admin/v1/integrations/:id/status` - Статус интеграции
-   - `PUT /api-admin/v1/integrations/:id/config` - Обновление конфигурации
-   - `GET /api-admin/v1/integrations/:id/logs` - Логи интеграции
-
-**Библиотеки**:
-- Использовать существующие библиотеки для интеграций
-- Расширить в `libs/backend/domain/admin-integrations/`
-
-**Безопасность**:
-- Требуется авторизация
-- `admin` и выше могут просматривать
-- Только `super_admin` может изменять конфигурацию
-
-**Тесты**:
-- Unit тесты
-- Integration тесты
-
-**Оценка**: 2-3 дня
-
----
-
-### Фаза 9: Pipelines/Workflows/Workers (P3)
-
-**Цель**: Реализовать управление пайплайнами, воркфлоу и воркерами.
-
-**Задачи**:
-1. Создать `libs/backend/domain/admin-automation/`
-2. Реализовать сервис управления automation
-3. Создать контроллеры `pipelines.controller.ts`, `workflows.controller.ts`, `workers.controller.ts`
-4. Реализовать эндпоинты:
-   - `GET /api-admin/v1/pipelines` - Список пайплайнов
-   - `GET /api-admin/v1/workflows` - Список воркфлоу
-   - `GET /api-admin/v1/workers` - Список воркеров
-   - `POST /api-admin/v1/pipelines/:id/stop` - Остановка пайплайна
-   - `GET /api-admin/v1/pipelines/:id/logs` - Логи пайплайна
-
-**Библиотеки**:
-- Использовать существующие библиотеки для pipelines/workflows/workers
-- Расширить в `libs/backend/domain/admin-automation/`
-
-**Безопасность**:
-- Требуется авторизация
-- `admin` и выше могут просматривать
-- Только `super_admin` может останавливать
-
-**Тесты**:
-- Unit тесты
-- Integration тесты
-
-**Оценка**: 3-4 дня
-
----
-
-### Фаза 10: Безопасность и аудит (P1)
-
-**Цель**: Реализовать audit logs, IP блокировку, события безопасности.
-
-**Задачи**:
-1. Создать `libs/backend/domain/admin-security/`
-2. Реализовать сервис безопасности и аудита
-3. Создать контроллеры `audit.controller.ts`, `security.controller.ts`
-4. Реализовать эндпоинты:
-   - `GET /api-admin/v1/audit/logs` - Список audit logs
-   - `GET /api-admin/v1/audit/export` - Экспорт (super_admin)
-   - `POST /api-admin/v1/security/ip-blocks` - Блокировка IP (super_admin)
-   - `GET /api-admin/v1/security/events` - События безопасности
-
-**Библиотеки**:
-- Использовать существующие библиотеки для audit
-- Расширить в `libs/backend/domain/admin-security/`
-
-**Безопасность**:
-- `admin` и выше могут просматривать
-- Только `super_admin` может экспортировать/блокировать IP
-- Нельзя заблокировать IP текущего админа
-
-**Тесты**:
-- Unit тесты
-- Integration тесты
-- Security тесты
-
-**Оценка**: 2-3 дня
-
----
-
-## Чек-лист внедрения
-
-### Общий чек-лист для каждой фазы:
-
-- [ ] Создать/расширить библиотеку в `libs/backend/domain/` или `libs/backend/infrastructure/`
-- [ ] Реализовать сервис с полной типизацией (без `as`, `any`)
-- [ ] Использовать type guards для проверки типов
-- [ ] Создать контроллер в `apps/api-admin/src/app/controllers/`
-- [ ] Реализовать эндпоинты с Swagger документацией
-- [ ] Добавить guards и проверки безопасности
-- [ ] Написать unit тесты (минимум 85% покрытие для библиотек)
-- [ ] Написать integration тесты для эндпоинтов
-- [ ] Написать security тесты
-- [ ] Проверить TypeScript (`nx run api-admin:typecheck`)
-- [ ] Проверить линтер (`nx run api-admin:lint`)
-- [ ] Запустить сервер и проверить работу
-- [ ] Обновить Swagger документацию
-- [ ] Создать коммит с правильным форматом
-
-### Чек-лист перед началом работы:
-
-- [ ] Проверить MCP серверы (`make mcp-status`)
-- [ ] Создать ветку от `develop` (`task-{номер}`)
-- [ ] Зарегистрировать задачу в `TASKS.md`
-- [ ] Прочитать план фазы
-- [ ] Изучить существующие библиотеки для переиспользования
-
-### Чек-лист перед коммитом:
-
-- [ ] Все тесты проходят
-- [ ] TypeScript проверка прошла
-- [ ] Линтер проверка прошла
-- [ ] Нет `as`, `any` (кроме документированных исключений)
-- [ ] Использованы type guards
-- [ ] Swagger документация обновлена
-- [ ] Коммит в правильном формате: `T #{номер} - {type}({scope}): description`
-
----
-
-## Оценка времени
-
-| Фаза | Приоритет | Оценка | Статус |
-|------|-----------|--------|--------|
-| Фаза 0: Подготовка | - | - | ✅ Завершено |
-| Фаза 1: Управление серверами | P1 | 2-3 дня | ⭕ Ожидает |
-| Фаза 2: Управление админами | P1 | 3-4 дня | ⭕ Ожидает |
-| Фаза 3: Управление пользователями | P2 | 2-3 дня | ⭕ Ожидает |
-| Фаза 4: Управление БД | P2 | 3-4 дня | ⭕ Ожидает |
-| Фаза 5: Управление платежами | P2 | 2-3 дня | ⭕ Ожидает |
-| Фаза 6: RBAC управление | P2 | 2-3 дня | ⭕ Ожидает |
-| Фаза 7: Мониторинг и аналитика | P3 | 3-4 дня | ⭕ Ожидает |
-| Фаза 8: Управление интеграциями | P3 | 2-3 дня | ⭕ Ожидает |
-| Фаза 9: Pipelines/Workflows/Workers | P3 | 3-4 дня | ⭕ Ожидает |
-| Фаза 10: Безопасность и аудит | P1 | 2-3 дня | ⭕ Ожидает |
-
-**Общая оценка**: 25-35 дней
-
----
-
-## Следующие шаги
-
-1. ✅ Утвердить план внедрения
-2. ✅ Создать систему управления задачами (`TASKS.md`)
-3. ✅ Создать скрипты для автоматизации (`/task`, `/commit`)
-4. ⏳ Начать Фазу 1: Управление серверами
-
----
-
-## Связанные документы
-
-- [ADMIN_API_PLAN.md](./ADMIN_API_PLAN.md) - План функциональности
-- [ADMIN_API_SECURITY.md](./ADMIN_API_SECURITY.md) - Кейсы безопасности
-- [../../TASKS.md](../../TASKS.md) - Список задач
+# Admin API - Technical Implementation Plan
+
+**Version**: 2.0
+**Date**: 2025-01-27
+**Status**: Technical Planning (Phase 1)
+
+## Overview
+
+Technical implementation plan for Admin API - centralized service for managing Workix platform. Based on `ADMIN_API_PLAN.md` specification and follows `constitution.md` principles.
+
+## Technical Context
+
+### Project Architecture
+
+**NX Monorepo structure**:
+```
+workix/
+├── apps/
+│   ├── api-admin/          # Admin API (port 7100, DB 5100)
+│   ├── api-auth/           # Auth API (port 7102, DB 5102)
+│   ├── api-gateway/        # Gateway (port 7000, DB 5000)
+│   └── ...
+├── libs/
+│   └── backend/
+│       ├── domain/         # Business logic
+│       │   ├── admin/      # ✅ Exists - basic admin services
+│       │   ├── auth/       # Exists - for users (User)
+│       │   ├── users/      # Exists - user management
+│       │   └── ...
+│       ├── infrastructure/ # Infrastructure
+│       │   ├── prisma/     # Prisma clients
+│       │   ├── i18n/       # Internationalization
+│       │   └── message-broker/ # Message queues
+│       └── shared/         # Shared utilities
+└── .specify/               # Project specifications
+```
+
+### Current api-admin State
+
+**Base**: `api-admin` created as copy of `api-auth` with adaptation:
+- ✅ Port: 7100 (instead of 7102)
+- ✅ DB: `workix_admin` on port 5100 (instead of `workix_auth` on 5102)
+- ✅ Prisma schema: adapted for `Admin` model
+- ✅ Integrated `WorkixAuthModule` (needs replacement with `WorkixAdminModule`)
+
+**Issues**:
+- ❌ Uses `WorkixAuthModule` instead of `WorkixAdminModule`
+- ❌ Controllers use `User` instead of `Admin`
+- ❌ Unnecessary modules (OAuth2, PhoneOtp, EmailVerification)
+- ❌ No admin-specific controllers
+
+### Technologies
+
+- **Framework**: NestJS
+- **Database**: PostgreSQL + Prisma ORM
+- **Authentication**: JWT (via `@workix/backend/domain/admin`)
+- **Validation**: class-validator, class-transformer
+- **Documentation**: Swagger/OpenAPI
+- **Testing**: Vitest
+- **Type Safety**: TypeScript strict mode
+
+### Service Dependencies
+
+**api-admin → libs/backend/domain/admin**:
+- ✅ `WorkixAdminModule` - main module
+- ✅ `AdminAuthService` - admin authentication
+- ✅ `AdminJwtService` - JWT token generation
+- ✅ `AdminIpWhitelistService` - IP whitelist
+- ✅ `AdminTokenCacheService` - token caching
+
+**api-admin → libs/backend/infrastructure/**:
+- ✅ `PrismaModule` - DB operations
+- ✅ `I18nModule` - internationalization
+- ✅ `MessageBrokerModule` - message queues
+
+**api-admin → other domain libraries** (for user management):
+- ⚠️ `@workix/backend/domain/users` - for viewing users
+- ⚠️ `@workix/backend/domain/billing` - for billing management (if exists)
+- ⚠️ `@workix/backend/domain/rbac` - for RBAC management (if exists)
+
+### Needs Clarification
+
+1. **NEEDS CLARIFICATION**: Does `@workix/backend/domain/billing` exist?
+   - If not - need to create or use external API
+
+2. **NEEDS CLARIFICATION**: Does `@workix/backend/domain/rbac` exist?
+   - If not - need to create or use external API
+
+3. **NEEDS CLARIFICATION**: How to monitor other services (api-gateway, api-auth, etc.)?
+   - Health check endpoints?
+   - Service discovery?
+   - Direct DB connections?
+
+4. **NEEDS CLARIFICATION**: How to integrate with Grafana/Prometheus?
+   - Existing endpoints?
+   - Need to create new ones?
+
+5. **NEEDS CLARIFICATION**: How to work with other services' databases?
+   - Direct Prisma connections?
+   - Via other services' APIs?
+   - Read-only access?
+
+## Constitution Check
+
+### ✅ 1. No-Code First
+- **Status**: ✅ PASS
+- **Rationale**: Admin API is backend service for admins, doesn't require no-code approach
+
+### ✅ 2. Explainability & Trust
+- **Status**: ✅ PASS
+- **Rationale**: All admin actions logged in audit logs, full traceability
+
+### ✅ 3. Security First
+- **Status**: ✅ PASS
+- **Rationale**:
+  - IP whitelist for super_admin
+  - Audit logging all operations
+  - Self-destruction protection
+  - Rate limiting
+  - JWT authentication
+
+### ✅ 4. Reliability & Observability
+- **Status**: ✅ PASS
+- **Rationale**:
+  - Health checks for all services
+  - Monitoring via Prometheus/Grafana
+  - Dashboard with metrics
+  - Logging all operations
+
+### ✅ 5. Clean Architecture
+- **Status**: ✅ PASS
+- **Rationale**:
+  - Business logic in `libs/backend/domain/`
+  - API only connects and calls libraries
+  - SOLID principles
+  - DRY - library reuse
+
+### ✅ 6. Performance & Scalability
+- **Status**: ✅ PASS
+- **Rationale**:
+  - Metrics caching (Redis)
+  - Pagination for large lists
+  - Async processing for heavy operations
+  - Performance requirements defined in spec
+
+### ✅ 7. Developer Experience
+- **Status**: ✅ PASS
+- **Rationale**:
+  - TypeScript strict mode
+  - Swagger documentation
+  - Full typing without `as`, `any`
+  - Type guards for type checking
+
+### ✅ 8. User Experience
+- **Status**: ✅ PASS
+- **Rationale**:
+  - Standardized error responses
+  - Clear error messages
+  - Swagger for API testing
+
+### Gates Evaluation
+
+**Gate 1: Security Review** ✅ PASS
+- All endpoints protected
+- Audit logging
+- IP whitelist
+- Self-destruction protection
+
+**Gate 2: Architecture Review** ✅ PASS
+- Logic in libraries
+- API only connects
+- Reuse existing libraries
+
+**Gate 3: Type Safety** ✅ PASS
+- TypeScript strict mode
+- No `as`, `any` (except documented exceptions)
+- Type guards for type checking
+
+## Phase 0: Research & Clarification
+
+### Research Tasks
+
+1. **Research existing libraries**:
+   - Check `@workix/backend/domain/billing` existence
+   - Check `@workix/backend/domain/rbac` existence
+   - Check monitoring libraries existence
+
+2. **Research integrations**:
+   - How do other services provide health checks?
+   - How to integrate with Grafana/Prometheus?
+   - How to access other services' databases?
+
+3. **Research best practices**:
+   - Admin API patterns in microservice architecture
+   - Security patterns for admin panels
+   - Monitoring patterns for multiple services
+
+### Research Findings
+
+**TODO**: Execute research tasks and fill findings here
+
+## Phase 1: Design & Contracts
+
+### Data Model
+
+#### Admin Entity (from Prisma schema)
+
+```prisma
+model Admin {
+  id                    String   @id @default(uuid())
+  email                 String   @unique
+  passwordHash          String
+  name                  String?
+  role                  AdminRole @default(ADMIN)
+  isActive              Boolean  @default(true)
+  twoFactorEnabled      Boolean  @default(false)
+  twoFactorSecret       String?
+  backupCodes           String[] @default([])
+  ipWhitelistEnabled    Boolean  @default(false)
+  lockedUntil           DateTime?
+  failedLoginAttempts   Int      @default(0)
+  lastLoginAt           DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  sessions              AdminSession[]
+  ipWhitelist           AdminIpWhitelist[]
+  auditLogs             AuditLog[]
+}
+```
+
+#### AdminSession Entity
+
+```prisma
+model AdminSession {
+  id          String   @id @default(uuid())
+  adminId     String
+  token       String   @unique
+  ipAddress   String?
+  userAgent   String?
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  admin       Admin    @relation(fields: [adminId], references: [id])
+}
+```
+
+#### AuditLog Entity
+
+```prisma
+model AuditLog {
+  id          String   @id @default(uuid())
+  adminId     String?
+  action      String
+  resource    String?
+  resourceId  String?
+  details     Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  admin       Admin?   @relation(fields: [adminId], references: [id])
+}
+```
+
+### API Contracts
+
+#### Authentication Endpoints
+
+**POST** `/api-admin/v1/auth/register`
+```typescript
+Request: {
+  email: string;
+  password: string;
+  name?: string;
+  role?: 'admin' | 'super_admin';
+}
+
+Response: {
+  admin: {
+    id: string;
+    email: string;
+    name?: string;
+    role: string;
+  };
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+}
+```
+
+**POST** `/api-admin/v1/auth/login`
+```typescript
+Request: {
+  email: string;
+  password: string;
+  twoFactorCode?: string;
+}
+
+Response: {
+  admin: {
+    id: string;
+    email: string;
+    name?: string;
+    role: string;
+  };
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+}
+```
+
+#### Admin Management Endpoints
+
+**GET** `/api-admin/v1/admins`
+```typescript
+Query: {
+  page?: number;      // default: 1
+  limit?: number;     // default: 20, max: 100
+  role?: string;
+  isActive?: boolean;
+  search?: string;    // search by email, name
+  sortBy?: string;    // createdAt, lastLoginAt, email
+  sortOrder?: 'asc' | 'desc';
+}
+
+Response: {
+  data: Admin[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+```
+
+**GET** `/api-admin/v1/admins/:id`
+```typescript
+Response: {
+  id: string;
+  email: string;
+  name?: string;
+  role: string;
+  isActive: boolean;
+  twoFactorEnabled: boolean;
+  ipWhitelistEnabled: boolean;
+  lastLoginAt?: string;
+  createdAt: string;
+  updatedAt: string;
+  sessions: AdminSession[];
+  ipWhitelist: AdminIpWhitelist[];
+}
+```
+
+**PUT** `/api-admin/v1/admins/:id`
+```typescript
+Request: {
+  name?: string;
+  role?: 'admin' | 'super_admin';  // super_admin only
+  isActive?: boolean;
+}
+
+Response: {
+  id: string;
+  email: string;
+  name?: string;
+  role: string;
+  isActive: boolean;
+  updatedAt: string;
+}
+```
+
+#### Services Management Endpoints
+
+**GET** `/api-admin/v1/services`
+```typescript
+Response: {
+  services: Array<{
+    id: string;
+    name: string;
+    port: number;
+    status: 'healthy' | 'unhealthy' | 'unknown';
+    lastCheck: string;
+    responseTime?: number;
+  }>;
+}
+```
+
+**GET** `/api-admin/v1/services/:serviceId/status`
+```typescript
+Response: {
+  serviceId: string;
+  status: 'healthy' | 'unhealthy' | 'unknown';
+  responseTime: number;
+  lastCheck: string;
+  details?: {
+    version?: string;
+    uptime?: number;
+    memory?: number;
+    cpu?: number;
+  };
+}
+```
+
+## Phase 2: Implementation Plan
+
+### Phase 1: Basic Infrastructure (P1) - 3-4 days
+
+**Goal**: Setup basic infrastructure and replace auth module with admin module.
+
+**Tasks**:
+1. ✅ Replace `WorkixAuthModule` with `WorkixAdminModule` in `app.module.ts`
+2. ✅ Remove unnecessary modules (OAuth2, PhoneOtp, EmailVerification)
+3. ✅ Remove unnecessary controllers
+4. ✅ Adapt `AuthController` for admins
+5. ✅ Configure guards (`AdminJwtGuard`, `AdminRoleGuard`)
+6. ✅ Configure rate limiting
+7. ✅ Configure Swagger documentation
+
+**Libraries**:
+- Use `@workix/backend/domain/admin`
+
+**Tests**:
+- Unit tests for guards
+- Integration tests for auth endpoints
+- Security tests
+
+### Phase 2: Admin Management (P1) - 3-4 days
+
+**Goal**: Implement CRUD operations for admin management.
+
+**Tasks**:
+1. Create `libs/backend/domain/admin-management/` or extend existing
+2. Implement `AdminManagementService`
+3. Create `AdminsController`
+4. Implement all CRUD endpoints
+5. Implement block/unblock
+6. Implement session management
+7. Implement IP whitelist management
+
+**Security**:
+- Cannot delete/block yourself
+- Cannot delete/block last super_admin
+- Cannot change last super_admin role
+- Audit log all actions
+
+**Tests**:
+- Unit tests for all security checks
+- Integration tests for CRUD operations
+- Security tests
+
+### Phase 3: Services Management (P1) - 2-3 days
+
+**Goal**: Implement monitoring and management of all services.
+
+**Tasks**:
+1. Create `libs/backend/domain/admin-services/`
+2. Implement `ServiceMonitoringService`
+3. Create `ServicesController`
+4. Implement health check for all services
+5. Implement metrics retrieval
+6. Implement service restart (super_admin)
+
+**Tests**:
+- Unit tests
+- Integration tests
+- Security tests
+
+### Phase 4: Dashboard & Status (P1) - 2-3 days
+
+**Goal**: Implement main dashboard and platform status.
+
+**Tasks**:
+1. Create `libs/backend/domain/admin-dashboard/`
+2. Implement `DashboardService`
+3. Create `DashboardController`
+4. Implement `/api-admin/v1/status`
+5. Implement `/api-admin/v1/dashboard`
+6. Metrics caching (Redis)
+
+**Tests**:
+- Unit tests
+- Integration tests
+
+### Phase 5-10: Other Features
+
+See existing `IMPLEMENTATION_PLAN.md` for details of other phases.
+
+## Output Files
+
+After executing this plan, will be created:
+
+- ✅ `IMPLEMENTATION_PLAN.md` (this file) - updated
+- ⏳ `data-model.md` - detailed data model
+- ⏳ `contracts/` - OpenAPI specifications
+- ⏳ `quickstart.md` - quick start
+- ⏳ `research.md` - research results (if needed)
+
+## Next Steps
+
+1. ⏳ Execute research tasks (Phase 0)
+2. ⏳ Create data-model.md (Phase 1)
+3. ⏳ Create API contracts (Phase 1)
+4. ⏳ Create quickstart.md (Phase 1)
+5. ⏳ Start Phase 1 implementation (Phase 2)
+
+## Related Documents
+
+- [ADMIN_API_PLAN.md](./ADMIN_API_PLAN.md) - Feature specification
+- [ADMIN_API_SECURITY.md](./ADMIN_API_SECURITY.md) - Security cases
+- [../../.specify/memory/constitution.md](../../.specify/memory/constitution.md) - Project Constitution
+- [../../.specify/specs-optimized/core/development.md](../../.specify/specs-optimized/core/development.md) - Development Process

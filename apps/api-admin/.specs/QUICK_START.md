@@ -1,58 +1,32 @@
-# Speckit Commands - Краткая инструкция
+# Speckit Commands - Quick Reference
 
-**Версия**: 1.0  
-**Дата**: 2025-11-27
+**Version**: 1.0
+**Date**: 2025-11-27
 
-## Правильный порядок команд
-
-```
-1. /speckit.specify      → Создание спецификации
-2. /speckit.clarify      → Уточнение неоднозначностей
-3. /speckit.plan         → Техническое планирование
-4. /speckit.tasks        → Генерация задач
-5. /speckit.checklist    → Чек-лист качества (после tasks)
-6. /speckit.analyze      → Анализ согласованности (после tasks)
-7. /speckit.implement    → Реализация (опционально)
-```
-
-## Текущий статус Admin API
-
-| # | Команда | Статус | Файл |
-|---|---------|--------|------|
-| 1 | `/speckit.specify` | ✅ | `.specs/ADMIN_API_PLAN.md` |
-| 2 | `/speckit.clarify` | ✅ | Обновлен spec |
-| 3 | `/speckit.plan` | ⏳ **СЛЕДУЮЩИЙ** | - |
-| 4 | `/speckit.tasks` | ⏳ | - |
-| 5 | `/speckit.checklist` | ✅* | `.specs/checklists/` |
-| 6 | `/speckit.analyze` | ✅* | `.specs/ANALYSIS_REPORT.md` |
-
-\* Выполнено раньше для демонстрации, правильный порядок - после tasks
-
-## Следующая команда
+## Execution Order
 
 ```
-/speckit.plan
+1. /speckit.specify      → Create specification
+2. /speckit.clarify      → Clarify ambiguities
+3. /speckit.plan         → Technical planning
+4. /speckit.tasks        → Generate tasks
+5. /speckit.checklist    → Quality checklist (after tasks)
+6. /speckit.analyze      → Consistency analysis (after tasks)
+7. /speckit.implement    → Implementation (optional)
 ```
 
-## Структура документации
+## Document Structure
 
-Все спецификации хранятся в `apps/api-admin/.specs/`:
-- `ADMIN_API_PLAN.md` - Спецификация
-- `IMPLEMENTATION_PLAN.md` - План внедрения
-- `ADMIN_API_SECURITY.md` - Кейсы безопасности
-- `SPECKIT_WORKFLOW.md` - Полная инструкция
-- `checklists/` - Чек-листы качества
+All specifications stored in `apps/api-admin/.specs/`:
+- `ADMIN_API_PLAN.md` - Specification
+- `IMPLEMENTATION_PLAN.md` - Implementation plan
+- `ADMIN_API_SECURITY.md` - Security cases
+- `SPECKIT_WORKFLOW.md` - Full guide
+- `checklists/` - Quality checklists
 
-## Важно для NX монорепозитория
+## NX Monorepo Notes
 
 - `api-auth` → `libs/backend/domain/auth` (User)
 - `api-admin` → `libs/backend/domain/admin` (Admin)
-- Изменения в `admin` **НЕ влияют** на `api-auth`
-- Общие библиотеки (`infrastructure/*`) влияют на оба API
-
-## Команды которые НЕ существуют
-
-❌ `/speckit.test`, `/speckit.deploy`, `/speckit.monitor`, `/speckit.optimize`, `/speckit.refactor`, `/speckit.cleanup`, `/speckit.docs`, `/speckit.release`, `/speckit.support`, `/speckit.improve`, `/speckit.review`
-
-**Реально доступны только**: specify, clarify, plan, tasks, checklist, analyze, implement
-
+- Changes in `admin` **DO NOT affect** `api-auth`
+- Shared libraries (`infrastructure/*`) affect both APIs

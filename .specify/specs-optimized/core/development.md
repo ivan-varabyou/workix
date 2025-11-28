@@ -53,30 +53,30 @@ PLANNING → PREPARATION → WORKING → TESTING → DONE
 
 ### Task Commands
 
-Для быстрой работы используйте команды:
+For quick work use commands:
 
 ```bash
-# Создать новую задачу (автоматически определит номер)
+# Create new task (auto-determine number)
 ./scripts/task-manager.sh start
 
-# Создать задачу с конкретным номером
+# Create task with specific number
 ./scripts/task-manager.sh start 5
 
-# Создать коммит (автоматически определит номер задачи из ветки)
+# Create commit (auto-determine task number from branch)
 ./scripts/task-manager.sh commit 'feat(admin): add user management'
 
-# Показать статус задачи
-./scripts/task-manager.sh status [номер]
+# Show task status
+./scripts/task-manager.sh status [number]
 
-# Показать список задач
+# Show task list
 ./scripts/task-manager.sh list
 ```
 
 ### Chat Commands (Future)
 
-В будущем планируется поддержка команд в чате:
-- `/task {номер}` - Начать работу над задачей (создать ветку, переключиться)
-- `/commit {message}` - Создать коммит с автоматическим номером задачи
+Future chat command support planned:
+- `/task {number}` - Start work on task (create branch, switch)
+- `/commit {message}` - Create commit with auto task number
 
 ## Key Rules
 
@@ -105,6 +105,12 @@ PLANNING → PREPARATION → WORKING → TESTING → DONE
 - DRY (Don't Repeat Yourself)
 - KISS (Keep It Simple)
 - Minimum 85% test coverage for shared libraries
+
+### Documentation & Language
+- **Language**: All code, comments, documentation, specifications MUST be in English
+- **Conciseness**: Write concisely, to the point - avoid unnecessary context
+- **Comments**: Only when code intent is not obvious
+- **Documentation**: Keep it brief and focused on essentials
 
 ### Testing
 - Unit tests for all services

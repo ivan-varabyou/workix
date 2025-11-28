@@ -1,73 +1,78 @@
-# Speckit Commands - Краткая инструкция
+# Speckit Commands - Quick Reference
 
-**Версия**: 1.0  
-**Дата**: 2025-11-27
+**Version**: 1.0
+**Date**: 2025-11-27
 
-## Правильный порядок команд
+## Execution Order
 
 ```
-1. /speckit.specify      → Создание спецификации
-2. /speckit.clarify      → Уточнение неоднозначностей
-3. /speckit.plan         → Техническое планирование
-4. /speckit.tasks        → Генерация задач
-5. /speckit.checklist    → Чек-лист качества (после tasks)
-6. /speckit.analyze      → Анализ согласованности (после tasks)
-7. /speckit.implement    → Реализация (опционально)
+1. /speckit.specify      → Create specification
+2. /speckit.clarify      → Clarify ambiguities
+3. /speckit.plan         → Technical planning
+4. /speckit.tasks        → Generate tasks
+5. /speckit.checklist    → Quality checklist (after tasks)
+6. /speckit.analyze      → Consistency analysis (after tasks)
+7. /speckit.implement    → Implementation (optional)
 ```
 
-## Где хранятся документы
+## Document Storage
 
-**Для каждого приложения**: `apps/{app-name}/.specs/`
+**For each app**: `apps/{app-name}/.specs/`
 
-Пример для Admin API:
+Example for Admin API:
 ```
 apps/api-admin/.specs/
-├── README.md                    # Описание структуры
-├── ADMIN_API_PLAN.md            # spec.md (спецификация)
-├── IMPLEMENTATION_PLAN.md       # plan.md (технический план)
-├── ADMIN_API_SECURITY.md        # Кейсы безопасности
-├── SPECKIT_WORKFLOW.md          # Полная инструкция
-├── COMMANDS_ORDER.md            # Краткая справка
-├── ANALYSIS_REPORT.md           # Анализ согласованности
+├── README.md                    # Structure description
+├── ADMIN_API_PLAN.md            # spec.md (specification)
+├── IMPLEMENTATION_PLAN.md       # plan.md (technical plan)
+├── ADMIN_API_SECURITY.md        # Security cases
+├── SPECKIT_WORKFLOW.md          # Full guide
+├── COMMANDS_ORDER.md            # Quick reference
+├── ANALYSIS_REPORT.md           # Consistency analysis
 └── checklists/
-    └── requirements-quality.md  # Чек-лист качества
+    └── requirements-quality.md  # Quality checklist
 ```
 
-## Текущий статус Admin API
+## Available Commands
 
-| # | Команда | Статус | Файл |
-|---|---------|--------|------|
-| 1 | `/speckit.specify` | ✅ | `.specs/ADMIN_API_PLAN.md` |
-| 2 | `/speckit.clarify` | ✅ | Обновлен spec |
-| 3 | `/speckit.plan` | ⏳ **СЛЕДУЮЩИЙ** | - |
-| 4 | `/speckit.tasks` | ⏳ | - |
-| 5 | `/speckit.checklist` | ✅* | `.specs/checklists/` |
-| 6 | `/speckit.analyze` | ✅* | `.specs/ANALYSIS_REPORT.md` |
+### Core Commands (7)
+1. `/speckit.specify` - Create specification
+2. `/speckit.clarify` - Clarify ambiguities
+3. `/speckit.plan` - Technical planning
+4. `/speckit.tasks` - Generate tasks
+5. `/speckit.checklist` - Quality checklist
+6. `/speckit.analyze` - Consistency analysis
+7. `/speckit.implement` - Implementation
 
-\* Выполнено раньше для демонстрации, правильный порядок - после tasks
+### Additional Commands (3)
+8. `/speckit.test` - ✅ Generate test plan and check coverage
+9. `/speckit.docs` - ✅ Generate documentation (API, guides, README)
+10. `/speckit.review` - ✅ Code review and quality check
 
-## Следующая команда для Admin API
+### Release & Deploy Commands (2)
+11. `/speckit.release` - ✅ Prepare release (versioning, changelog, tags)
+12. `/speckit.deploy` - ✅ Check deployment readiness and generate deployment plan
 
-```
-/speckit.plan
-```
+**Important**: These commands **DO NOT** auto-execute release/deployment, only **prepare** everything for manual execution.
 
-## Важно для NX монорепозитория
+### Automatic Execution (1 command)
+13. `/runTask` - ✅ Automatic task execution from `apps/{project}/.specs/tasks.md`
+   - Creates branch `t0-{project}` from `develop`
+   - For each task creates sub-branch and executes
+   - After each task checks: types, linter, functionality
+   - Merges to main branch after checks
+   - **Usage**: `/runTask {project-name}` (e.g., `/runTask api-admin`)
+   - **See details**: `.cursor/commands/runTask.md`
 
-- `api-auth` → `libs/backend/domain/auth` (User) - **независимо**
-- `api-admin` → `libs/backend/domain/admin` (Admin) - **независимо**
-- Изменения в `admin` **НЕ влияют** на `api-auth`
-- Общие библиотеки (`infrastructure/*`) влияют на оба API
+### Commands That Don't Exist
+❌ **NOT implemented**:
+- `/speckit.monitor`, `/speckit.optimize`, `/speckit.refactor`
+- `/speckit.cleanup`, `/speckit.support`, `/speckit.improve`
 
-## Команды которые НЕ существуют
+**Total available**: 13 commands (7 core + 3 additional + 2 release/deploy + 1 automatic execution)
 
-❌ `/speckit.test`, `/speckit.deploy`, `/speckit.monitor`, `/speckit.optimize`, `/speckit.refactor`, `/speckit.cleanup`, `/speckit.docs`, `/speckit.release`, `/speckit.support`, `/speckit.improve`, `/speckit.review`
+## Quick Reference
 
-**Реально доступны только**: specify, clarify, plan, tasks, checklist, analyze, implement
-
-## Быстрая справка
-
-- **Полная инструкция**: `apps/api-admin/.specs/SPECKIT_WORKFLOW.md`
-- **Краткая справка**: `apps/api-admin/.specs/COMMANDS_ORDER.md`
-- **Шаблон для других apps**: `.specs-template/README.md`
-
+- **Full guide**: `apps/api-admin/.specs/SPECKIT_WORKFLOW.md`
+- **Quick reference**: `apps/api-admin/.specs/COMMANDS_ORDER.md`
+- **Template for other apps**: `.specs-template/README.md`

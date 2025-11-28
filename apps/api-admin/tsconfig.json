@@ -3,9 +3,13 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "commonjs",
-    "lib": ["ES2020"],
-    "outDir": "../../dist/out-tsc/apps/api-admin",
-    "types": ["node"],
+    "lib": [
+      "ES2020"
+    ],
+    "outDir": "../../dist/out-tsc/apps/auth-service",
+    "types": [
+      "node"
+    ],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -18,9 +22,56 @@
     "sourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "typeRoots": ["./node_modules/@types", "../../node_modules/@types"],
-    "baseUrl": "../../"
+    "typeRoots": [
+      "./node_modules/@types",
+      "../../node_modules/@types"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@workix/domain/auth": [
+        "../../libs/backend/domain/auth/src/index.ts"
+      ],
+      "@workix/domain/users": [
+        "../../libs/backend/domain/users/src/index.ts"
+      ],
+      "@workix/domain/pipelines": [
+        "../../libs/backend/domain/pipelines/src/index.ts"
+      ],
+      "@workix/domain/rbac": [
+        "../../libs/backend/domain/rbac/src/index.ts"
+      ],
+      "@workix/backend/shared/core": [
+        "../../libs/backend/shared/core/src/index.ts"
+      ],
+      "@workix/shared": [
+        "../../libs/shared/utils/src/index.ts"
+      ],
+      "@workix/shared/backend/core": [
+        "../../libs/backend/shared/core/src/index.ts"
+      ],
+      "@workix/infrastructure/i18n": [
+        "../../libs/backend/infrastructure/i18n/src/index.ts"
+      ],
+      "@workix/infrastructure/message-broker": [
+        "../../libs/backend/infrastructure/message-broker/src/index.ts"
+      ],
+      "@workix/infrastructure/database": [
+        "../../libs/backend/infrastructure/database/src/index.ts"
+      ],
+      "@workix/infrastructure/prisma": [
+        "../../libs/backend/infrastructure/prisma/src/index.ts"
+      ]
+    }
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "**/*.spec.ts"]
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.spec.ts"
+  ]
 }

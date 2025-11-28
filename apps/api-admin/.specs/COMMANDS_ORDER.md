@@ -1,59 +1,55 @@
-# Порядок команд Speckit - Краткая инструкция
+# Speckit Commands Order - Quick Reference
 
-**Версия**: 1.0  
-**Дата**: 2025-11-27
+**Version**: 1.0
+**Date**: 2025-11-27
 
-## Правильный порядок команд
-
-```
-1. /speckit.specify      → Создание спецификации
-2. /speckit.clarify      → Уточнение неоднозначностей  
-3. /speckit.plan         → Техническое планирование
-4. /speckit.tasks        → Генерация задач
-5. /speckit.checklist    → Чек-лист качества (после tasks)
-6. /speckit.analyze      → Анализ согласованности (после tasks)
-7. /speckit.implement    → Реализация (опционально)
-```
-
-## Текущий статус Admin API
-
-| # | Команда | Статус | Файл |
-|---|---------|--------|------|
-| 1 | `/speckit.specify` | ✅ | `.specs/ADMIN_API_PLAN.md` |
-| 2 | `/speckit.clarify` | ✅ | Обновлен spec |
-| 3 | `/speckit.plan` | ⏳ **СЛЕДУЮЩИЙ** | - |
-| 4 | `/speckit.tasks` | ⏳ | - |
-| 5 | `/speckit.checklist` | ✅* | `.specs/checklists/` |
-| 6 | `/speckit.analyze` | ✅* | `.specs/ANALYSIS_REPORT.md` |
-
-\* Выполнено раньше для демонстрации, правильный порядок - после tasks
-
-## Следующая команда
+## Execution Order
 
 ```
-/speckit.plan
+1. /speckit.specify      → Create specification
+2. /speckit.clarify      → Clarify ambiguities
+3. /speckit.plan         → Technical planning
+4. /speckit.tasks        → Generate tasks
+5. /speckit.checklist    → Quality checklist (after tasks)
+6. /speckit.analyze      → Consistency analysis (after tasks)
+7. /speckit.implement    → Implementation (optional)
 ```
 
-## Структура документации
+## Available Commands
 
-Все спецификации хранятся в `apps/api-admin/.specs/`:
-- `ADMIN_API_PLAN.md` - Спецификация (spec.md)
-- `IMPLEMENTATION_PLAN.md` - План внедрения (plan.md)
-- `ADMIN_API_SECURITY.md` - Кейсы безопасности
-- `SPECKIT_WORKFLOW.md` - Полная инструкция
-- `QUICK_START.md` - Краткая справка
-- `checklists/` - Чек-листы качества
+### Core Commands (7)
+1. `/speckit.specify` - Create specification
+2. `/speckit.clarify` - Clarify ambiguities
+3. `/speckit.plan` - Technical planning
+4. `/speckit.tasks` - Generate tasks
+5. `/speckit.checklist` - Quality checklist
+6. `/speckit.analyze` - Consistency analysis
+7. `/speckit.implement` - Implementation
 
-## Важно для NX монорепозитория
+### Additional Commands (3)
+8. `/speckit.test` - ✅ Generate test plan
+9. `/speckit.docs` - ✅ Generate documentation
+10. `/speckit.review` - ✅ Code review
 
-- `api-auth` → `libs/backend/domain/auth` (User) - **независимо**
-- `api-admin` → `libs/backend/domain/admin` (Admin) - **независимо**
-- Изменения в `admin` **НЕ влияют** на `api-auth`
-- Общие библиотеки (`infrastructure/*`) влияют на оба API
+### Release & Deploy Commands (2)
+11. `/speckit.release` - ✅ Prepare release (versioning, changelog)
+12. `/speckit.deploy` - ✅ Check deployment readiness and plan
 
-## Команды которые НЕ существуют
+**Important**: Release and Deploy commands **DO NOT** auto-execute release/deployment, only **prepare** everything.
 
-❌ `/speckit.test`, `/speckit.deploy`, `/speckit.monitor`, `/speckit.optimize`, `/speckit.refactor`, `/speckit.cleanup`, `/speckit.docs`, `/speckit.release`, `/speckit.support`, `/speckit.improve`, `/speckit.review`
+### Commands That Don't Exist
+- `/speckit.monitor`, `/speckit.optimize`, `/speckit.refactor`, `/speckit.cleanup`, `/speckit.support`, `/speckit.improve`
 
-**Реально доступны только**: specify, clarify, plan, tasks, checklist, analyze, implement
+**Total available**: 12 commands
 
+## Important Notes
+
+⚠️ **Correct order**:
+1. `/speckit.specify` → creates specification in `.specs/`
+2. `/speckit.clarify` → clarifies specification (updates file in `.specs/`)
+3. `/speckit.plan` → creates technical plan in `.specs/`
+4. `/speckit.tasks` → creates tasks in `.specs/`
+5. `/speckit.checklist` → creates checklists in `.specs/checklists/` (**after tasks**)
+6. `/speckit.analyze` → creates analysis in `.specs/` (**after tasks**)
+
+**Note**: For Admin API, `checklist` and `analyze` were executed earlier for demo, but correct order is after `tasks`.
